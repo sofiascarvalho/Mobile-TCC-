@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.analyticai.R
 import com.example.analyticai.ui.theme.Roboto
+
 
 @Composable
 fun HomeScreen() {
@@ -53,12 +56,12 @@ fun HomeScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // =========================
-        // Cabeçalho
+        // Seção 1: Cabeçalho + Conteúdo principal
         // =========================
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(start = 5.dp, end = 5.dp, top = 18.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -79,18 +82,14 @@ fun HomeScreen() {
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(200.dp))
 
-        // =========================
-        // Conteúdo principal
-        // =========================
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
 
             Text(
                 text = "A inteligência que\ntransforma dados em\nresultados",
@@ -103,14 +102,14 @@ fun HomeScreen() {
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
-                text = "Transformando dados em aprendizagem inteligente.",
+                text = "Transformando dados em \naprendizagem inteligente.",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.ExtraLight,
                 fontFamily = Roboto,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             Button(
                 onClick = {},
@@ -127,26 +126,23 @@ fun HomeScreen() {
             }
         }
 
-        Spacer(
-            modifier = Modifier.height(355.dp)
-        )
+        Spacer(modifier = Modifier.height(340.dp))
+
         // =========================
-        // Segunda seção com imagem de fundo
+        // Seção 2: Imagem de fundo com conteúdo sobreposto
         // =========================
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(600.dp) // altura da seção que será coberta pela imagem
+                .height(770.dp)
         ) {
-            // Imagem de fundo
             Image(
                 painter = painterResource(R.drawable.imagem_fundo),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
-            // Conteúdo sobre a imagem
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -166,7 +162,7 @@ fun HomeScreen() {
 
                 Text(
                     text = "Aqui você pode adicionar mais textos, botões ou outros elementos sobre a imagem.",
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
@@ -183,14 +179,68 @@ fun HomeScreen() {
             }
         }
 
-        Spacer(modifier = Modifier.height(40.dp)) // espaço final
+        Spacer(modifier = Modifier.height(40.dp))
+
+        // =========================
+        // Seção 3: Nova seção abaixo da imagem
+        // =========================
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .height(740.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Benefícios para todos",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = "Famílias",
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Tenha transparência total \nno acompanhamento do progresso \ndos seus filhos. Receba insights \nvaliosos e relatórios personalizados \npara apoiar a jornada de aprendizado deles.",
+                fontSize = 8.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraLight
+            )
+
+            Text(
+                text = "Escolas",
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Escolas"
+            )
+
+            Text(
+                text = "Alunos",
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Alunos"
+            )
+
+            Divider(modifier = Modifier.width(220.dp).height(2.dp))
+
+        }
     }
 }
 
-
-
-@Preview
+@Preview(showBackground = true)
 @Composable
-private fun HomeScreenPreview() {
+fun HomeScreenPreview() {
     HomeScreen()
 }
