@@ -1,5 +1,6 @@
 package com.example.analyticai.screens
 
+import InfoCard
 import android.widget.Space
 import androidx.collection.mutableObjectIntMapOf
 import androidx.compose.foundation.BorderStroke
@@ -142,42 +143,69 @@ fun HomeScreen() {
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp),
+                    .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Top
             ) {
+                Spacer(modifier = Modifier.height(60.dp))
                 Text(
-                    text = "Seção adicional sobre a imagem",
+                    text = "Nossos Recursos",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(70.dp))
 
-                Text(
-                    text = "Aqui você pode adicionar mais textos, botões ou outros elementos sobre a imagem.",
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
+                // Zigzag cards
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // Card 1 → esquerda
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        InfoCard(
+                            image = R.drawable.grafic,
+                            title = "Dashboard de Performance",
+                            description = "Descrição do Card 1")
+                    }
+
+                    // Card 2 → direita
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        InfoCard(
+                            image = R.drawable.notes,
+                            title = "Planos Personalizados",
+                            description = "Descrição do Card 2")
+                    }
+
+                    // Card 3 → esquerda
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        InfoCard(
+                            image = R.drawable.notification,
+                            title = "Notificações Inteligentes",
+                            description = "Descrição do Card 3")
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(20.dp))
-
-                Button(
-                    onClick = {},
-                    modifier = Modifier.width(200.dp),
-                    colors = ButtonDefaults.buttonColors(Color(0xffFFC23D))
-                ) {
-                    Text("Outro botão")
-                }
             }
+
+
         }
+
 
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -207,10 +235,11 @@ fun HomeScreen() {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Tenha transparência total \nno acompanhamento do progresso \ndos seus filhos. Receba insights \nvaliosos e relatórios personalizados \npara apoiar a jornada de aprendizado deles.",
+                text = stringResource(R.string.Família),
                 fontSize = 8.sp,
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraLight
+                fontWeight = FontWeight.ExtraLight,
+                modifier = Modifier.padding(horizontal = 20.dp)
             )
 
             Text(
@@ -220,7 +249,10 @@ fun HomeScreen() {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Escolas"
+                text = stringResource(R.string.Escolas),
+                fontSize = 8.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraLight
             )
 
             Text(
@@ -230,7 +262,10 @@ fun HomeScreen() {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Alunos"
+                text = stringResource(R.string.Alunos),
+                fontSize = 8.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraLight
             )
 
             Divider(modifier = Modifier.width(220.dp).height(2.dp))
@@ -239,7 +274,7 @@ fun HomeScreen() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 4000)
 @Composable
 fun HomeScreenPreview() {
     HomeScreen()
