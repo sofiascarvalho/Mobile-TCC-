@@ -41,12 +41,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.analyticai.R
 import com.example.analyticai.ui.theme.Roboto
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navegacao: NavHostController?) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -73,7 +74,8 @@ fun HomeScreen() {
                 fontWeight = FontWeight.ExtraBold
             )
             Button(
-                onClick = {},
+                onClick = {
+                    navegacao!!.navigate("login")},
                 colors = ButtonDefaults.buttonColors(Color(0xff7D53F3))
             ) {
                 Text(
@@ -114,7 +116,8 @@ fun HomeScreen() {
             Spacer(modifier = Modifier.height(15.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                },
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(Color(0xff7D53F3)),
                 modifier = Modifier.width(200.dp).padding(top = 20.dp)
@@ -300,5 +303,5 @@ fun HomeScreen() {
 @Preview(showBackground = true, heightDp = 10000)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(null)
 }
