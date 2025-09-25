@@ -115,7 +115,7 @@ fun HomeScreen() {
 
             Button(
                 onClick = {},
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(Color(0xff7D53F3)),
                 modifier = Modifier.width(200.dp).padding(top = 20.dp)
             ) {
@@ -215,90 +215,84 @@ fun HomeScreen() {
         Spacer(modifier = Modifier.height(40.dp))
 
         // =========================
-        // Seção 3: Nova seção abaixo da imagem
-        // =========================
-        Column(
+// Seção 3: Nova seção abaixo da imagem
+// =========================
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
-                .height(725.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .height(770.dp)
         ) {
-            Text(
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
                 text = "Benefícios para todos",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(80.dp))
 
-            Column (
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = "Famílias",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Normal
-                )
-                Text(
-                    text = stringResource(R.string.Família),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.ExtraLight,
-                    modifier = Modifier.padding(horizontal = 65.dp),
-                    lineHeight = 11.sp
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 50.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Famílias", fontSize = 18.sp, fontWeight = FontWeight.Normal)
+                    Text(
+                        text = stringResource(R.string.Família),
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.ExtraLight,
+                        modifier = Modifier.padding(horizontal = 65.dp),
+                        lineHeight = 11.sp
+                    )
 
+                    Spacer(modifier = Modifier.height(37.dp))
+
+                    Text("Escolas", fontSize = 18.sp, fontWeight = FontWeight.Normal)
+                    Text(
+                        text = stringResource(R.string.Escolas),
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.ExtraLight,
+                        modifier = Modifier.padding(horizontal = 65.dp),
+                        lineHeight = 11.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(37.dp))
+
+                    Text("Alunos", fontSize = 18.sp, fontWeight = FontWeight.Normal)
+                    Text(
+                        text = stringResource(R.string.Alunos),
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.ExtraLight,
+                        modifier = Modifier.padding(horizontal = 65.dp),
+                        lineHeight = 11.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(155.dp)) // mantém o respiro que você já tinha
+                Divider(modifier = Modifier.width(350.dp).height(1.dp))
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Escolas",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Normal
-                )
-                Text(
-                    text = stringResource(R.string.Escolas),
-                    fontSize = 12.sp,
+                    text = "Contato: contato@analytica-ai.com\n" +
+                            "© 2025 Analytica AI. Todos os direitos reservados.",
+                    fontSize = 10.sp,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.ExtraLight,
-                    modifier = Modifier.padding(horizontal = 65.dp),
-                    lineHeight = 11.sp
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = "Alunos",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Normal
-                )
-                Text(
-                    text = stringResource(R.string.Alunos),
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.ExtraLight,
-                    modifier = Modifier.padding(horizontal = 65.dp),
                     lineHeight = 11.sp
                 )
             }
-            Spacer(modifier = Modifier.height(150.dp))
-            Divider(modifier = Modifier.width(350.dp).height(1.dp))
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = "Contato: contato@analytica-ai.com\n" +
-                        "© 2025 Analytica AI. Todos os direitos reservados.",
-                fontSize = 10.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraLight,
-                lineHeight = 11.sp
-            )
         }
     }
 }
