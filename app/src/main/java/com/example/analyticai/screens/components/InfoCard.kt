@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -30,39 +31,47 @@ fun InfoCard(
 ) {
     Card(
         modifier = modifier
-            .width(200.dp)
+            .width(260.dp)
+            .height(170.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
         colors = androidx.compose.material3.CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
+        Spacer(modifier = Modifier.height(10.dp))
         Column(
             modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             if (image != null){
                 Image(
                     painter = painterResource(image),
                     contentDescription = "",
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(25.dp)
                         .padding(bottom = 8.dp)
                 )
             }
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = title,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
-                color = Color(0xff3347B0),
-                textAlign = TextAlign.Center
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 10.dp),
+                lineHeight = 5.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = description,
                 fontSize = 10.sp,
                 color = Color.Black,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 10.dp),
+                lineHeight = 11.sp,
+                fontWeight = FontWeight.ExtraLight
             )
         }
     }

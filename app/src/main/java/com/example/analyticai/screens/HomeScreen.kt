@@ -107,7 +107,8 @@ fun HomeScreen() {
                 fontSize = 12.sp,
                 fontWeight = FontWeight.ExtraLight,
                 fontFamily = Roboto,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                lineHeight = 11.sp
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -115,9 +116,8 @@ fun HomeScreen() {
             Button(
                 onClick = {},
                 shape = RoundedCornerShape(12.dp),
-                border = BorderStroke(2.dp, color = Color(0xff3347B0)),
                 colors = ButtonDefaults.buttonColors(Color(0xff7D53F3)),
-                modifier = Modifier.width(300.dp)
+                modifier = Modifier.width(200.dp).padding(top = 20.dp)
             ) {
                 Text(
                     text = "Começar agora",
@@ -159,7 +159,7 @@ fun HomeScreen() {
                     textAlign = TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(70.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 // Zigzag cards
                 Column(
@@ -169,34 +169,39 @@ fun HomeScreen() {
                     // Card 1 → esquerda
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
+                        horizontalArrangement = Arrangement.End
                     ) {
                         InfoCard(
                             image = R.drawable.grafic,
                             title = "Dashboard de Performance",
-                            description = "Descrição do Card 1")
+                            description = stringResource(R.string.Dashboard)
+                        )
                     }
+                    Spacer(modifier = Modifier.height(5.dp))
 
                     // Card 2 → direita
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        InfoCard(
+                            image = R.drawable.notes,
+                            title = "Planos Personalizados",
+                            description = stringResource(R.string.Planos)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    // Card 3 → esquerda
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
                         InfoCard(
-                            image = R.drawable.notes,
-                            title = "Planos Personalizados",
-                            description = "Descrição do Card 2")
-                    }
-
-                    // Card 3 → esquerda
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        InfoCard(
                             image = R.drawable.notification,
                             title = "Notificações Inteligentes",
-                            description = "Descrição do Card 3")
+                            description = stringResource(R.string.Notificações)
+                        )
                     }
                 }
 
@@ -216,7 +221,7 @@ fun HomeScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
-                .height(740.dp),
+                .height(725.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -228,53 +233,77 @@ fun HomeScreen() {
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            Column (
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text(
+                    text = "Famílias",
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Normal
+                )
+                Text(
+                    text = stringResource(R.string.Família),
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.ExtraLight,
+                    modifier = Modifier.padding(horizontal = 65.dp),
+                    lineHeight = 11.sp
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = "Escolas",
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Normal
+                )
+                Text(
+                    text = stringResource(R.string.Escolas),
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.ExtraLight,
+                    modifier = Modifier.padding(horizontal = 65.dp),
+                    lineHeight = 11.sp
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    text = "Alunos",
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Normal
+                )
+                Text(
+                    text = stringResource(R.string.Alunos),
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.ExtraLight,
+                    modifier = Modifier.padding(horizontal = 65.dp),
+                    lineHeight = 11.sp
+                )
+            }
+            Spacer(modifier = Modifier.height(150.dp))
+            Divider(modifier = Modifier.width(350.dp).height(1.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+
             Text(
-                text = "Famílias",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = stringResource(R.string.Família),
-                fontSize = 8.sp,
+                text = "Contato: contato@analytica-ai.com\n" +
+                        "© 2025 Analytica AI. Todos os direitos reservados.",
+                fontSize = 10.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.ExtraLight,
-                modifier = Modifier.padding(horizontal = 20.dp)
+                lineHeight = 11.sp
             )
-
-            Text(
-                text = "Escolas",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = stringResource(R.string.Escolas),
-                fontSize = 8.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraLight
-            )
-
-            Text(
-                text = "Alunos",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = stringResource(R.string.Alunos),
-                fontSize = 8.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraLight
-            )
-
-            Divider(modifier = Modifier.width(220.dp).height(2.dp))
-
         }
     }
 }
 
-@Preview(showBackground = true, heightDp = 4000)
+@Preview(showBackground = true, heightDp = 10000)
 @Composable
 fun HomeScreenPreview() {
     HomeScreen()
