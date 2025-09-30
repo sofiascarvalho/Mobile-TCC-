@@ -65,14 +65,14 @@ fun LoginScreen(navegacao: NavHostController?) {
                         .padding(start = 5.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Text(text = "Email",
+                    Text(text = "Matrícula",
                         textAlign = TextAlign.Start)
                 }
 
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("seu.email@exemplo.com", fontSize = 14.sp, fontWeight = FontWeight.Normal) },
+                    label = { Text("0000000000", fontSize = 14.sp, fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                     colors = OutlinedTextFieldDefaults.colors(

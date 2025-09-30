@@ -14,18 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun InfoCard(
-    title: String ="",
-    description: String="",
+    title: String = "",
+    description: Int, // ainda Int, ok
     image: Int? = null,
     modifier: Modifier = Modifier
 ) {
@@ -35,16 +34,15 @@ fun InfoCard(
             .height(170.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = androidx.compose.material3.CardDefaults.cardColors(Color.White),
+        colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Spacer(modifier = Modifier.height(10.dp))
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (image != null){
+            if (image != null) {
                 Image(
                     painter = painterResource(image),
                     contentDescription = "",
@@ -53,7 +51,9 @@ fun InfoCard(
                         .padding(bottom = 8.dp)
                 )
             }
+
             Spacer(modifier = Modifier.height(5.dp))
+
             Text(
                 text = title,
                 fontWeight = FontWeight.Normal,
@@ -61,11 +61,14 @@ fun InfoCard(
                 color = Color.Black,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 10.dp),
-                lineHeight = 5.sp
+                lineHeight = 16.sp
             )
+
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Aqui usamos stringResource para converter o Int em String
             Text(
-                text = description,
+                text = stringResource(description),
                 fontSize = 10.sp,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
@@ -75,10 +78,4 @@ fun InfoCard(
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun ResourcesCardsPreview() {
-    InfoCard()
 }

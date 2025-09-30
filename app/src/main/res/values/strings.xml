@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Analytic AI</string>
-    <string name="Família">Tenha transparência total no acompanhamento do progresso dos seus filhos. Receba insights valiosos e relatórios personalizados para apoiar a jornada de aprendizado deles.</string>
-    <string name="Escolas">Otimize a gestão e a avaliação do desempenho de grupos e turmas. Obtenha insights profundos para identificar tendências e tomar decisões pedagógicas mais eficazes.</string>
-    <string name="Alunos">Aproveite planos de estudo personalizados e receba feedback contínuo. Entenda seus pontos fortes e fracos, e acelere seu desenvolvimento de forma inteligente.</string>
-    <string name="Dashboard">Gráficos e relatórios interativos para visualizar o progresso de forma clara e intuitiva.</string>
-    <string name="Planos">Planos de estudo sob medida, adaptados ao ritmo e às necessidades de cada usuário.</string>
-    <string name="Notificações">Lembretes e alertas em tempo real para manter o foco e garantir a consistência.</string>
+    <string name="familia">Tenha transparência total no acompanhamento do progresso dos seus filhos. Receba insights valiosos e relatórios personalizados para apoiar a jornada de aprendizado deles.</string>
+    <string name="escolas">Otimize a gestão e a avaliação do desempenho de grupos e turmas. Obtenha insights profundos para identificar tendências e tomar decisões pedagógicas mais eficazes.</string>
+    <string name="alunos">Aproveite planos de estudo personalizados e receba feedback contínuo. Entenda seus pontos fortes e fracos, e acelere seu desenvolvimento de forma inteligente.</string>
+    <string name="dashboard">Gráficos e relatórios interativos para visualizar o progresso de forma clara e intuitiva.</string>
+    <string name="planos">Planos de estudo sob medida, adaptados ao ritmo e às necessidades de cada usuário.</string>
+    <string name="notificacoes">Lembretes e alertas em tempo real para manter o foco e garantir a consistência.</string>
+
 </resources>
