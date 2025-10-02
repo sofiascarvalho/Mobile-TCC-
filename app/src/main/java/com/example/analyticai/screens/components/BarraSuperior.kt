@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.analyticai.ui.theme.Grey5B
+import com.example.analyticai.ui.theme.DarkGray
 
 @Composable
 fun BarraSuperior(modifier: Modifier = Modifier) {
@@ -52,7 +52,7 @@ fun BarraSuperior(modifier: Modifier = Modifier) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Foto",
-                    tint = Grey5B,
+                    tint = DarkGray,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -60,8 +60,8 @@ fun BarraSuperior(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text("Nome Do Aluno", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = Grey5B)
-                Text("1º Ano B", fontSize = 14.sp, color = Grey5B, fontWeight = FontWeight.Light)
+                Text("Nome Do Aluno", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
+                Text("1º Ano B", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
             }
         }
         Spacer(modifier = Modifier.height(8.dp))

@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.BarraSuperior
-import com.example.analyticai.ui.theme.Grey5B
-import com.example.analyticai.ui.theme.Grey68
-import com.example.analyticai.ui.theme.Purple80
+import com.example.analyticai.ui.theme.DarkGray
+import com.example.analyticai.ui.theme.GrayDarkMedium
+import com.example.analyticai.ui.theme.PurplePrimary
 
 @Composable
 fun ProfileScreen(navegacao: NavHostController?) {
@@ -68,7 +68,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     Text("Configurações do Sistema",
                         modifier = Modifier.padding(start = 5.dp),
                         fontSize = 14.sp,
-                        color = Grey5B,
+                        color = DarkGray,
                         fontWeight = FontWeight.Normal)
                 }
 
@@ -150,14 +150,14 @@ fun ProfileScreen(navegacao: NavHostController?) {
                         Text(
                             "Aparência",
                             fontWeight = FontWeight.Medium,
-                            color = Grey68)
+                            color = GrayDarkMedium)
 
                         Spacer(modifier = Modifier.height(20.dp))
 
                         Text(
                             text = "Modo dark",
                             fontWeight = FontWeight.Normal,
-                            color = Grey68)
+                            color = GrayDarkMedium)
 
                         Row(
                             modifier = Modifier.fillMaxWidth()
@@ -167,7 +167,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                                 modifier = Modifier.weight(1f).padding(top = 8.dp),
                                 fontWeight = FontWeight.Normal,
                                 fontSize = 12.sp,
-                                color = Grey68
+                                color = GrayDarkMedium
                                 )
                             Switch(
                                 checked = isDarkMode,
@@ -190,7 +190,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                                 .height(50.dp)
                                 .width(180.dp),
                             shape = RoundedCornerShape(28.dp),
-                            colors = ButtonDefaults.buttonColors(Purple80)
+                            colors = ButtonDefaults.buttonColors(PurplePrimary)
                         ) {
                             Text("Salvar Alterações", color = Color.White)
                         }
