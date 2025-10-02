@@ -12,13 +12,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.analyticai.screens.ConfirmEmail
+import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.HomeScreen
 import com.example.analyticai.screens.LoginScreen
-import com.example.analyticai.screens.ProfileScreen
+import com.example.analyticai.screens.RankingScreen
 import com.example.analyticai.screens.RecPasswd
+import com.example.analyticai.screens.RecursosScreen
+import com.example.analyticai.screens.components.BarraInferior
+import com.example.analyticai.screens.components.BarraSuperior
+import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
 
 class MainActivity : ComponentActivity() {
@@ -27,19 +34,54 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AnalyticAITheme {
-                var navegacao= rememberNavController()
-                NavHost(
-                    navController=navegacao,
-                    startDestination = "home" //nome de associacao a tela
-                ){
-                    //quando a rota home for chamada,vamos para a tela criada
-                    composable(route = "home"){ HomeScreen(navegacao) }
-                    composable(route = "login"){ LoginScreen(navegacao) }
-                    composable (route = "recPasswd"){ RecPasswd(navegacao) }
-                    composable(route = "email"){ ConfirmEmail(navegacao) }
+                val navController = rememberNavController() // NavController único
+
+                val topBarRoutes = listOf(
+                    "profile",
+                    "recursos",
+                    "ranking",
+                    "dashboard"
+                )
+                // Rotas que devem exibir a barra inferior
+                val bottomBarRoutes = listOf(
+                    "profile",
+                    "recursos",
+                    "ranking",
+                    "dashboard"
+                )
+
+                Scaffold(
+                    topBar = {val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentRoute = navBackStackEntry?.destination?.route
+                        if (currentRoute in topBarRoutes) {
+                            BarraSuperior(navController)
+                        }
+                             },
+                    bottomBar = {
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentRoute = navBackStackEntry?.destination?.route
+                        if (currentRoute in bottomBarRoutes) {
+                            BarraInferior(navController)
+                        }
+                    }
+                ) { innerPadding ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = "home", // tela inicial
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable("home") { HomeScreen(navController) }
+                        composable("login") { LoginScreen(navController) }
+                        composable("recPasswd") { RecPasswd(navController) }
+                        composable("email") { ConfirmEmail(navController) }
+                        composable("profile") { ProfileScreen(navController) }
+                        composable("recursos") { RecursosScreen(navController) }
+                        composable("ranking") { RankingScreen(navController) }
+                        composable("dashboard") { DashboardScreen(navController) }
+                    }
                 }
-                //HomeScreen()
             }
         }
     }
 }
+

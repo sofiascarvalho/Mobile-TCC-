@@ -140,7 +140,7 @@ fun LoginScreen(navegacao: NavHostController?) {
 
                 // Botão Entrar
                 Button(
-                    onClick = { /*navegacao!!.navigate("dashboard")*/ },
+                    onClick = { navegacao!!.navigate("dashboard") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

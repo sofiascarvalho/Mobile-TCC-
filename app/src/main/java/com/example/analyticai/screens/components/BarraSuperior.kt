@@ -26,17 +26,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.analyticai.ui.theme.DarkGray
 
 @Composable
-fun BarraSuperior(modifier: Modifier = Modifier) {
+fun BarraSuperior(navController: NavHostController?) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
                 .padding(top = 10.dp, start = 5.dp, end = 5.dp)
@@ -73,5 +74,5 @@ fun BarraSuperior(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun BarraSuperiorPreview() {
-    BarraSuperior()
+    BarraSuperior(null)
 }
