@@ -131,7 +131,7 @@ fun LoginScreen(navegacao: NavHostController?) {
                         Text("Lembrar de mim")
                     }
 
-                    TextButton(onClick = { /* ação recuperar senha */ }) {
+                    TextButton(onClick = { navegacao!!.navigate("recPasswd") }) {
                         Text("Esqueceu a senha?")
                     }
                 }
@@ -140,7 +140,7 @@ fun LoginScreen(navegacao: NavHostController?) {
 
                 // Botão Entrar
                 Button(
-                    onClick = { /* ação de login */ },
+                    onClick = { /*navegacao!!.navigate("dashboard")*/ },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),

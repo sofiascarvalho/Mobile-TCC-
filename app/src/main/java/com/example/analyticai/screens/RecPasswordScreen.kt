@@ -13,11 +13,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,8 +29,42 @@ import com.example.analyticai.ui.theme.GrayExtraLight
 import com.example.analyticai.ui.theme.PurplePrimary
 
 @Composable
-fun RecPasswd(modifier: Modifier = Modifier) {
-    
+fun RecPasswd(navegacao: NavHostController?) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card (
+                modifier = Modifier.size(350.dp, 300.dp),
+                elevation = CardDefaults.cardElevation(2.dp)
+            ){
+                Column (
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Text(text = "Recuperar Senha")
+                    Text(
+                        text = "Digite sua matrícula para enviarmos um e-mail de recuperação.",
+                        modifier = Modifier.padding(horizontal = 70.dp))
+                    Text(text = "Matrícula")
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {}
+                    )
+                    Button(
+                        onClick = {navegacao!!.navigate("email")}
+                    ) {
+                        Text(text = "Enviar")
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -37,7 +73,9 @@ fun ConfirmEmail(navegacao: NavHostController?) {
         modifier = Modifier.fillMaxSize()
     ){
         Column (
-            modifier = Modifier.fillMaxSize().background(GrayExtraLight),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(GrayExtraLight),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -59,15 +97,15 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
-                    Spacer(modifier = Modifier.height(45.dp))
+                    Spacer(modifier = Modifier.height(30.dp))
                     Text(
                         text = "Um e-mail para redefinição de senha foi enviado para seu e-mail educacional. Por favor, verifique a caixa de entrada.",
                         modifier = Modifier.padding(horizontal = 70.dp)
                     )
-                    Spacer(modifier = Modifier.height(45.dp))
+                    Spacer(modifier = Modifier.height(30.dp))
                     Button(
                         onClick = {
-                            navegacao!!.navigate("home")
+                            navegacao!!.navigate("login")
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = PurplePrimary
@@ -94,7 +132,9 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
         modifier = Modifier.fillMaxSize()
     ){
         Column (
-            modifier = Modifier.fillMaxSize().background(GrayExtraLight),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(GrayExtraLight),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -140,6 +180,12 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
     }
 }
 
+
+@Preview
+@Composable
+private fun RecPasswdPreview() {
+    RecPasswd(null)
+}
 
 
 /*

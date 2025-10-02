@@ -27,7 +27,7 @@ import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
 
 @Composable
-fun ProfileScreen(navegacao: NavHostController?) {
+fun ProfileScreen(/*navegacao: NavHostController?*/) {
     var nomeUsuario by remember { mutableStateOf(TextFieldValue("")) }
     var emailUsuario by remember { mutableStateOf(TextFieldValue("")) }
     var telefoneUsuario by remember { mutableStateOf(TextFieldValue("")) }
@@ -44,7 +44,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
         Scaffold(
             modifier = Modifier.background(Color.White),
             topBar = { BarraSuperior() },
-            bottomBar = { BarraInferior(controleNavegacao = navegacao) }
+            bottomBar = { BarraInferior() }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
@@ -204,6 +204,6 @@ fun ProfileScreen(navegacao: NavHostController?) {
 @Preview
 @Composable
 private fun ProfileScreenPreview() {
-    ProfileScreen(null)
+    ProfileScreen()
 }
 

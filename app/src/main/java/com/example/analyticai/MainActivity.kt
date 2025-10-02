@@ -14,9 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.analyticai.screens.ConfirmEmail
 import com.example.analyticai.screens.HomeScreen
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.ProfileScreen
+import com.example.analyticai.screens.RecPasswd
 import com.example.analyticai.ui.theme.AnalyticAITheme
 
 class MainActivity : ComponentActivity() {
@@ -31,8 +33,10 @@ class MainActivity : ComponentActivity() {
                     startDestination = "home" //nome de associacao a tela
                 ){
                     //quando a rota home for chamada,vamos para a tela criada
-                    composable(route = "home"){ ProfileScreen(navegacao) }
-                    //composable(route = "login"){ LoginScreen(navegacao) }
+                    composable(route = "home"){ HomeScreen(navegacao) }
+                    composable(route = "login"){ LoginScreen(navegacao) }
+                    composable (route = "recPasswd"){ RecPasswd(navegacao) }
+                    composable(route = "email"){ ConfirmEmail(navegacao) }
                 }
                 //HomeScreen()
             }

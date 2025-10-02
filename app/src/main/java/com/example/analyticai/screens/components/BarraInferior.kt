@@ -24,7 +24,7 @@ import com.example.analyticai.R
 import com.example.analyticai.ui.theme.BackgroundLightPink
 
 @Composable
-fun BarraInferior(controleNavegacao: NavHostController?) {
+fun BarraInferior(/*controleNavegacao: NavHostController?*/) {
 
     NavigationBar(
         containerColor = BackgroundLightPink,
@@ -33,7 +33,7 @@ fun BarraInferior(controleNavegacao: NavHostController?) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                controleNavegacao!!.navigate("conteudo")
+                //controleNavegacao!!.navigate("conteudo")
             },
             icon = {
                 Icon(
@@ -59,7 +59,7 @@ fun BarraInferior(controleNavegacao: NavHostController?) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                controleNavegacao!!.navigate("cadastro")
+                //controleNavegacao!!.navigate("cadastro")
             },
             icon = {
                 Icon(
@@ -73,7 +73,7 @@ fun BarraInferior(controleNavegacao: NavHostController?) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                controleNavegacao!!.navigate("cadastro")
+                //controleNavegacao!!.navigate("cadastro")
             },
             icon = {
                 Icon(
@@ -90,5 +90,5 @@ fun BarraInferior(controleNavegacao: NavHostController?) {
 @Preview
 @Composable
 private fun BarraInferiorPreview(){
-    BarraInferior(null)
+    BarraInferior()
 }
