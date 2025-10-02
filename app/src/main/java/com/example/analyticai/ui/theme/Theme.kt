@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 // --- Light Mode ---
 val LightPrimary = Color(0xFF7D53F3)
 val LightSecondary = Color(0xFFC6B2FF)
-val LightBackground = Color(0xFFF9F9F9)
-val LightSurface = Color(0xFFFFFFFF)
+val LightBackground = Color(0xFFFFFFFF)
+val LightSurface = Color(0xFFF9F9F9)
 val LightCardBackground = Color(0xFFFCF5FF)
 val LightTextPrimary = Color(0xFF5B5B5B)
 val LightTextSecondary = Color(0xFF363636)

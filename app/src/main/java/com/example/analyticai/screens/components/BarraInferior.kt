@@ -21,12 +21,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.analyticai.R
+import com.example.analyticai.ui.theme.WhiteFC
 
 @Composable
 fun BarraInferior(controleNavegacao: NavHostController?) {
 
     NavigationBar(
-        containerColor = Color(0xffFCF5FF),
+        containerColor = WhiteFC,
         contentColor = Color(0xff363636)
     ) {
         NavigationBarItem(
