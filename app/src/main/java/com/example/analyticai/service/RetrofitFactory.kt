@@ -1,9 +1,18 @@
 package com.example.analyticai.service
 
+import com.example.analyticai.model.LoginRequest
+import com.example.analyticai.model.LoginResponse
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.Headers
+import retrofit2.http.POST
 
 object RetrofitFactory {
-    private val BASE_URL = "http://10.0.2.2:8080/v1/analytica-ai/usuarios/"
+    private val BASE_URL = "http://10.107.144.5:5050/v1/analytica-ai/"
 
     private val retrofitFactory = retrofit2.Retrofit
         .Builder()
@@ -15,3 +24,5 @@ object RetrofitFactory {
         return retrofitFactory.create(ApiService::class.java)
     }
 }
+
+

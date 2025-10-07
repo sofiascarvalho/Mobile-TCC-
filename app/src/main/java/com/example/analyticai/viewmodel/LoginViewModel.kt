@@ -10,33 +10,49 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
+
     private val _loginResponse = MutableStateFlow<LoginResponse?>(null)
     val loginResponse: StateFlow<LoginResponse?> = _loginResponse
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun login(credencial: String, senha: String) {
+    fun login(
+        credencial: String,
+        senha: String,
+        onSuccess: (LoginResponse) -> Unit = {},
+        onError: (String) -> Unit = {}
+    ) {
         viewModelScope.launch {
             if (credencial.isBlank() || senha.isBlank()) {
-                _errorMessage.value = "Preencha todos os campos!"
+                onError("Preencha todos os campos!")
                 return@launch
             }
 
             try {
-                val response = RetrofitFactory.getApiService().loginUsuario(LoginRequest(credencial, senha))
+                val response = RetrofitFactory.getApiService().loginUsuario(
+                    LoginRequest(credencial, senha)
+                )
                 if (response.isSuccessful) {
                     val body = response.body()
-                    if (body?.status_code == 200 && body.dados != null) {
+                    if (body != null && body.status_code in listOf(200, 201)) {
                         _loginResponse.value = body
+                        onSuccess(body)
                     } else {
-                        _errorMessage.value = body?.message ?: "Credenciais inválidas!"
+                        val msg = body?.message ?: "Credenciais inválidas!"
+                        _errorMessage.value = msg
+                        onError(msg)
                     }
                 } else {
-                    _errorMessage.value = "Erro ao realizar login (${response.code()})"
+                    val msg = "Erro ao realizar login (${response.code()})"
+                    _errorMessage.value = msg
+                    onError(msg)
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "Falha ao conectar com o servidor"
+                val msg = "Falha ao conectar: ${e.message}"
+                _errorMessage.value = msg
+                onError(msg)
+                e.printStackTrace()
             }
         }
     }

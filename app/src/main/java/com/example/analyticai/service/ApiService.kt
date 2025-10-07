@@ -9,6 +9,6 @@ import retrofit2.http.POST
 
 interface ApiService {
     @Headers("Content-Type: application/json")
-    @POST("login")
+    @POST("usuarios/login")
     suspend fun loginUsuario(@Body request: LoginRequest): Response<LoginResponse>
 }
