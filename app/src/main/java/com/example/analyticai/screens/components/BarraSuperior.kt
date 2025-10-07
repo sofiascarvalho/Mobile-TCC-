@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.analyticai.ui.theme.DarkGray
-
 @Composable
 fun BarraSuperior(navController: NavHostController?) {
     Column (
@@ -70,6 +69,7 @@ fun BarraSuperior(navController: NavHostController?) {
         Divider(modifier = Modifier.height(1.dp).width(380.dp))
     }
 }
+
 
 @Preview
 @Composable

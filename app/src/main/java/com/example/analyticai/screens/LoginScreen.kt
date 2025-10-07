@@ -128,11 +128,12 @@ fun LoginScreen(navegacao: NavHostController?) {
                             checked = rememberMe,
                             onCheckedChange = { rememberMe = it }
                         )
-                        Text("Lembrar de mim")
+                        Text("Lembrar de mim", fontSize = 14.sp)
                     }
+                    Spacer(modifier = Modifier.width(10.dp))
 
                     TextButton(onClick = { navegacao!!.navigate("recPasswd") }) {
-                        Text("Esqueceu a senha?")
+                        Text("Esqueceu a senha?", fontSize = 10.sp)
                     }
                 }
 

@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController() // NavController único
 
                 val topBarRoutes = listOf(
-                    "profile",
                     "recursos",
                     "ranking",
                     "dashboard"

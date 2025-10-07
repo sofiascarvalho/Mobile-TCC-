@@ -41,6 +41,7 @@ import androidx.navigation.NavHostController
 import com.example.analyticai.ui.theme.BackgroundGeneral
 import com.example.analyticai.ui.theme.GrayBlueLight
 import com.example.analyticai.ui.theme.GrayExtraLight
+import com.example.analyticai.ui.theme.GrayPink
 import com.example.analyticai.ui.theme.PurplePrimary
 
    @Composable
@@ -50,7 +51,7 @@ import com.example.analyticai.ui.theme.PurplePrimary
        Box(
            modifier = Modifier
                .fillMaxSize()
-               .background(colorScheme.background)
+               .background(GrayExtraLight)
        ) {
            Column(
                modifier = Modifier.fillMaxSize(),
@@ -60,10 +61,10 @@ import com.example.analyticai.ui.theme.PurplePrimary
                Card(
                    modifier = Modifier
                        .width(350.dp)
-                       .height(300.dp),
+                       .height(330.dp),
                    elevation = CardDefaults.cardElevation(2.dp),
                    colors = CardDefaults.cardColors(
-                       containerColor = colorScheme.surface
+                       containerColor = Color.White
                    ),
                    shape = RoundedCornerShape(16.dp)
                ) {
@@ -82,7 +83,7 @@ import com.example.analyticai.ui.theme.PurplePrimary
                                    .clickable { navegacao?.popBackStack() },
                                tint = colorScheme.onSurface
                            )
-                           Spacer(modifier = Modifier.width(30.dp))
+                           Spacer(modifier = Modifier.width(56.dp))
                            Text(
                                text = "Recuperar Senha",
                                fontSize = 18.sp,
@@ -93,29 +94,30 @@ import com.example.analyticai.ui.theme.PurplePrimary
 
                        Spacer(modifier = Modifier.height(20.dp))
                        Text(
-                           text = "Digite sua matrícula para enviarmos um e-mail de recuperação.",
+                           text = "Digite sua matrícula para enviarmos \num e-mail de recuperação.",
                            color = colorScheme.onSurface.copy(alpha = 0.9f),
                            fontSize = 14.sp,
-                           modifier = Modifier.padding(end = 30.dp)
+                           lineHeight = 12.sp,
+                           modifier = Modifier.padding(start = 33.dp)
                        )
 
                        Spacer(modifier = Modifier.height(25.dp))
                        Text(
                            text = "Matrícula",
                            color = colorScheme.onSurface,
-                           fontWeight = FontWeight.SemiBold
+                           fontWeight = FontWeight.Medium
                        )
                        Spacer(modifier = Modifier.height(8.dp))
                        OutlinedTextField(
                            value = "",
                            onValueChange = {},
-                           placeholder = { Text("Sua Matrícula") },
+                           placeholder = { Text("Sua Matrícula", color = GrayPink, fontWeight = FontWeight.ExtraLight, fontSize = 13.sp) },
                            modifier = Modifier.fillMaxWidth(),
                            colors = OutlinedTextFieldDefaults.colors(
                                focusedContainerColor = colorScheme.surface,
                                unfocusedContainerColor = colorScheme.surface,
-                               focusedBorderColor = colorScheme.primary,
-                               unfocusedBorderColor = colorScheme.secondary
+                               focusedBorderColor = GrayBlueLight,
+                               unfocusedBorderColor = GrayBlueLight
                            ),
                            shape = RoundedCornerShape(12.dp)
                        )
@@ -127,7 +129,7 @@ import com.example.analyticai.ui.theme.PurplePrimary
                                containerColor = colorScheme.primary
                            ),
                            shape = RoundedCornerShape(13.dp),
-                           modifier = Modifier.fillMaxWidth()
+                           modifier = Modifier.fillMaxWidth().height(50.dp)
                        ) {
                            Text(text = "Enviar", color = colorScheme.onPrimary)
                        }
@@ -151,14 +153,18 @@ fun ConfirmEmail(navegacao: NavHostController?) {
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Card(
-                modifier = Modifier.size(350.dp, 300.dp),
+                modifier = Modifier
+                    .width(350.dp)
+                    .height(330.dp),
+                elevation = CardDefaults.cardElevation(2.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White
                 ),
-                elevation = CardDefaults.cardElevation(2.dp)
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Column (
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize()
+                        .padding(horizontal = 25.dp, vertical = 20.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
@@ -171,7 +177,9 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                     Spacer(modifier = Modifier.height(30.dp))
                     Text(
                         text = "Um e-mail para redefinição de senha foi enviado para seu e-mail educacional. Por favor, verifique a caixa de entrada.",
-                        modifier = Modifier.padding(horizontal = 70.dp)
+                        modifier = Modifier.padding(horizontal = 15.dp),
+                        lineHeight = 12.sp,
+                        fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(30.dp))
                     Button(
@@ -180,7 +188,9 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = PurplePrimary
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth().height(50.dp),
+                        shape = RoundedCornerShape(13.dp)
                     ) {
                         Text(
                             text = "Voltar para o login"
@@ -362,28 +372,28 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
     }
 }
 
-
+/*
    @Preview
    @Composable
    private fun RedefPasswdPreview() {
        RedefinirPasswd(null)
    }   
+   */
    
-   
-   /*
+/*
 @Preview
 @Composable
 private fun RecPasswdPreview() {
     RecPasswd(null)
-}*/
+}
+*/
 
 
-/*
 @Preview
 @Composable
 private fun ConfirmEmailPreview() {
     ConfirmEmail(null)
-}*/
+}
 
 
 /*
