@@ -1,5 +1,6 @@
 package com.example.analyticai.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -15,18 +17,44 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.analyticai.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(navegacao: NavHostController?) {
+    val viewModel: LoginViewModel = viewModel()
+    val loginState by viewModel.loginResponse.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var rememberMe by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+
+    // Reage ao login ou erro
+    LaunchedEffect(loginState, errorMessage) {
+        loginState?.let { response ->
+            if (response.status_code == 200 && !response.dados.isNullOrEmpty()) {
+                Toast.makeText(context, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                navegacao?.navigate("home") {
+                    popUpTo("login") { inclusive = true } // remove Login da pilha
+                }
+            }
+        }
+
+        errorMessage?.let { message ->
+            if (message.isNotEmpty()) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White), // Fundo cinza claro
+            .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
         Card(
@@ -35,13 +63,10 @@ fun LoginScreen(navegacao: NavHostController?) {
                 .padding(24.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
             Column(
-                modifier = Modifier
-                    .padding(24.dp),
+                modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -57,22 +82,17 @@ fun LoginScreen(navegacao: NavHostController?) {
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
-
-                // Campo E-mail
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 5.dp),
+                // Matrícula
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(start = 5.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Text(text = "Matrícula",
-                        textAlign = TextAlign.Start)
+                    Text("Matrícula")
                 }
-
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("0000000000", fontSize = 14.sp, fontWeight = FontWeight.Normal) },
+                    label = { Text("0000000000", fontSize = 14.sp) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -87,21 +107,17 @@ fun LoginScreen(navegacao: NavHostController?) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Campo Senha
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 5.dp),
+                // Senha
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(start = 5.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Text(text = "Senha",
-                        textAlign = TextAlign.Start)
+                    Text("Senha")
                 }
-
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("•••••••••••", fontSize = 14.sp, fontWeight = FontWeight.Normal) },
+                    label = { Text("•••••••••••", fontSize = 14.sp) },
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
@@ -130,25 +146,18 @@ fun LoginScreen(navegacao: NavHostController?) {
                         )
                         Text("Lembrar de mim", fontSize = 14.sp)
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    TextButton(onClick = { navegacao!!.navigate("recPasswd") }) {
+                    TextButton(onClick = { navegacao?.navigate("recPasswd") }) {
                         Text("Esqueceu a senha?", fontSize = 10.sp)
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Botão Entrar
                 Button(
-                    onClick = { navegacao!!.navigate("dashboard") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    onClick = { viewModel.login(email.text, password.text) },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8A2BE2) // Roxo estilo Figma
-                    )
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF8A2BE2))
                 ) {
                     Text("Entrar", fontSize = 18.sp, color = Color.White)
                 }
@@ -156,6 +165,7 @@ fun LoginScreen(navegacao: NavHostController?) {
         }
     }
 }
+
 
 @Preview(showSystemUi = true)
 @Composable
