@@ -378,7 +378,7 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
    private fun RedefPasswdPreview() {
        RedefinirPasswd(null)
    }   
-   */
+*/
    
 /*
 @Preview
@@ -388,17 +388,17 @@ private fun RecPasswdPreview() {
 }
 */
 
-
+/*
 @Preview
 @Composable
 private fun ConfirmEmailPreview() {
     ConfirmEmail(null)
-}
+}*/
 
 
-/*
+
 @Preview
 @Composable
 private fun ConfirmRedefPreview() {
     ConfirmRedefinicao(null)
-}*/
+}
