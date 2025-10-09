@@ -8,15 +8,15 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,15 +30,12 @@ import com.example.analyticai.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(navegacao: NavHostController?) {
-
     val context = LocalContext.current
     val loginViewModel: LoginViewModel = viewModel()
 
-    val emailState = remember { mutableStateOf("") }
+    val matriculaState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val rememberMe = remember { mutableStateOf(false) }
-    val erroState = remember { mutableStateOf("") }
-
 
     // Criar canal de notificação (necessário no Android 8+)
     LaunchedEffect(Unit) {
@@ -89,14 +86,16 @@ fun LoginScreen(navegacao: NavHostController?) {
 
                 // Matrícula
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(start = 5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 5.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text("Matrícula")
                 }
                 OutlinedTextField(
-                    value = emailState.value,
-                    onValueChange = { emailState.value = it },
+                    value = matriculaState.value,
+                    onValueChange = { matriculaState.value = it },
                     label = { Text("0000000000", fontSize = 14.sp) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
@@ -114,7 +113,9 @@ fun LoginScreen(navegacao: NavHostController?) {
 
                 // Senha
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(start = 5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 5.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text("Senha")
@@ -124,6 +125,7 @@ fun LoginScreen(navegacao: NavHostController?) {
                     onValueChange = { passwordState.value = it },
                     label = { Text("•••••••••••", fontSize = 14.sp) },
                     visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -152,7 +154,11 @@ fun LoginScreen(navegacao: NavHostController?) {
                         Text("Lembrar de mim", fontSize = 14.sp)
                     }
                     TextButton(onClick = { navegacao?.navigate("recPasswd") }) {
-                        Text("Esqueceu a senha?", fontSize = 10.sp, textDecoration = TextDecoration.Underline)
+                        Text(
+                            "Esqueceu a senha?",
+                            fontSize = 10.sp,
+                            textDecoration = TextDecoration.Underline
+                        )
                     }
                 }
 
@@ -161,18 +167,21 @@ fun LoginScreen(navegacao: NavHostController?) {
                 Button(
                     onClick = {
                         loginViewModel.login(
-                            credencial = emailState.value,
+                            credencial = matriculaState.value,
                             senha = passwordState.value,
-                            onSuccess = { usuario ->
+                            onSuccess = {
                                 showLoginNotification(context)
                                 navegacao?.navigate("dashboard")
                             },
-                            onError = {mensagem ->
+                            onError = { mensagem ->
                                 Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show()
                             }
-                        ) },
-                    enabled = emailState.value.isNotBlank() && passwordState.value.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                        )
+                    },
+                    enabled = matriculaState.value.isNotBlank() && passwordState.value.isNotBlank(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF8A2BE2))
                 ) {
@@ -183,7 +192,7 @@ fun LoginScreen(navegacao: NavHostController?) {
     }
 }
 
-// Notificação de login
+// 🔔 Exibe notificação de login com sucesso
 fun showLoginNotification(context: Context) {
     val builder = NotificationCompat.Builder(context, "LOGIN_CHANNEL_ID")
         .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -191,8 +200,11 @@ fun showLoginNotification(context: Context) {
         .setContentText("Bem-vindo de volta!")
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
-}
 
+    with(NotificationManagerCompat.from(context)) {
+        notify(1, builder.build())
+    }
+}
 
 @Preview(showSystemUi = true)
 @Composable
