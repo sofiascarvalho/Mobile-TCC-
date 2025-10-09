@@ -74,6 +74,8 @@ fun RecursosScreen(navegacao: NavHostController?) {
             }
         )
     }
+
+
 }
 
 @Preview
