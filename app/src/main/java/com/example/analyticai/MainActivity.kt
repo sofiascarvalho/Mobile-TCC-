@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.analyticai.screens.ConfirmEmail
 import com.example.analyticai.screens.DashboardScreen
-import com.example.analyticai.screens.HomeScreen
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.RankingScreen
 import com.example.analyticai.screens.RecPasswd
@@ -66,10 +65,9 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "profile", // tela inicial
+                        startDestination = "login", // tela inicial
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable("home") { HomeScreen(navController) }
                         composable("login") { LoginScreen(navController) }
                         composable("recPasswd") { RecPasswd(navController) }
                         composable("email") { ConfirmEmail(navController) }

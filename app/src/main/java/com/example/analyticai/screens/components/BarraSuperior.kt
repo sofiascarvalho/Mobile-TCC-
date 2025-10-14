@@ -33,6 +33,7 @@ fun BarraSuperior(navController: NavHostController?) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
     ){
+        Spacer(modifier = Modifier.height(40.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,

@@ -12,7 +12,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 object RetrofitFactory {
-    private val BASE_URL = "http://10.107.144.5:5050/v1/analytica-ai/"
+    private val BASE_URL = "http://10.107.134.15:8080/v1/analytica-ai/"
 
     private val retrofitFactory = retrofit2.Retrofit
         .Builder()
@@ -25,4 +25,4 @@ object RetrofitFactory {
     }
 }
 
-
+//eeeeeeeeeeeeeee sofia
