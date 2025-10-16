@@ -22,6 +22,7 @@ import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.RankingScreen
 import com.example.analyticai.screens.RecPasswd
 import com.example.analyticai.screens.RecursosScreen
+import com.example.analyticai.screens.WeatherScreen
 import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.BarraSuperior
 import com.example.analyticai.screens.components.ProfileScreen
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login", // tela inicial
+                        startDestination = "weather", // tela inicial
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("login") { LoginScreen(navController) }
@@ -75,6 +76,7 @@ class MainActivity : ComponentActivity() {
                         composable("recursos") { RecursosScreen(navController) }
                         composable("ranking") { RankingScreen(navController) }
                         composable("dashboard") { DashboardScreen(navController) }
+                        composable ("weather"){WeatherScreen()}
                     }
                 }
             }

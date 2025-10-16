@@ -38,8 +38,8 @@ fun LoginScreen(navegacao: NavHostController?) {
 
     val rememberMe = remember { mutableStateOf(false) }
 
-    var erroSenha by remember { mutableStateOf("") }
-    var erroMatricula by remember { mutableStateOf("") }
+    var erroSenha by remember { mutableStateOf<String?>(null) }
+    var erroMatricula by remember { mutableStateOf<String?>(null) }
 
 
     // Criar canal de notificação (necessário no Android 8+)
@@ -209,7 +209,7 @@ fun LoginScreen(navegacao: NavHostController?) {
                                 senha = passwordState.value,
                                 onSuccess = {
                                     showLoginNotification(context)
-                                    Toast.makeText(context, "Login realizado com sucesso!")
+                                    Toast.makeText(context, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
                                     navegacao?.navigate("dashboard")
                                 },
                                 onError = { mensagem ->

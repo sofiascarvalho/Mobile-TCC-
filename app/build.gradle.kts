@@ -80,4 +80,8 @@ dependencies {
 
 
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
+
+    //MPAndroidChart
+    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
 }
+

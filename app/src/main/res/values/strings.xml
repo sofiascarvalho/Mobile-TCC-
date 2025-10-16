@@ -6,5 +6,7 @@
     <string name="dashboard">Gráficos e relatórios interativos para visualizar o progresso de forma clara e intuitiva.</string>
     <string name="planos">Planos de estudo sob medida, adaptados ao ritmo e às necessidades de cada usuário.</string>
     <string name="notificacoes">Lembretes e alertas em tempo real para manter o foco e garantir a consistência.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

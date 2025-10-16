@@ -28,7 +28,7 @@ class LoginViewModel : ViewModel() {
     //validacao do campo de senha
     fun validarSenha(senha: String): String?{
         return when{
-            senha.length < 8 -> "A senha deve ter no mínimo 8 caracteres"
+            senha.length < 6 -> "A senha deve ter no mínimo 8 caracteres"
             senha.length>20 -> "A senha deve ter até 20 caracteres"
             else->null
         }
