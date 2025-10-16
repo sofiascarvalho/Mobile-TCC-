@@ -265,7 +265,7 @@ fun BarraSuperiorProfile(navegacao: NavHostController?) {
                     contentDescription = "",
                     tint = PurplePrimary,
                     modifier = Modifier.padding(start = 125.dp)
-                        .clickable { navegacao?.navigate("home") }
+                        .clickable { navegacao?.navigate("login") }
                 )
             }
 

@@ -17,6 +17,23 @@ class LoginViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
+    //validacao do campo de credencial
+    fun validarCredencial(credencial: String): String?{
+        return when{
+            credencial.length>11 -> "A credencial deve ter no máximo 11 caracteres"
+            else -> null
+        }
+    }
+
+    //validacao do campo de senha
+    fun validarSenha(senha: String): String?{
+        return when{
+            senha.length < 8 -> "A senha deve ter no mínimo 8 caracteres"
+            senha.length>20 -> "A senha deve ter até 20 caracteres"
+            else->null
+        }
+    }
+
     fun login(
         credencial: String,
         senha: String,
