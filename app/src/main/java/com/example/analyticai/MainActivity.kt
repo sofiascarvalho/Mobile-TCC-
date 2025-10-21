@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         composable("profile") { ProfileScreen(navController) }
                         composable("recursos") { RecursosScreen(navController) }
                         composable("ranking") { RankingScreen(navController) }
-                        composable("dashboard") { DashboardScreen(navController) }
+                        composable ("dashboard"){DashboardScreen(navController)}
                     }
                 }
             }

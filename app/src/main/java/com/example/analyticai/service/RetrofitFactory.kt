@@ -1,5 +1,6 @@
 package com.example.analyticai.service
 
+import com.example.analyticai.model.DashboardResponse
 import com.example.analyticai.model.LoginRequest
 import com.example.analyticai.model.LoginResponse
 import okhttp3.OkHttpClient
@@ -12,7 +13,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 object RetrofitFactory {
-    private val BASE_URL = "http://10.107.134.15:8080/v1/analytica-ai/"
+    private val BASE_URL = "http://10.107.134.21:8080/v1/analytica-ai/"
 
     private val retrofitFactory = retrofit2.Retrofit
         .Builder()
@@ -23,6 +24,11 @@ object RetrofitFactory {
     fun getApiService(): ApiService {
         return retrofitFactory.create(ApiService::class.java)
     }
+
+    fun getRetrofit(): Retrofit {
+        return retrofitFactory
+    }
 }
 
-//eeeeeeeeeeeeeee sofia
+
+

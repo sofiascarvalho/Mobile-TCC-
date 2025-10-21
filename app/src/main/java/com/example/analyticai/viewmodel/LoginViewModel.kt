@@ -17,9 +17,6 @@ class LoginViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
     fun login(
         credencial: String,
         senha: String,
@@ -31,8 +28,6 @@ class LoginViewModel : ViewModel() {
                 onError("Preencha todos os campos!")
                 return@launch
             }
-
-            _isLoading.value = true  // ⬅️ Início do carregamento
 
             try {
                 val response = RetrofitFactory.getApiService().loginUsuario(
@@ -58,8 +53,6 @@ class LoginViewModel : ViewModel() {
                 _errorMessage.value = msg
                 onError(msg)
                 e.printStackTrace()
-            } finally {
-                _isLoading.value = false  // ⬅️ Fim do carregamento
             }
         }
     }
