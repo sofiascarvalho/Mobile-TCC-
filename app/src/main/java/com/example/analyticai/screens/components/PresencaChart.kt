@@ -14,29 +14,7 @@ import com.github.mikephil.charting.data.PieEntry
 
 @Composable
 fun PresencaChart(presente: Int, ausente: Int) {
-    AndroidView(factory = { context ->
-        PieChart(context).apply {
-            description.isEnabled = false
-            isRotationEnabled = false
-            legend.isEnabled = false
 
-            val entries = listOf(
-                PieEntry(presenca.toFloat(), "Presença"),
-                PieEntry(falta.toFloat(), "Falta")
-            )
-
-            val dataSet = PieDataSet(entries, "").apply {
-                colors = listOf(Color.parseColor("#DEDCF8"), Color.parseColor("#7D53F3")))
-                valueTextColor = Color.Black
-                valueTextSize = 12f
-            }
-
-            data = PieData(dataSet)
-            invalidate()
-        }
-    }, modifier = Modifier
-        .fillMaxWidth()
-        .height(200.dp))
 }
 
 
