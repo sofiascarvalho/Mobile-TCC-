@@ -1,10 +1,9 @@
 package com.example.analyticai.model
 
-data class Desempenho(
+data class DesempenhoResponse(
     val aluno: AlunoResponse,
     val frequencia: Frequencia,
-    val materia_id: Int,
-    val materia: String,
+    val materia: MateriaResponse,
     val atividades: List<Atividade>,
-    val media: Double
+    val media: String
 )

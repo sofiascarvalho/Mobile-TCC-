@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,13 +43,15 @@ fun InfoCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(130.dp)
             .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Row (
+            modifier = Modifier
+                .padding(start = 8.dp, top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
             Icon(
@@ -63,7 +66,10 @@ fun InfoCard(
                 fontWeight = FontWeight.Medium
             )
         }
-        Column {
+        Column (
+            modifier = Modifier
+                .padding(start = 10 .dp, top = 8.dp)
+        ){
             Text(text = matricula, fontSize = 10.sp)
             Text(text = data_nascimento, fontSize = 10.sp)
             Text(text = responsavel, fontSize = 10.sp)
