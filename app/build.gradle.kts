@@ -83,5 +83,8 @@ dependencies {
 
     //MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    //SALVAR LOGIN
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
 

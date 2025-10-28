@@ -1,7 +1,7 @@
 package com.example.analyticai.model
 
 data class Desempenho(
-    val aluno: Aluno,
+    val aluno: AlunoResponse,
     val frequencia: Frequencia,
     val materia_id: Int,
     val materia: String,
