@@ -1,6 +1,6 @@
-package com.example.analyticai.model
+package com.example.analyticai.model.response
 
-data class Recurso(
+data class RecursoResponse(
     val titulo: String,
     val descricao: String,
     val disciplina: String,

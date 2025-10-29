@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -13,34 +12,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.analyticai.model.Recurso
+import com.example.analyticai.model.response.RecursoResponse
 import com.example.analyticai.screens.components.ConfirmarDownload
 import com.example.analyticai.screens.components.RecursoCard
 
 @Composable
 fun RecursosScreen(navegacao: NavHostController?) {
-    var recursoSelecionado by remember { mutableStateOf<Recurso?>(null) }
+    var recursoSelecionado by remember { mutableStateOf<RecursoResponse?>(null) }
     var abaSelecionada by remember { mutableStateOf("Mural") }
     var disciplinaSelecionada by remember { mutableStateOf("Todas as disciplinas") }
     var periodoSelecionado by remember { mutableStateOf("1º Semestre") }
 
     val recursos = remember {
         listOf(
-            Recurso(
+            RecursoResponse(
                 titulo = "Material Complementar: Filosofia",
                 descricao = "Material para estudo complementar da aula de segunda-feira",
                 disciplina = "Filosofia",
                 periodo = "1º Semestre",
                 arquivo = "material-filosofia.pdf"
             ),
-            Recurso(
+            RecursoResponse(
                 titulo = "Material Complementar: Matemática",
                 descricao = "Video aula no YouTube para complementar a aula de segunda-feira",
                 disciplina = "Matemática",
                 periodo = "1º Semestre",
                 arquivo = "funcao-2grau.pdf"
             ),
-            Recurso(
+            RecursoResponse(
                 titulo = "Material Complementar: Biologia",
                 descricao = "Material para estudo complementar da aula de segunda-feira",
                 disciplina = "Biologia",

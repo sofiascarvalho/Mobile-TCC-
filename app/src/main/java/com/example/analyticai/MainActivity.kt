@@ -7,17 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.analyticai.screens.ConfirmEmail
-import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.RankingScreen
 import com.example.analyticai.screens.RecPasswd
@@ -65,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "dashboard", // tela inicial
+                        startDestination = "login", // tela inicial
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("login") { LoginScreen(navController) }
@@ -74,7 +69,6 @@ class MainActivity : ComponentActivity() {
                         composable("profile") { ProfileScreen(navController) }
                         composable("recursos") { RecursosScreen(navController) }
                         composable("ranking") { RankingScreen(navController) }
-                        composable ("dashboard"){DashboardScreen(navController)}
                     }
                 }
             }

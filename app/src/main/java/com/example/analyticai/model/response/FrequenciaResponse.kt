@@ -1,6 +1,6 @@
-package com.example.analyticai.model
+package com.example.analyticai.model.response
 
-data class Frequencia(
+data class FrequenciaResponse(
     val porcentagem_frequencia: String,
     val presencas: Int,
     val faltas: Int,

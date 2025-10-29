@@ -1,4 +1,6 @@
-package com.example.analyticai.model
+package com.example.analyticai.model.response
+
+import com.example.analyticai.model.response.TurmaResponse
 
 data class AlunoResponse(
     val id_usuario: Int,

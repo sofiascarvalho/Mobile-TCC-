@@ -1,4 +1,4 @@
-package com.example.analyticai.model
+package com.example.analyticai.model.response
 
 data class TurmaResponse(
     val id_turma: Int,

@@ -1,4 +1,4 @@
-package com.example.analyticai.model
+package com.example.analyticai.model.request
 
 data class LoginRequest(
     val credencial:String,
