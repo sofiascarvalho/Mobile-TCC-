@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.analyticai.screens.ConfirmEmail
-import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.RankingScreen
 import com.example.analyticai.screens.RecPasswd
@@ -26,6 +25,7 @@ import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.BarraSuperior
 import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
+import com.example.app.ui.screens.DashboardScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login", // tela inicial
+                        startDestination = "profile", // tela inicial
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("login") { LoginScreen(navController) }
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         composable("profile") { ProfileScreen(navController) }
                         composable("recursos") { RecursosScreen(navController) }
                         composable("ranking") { RankingScreen(navController) }
-                        composable ("dashboard"){DashboardScreen(navController)}
+                        composable ("dashboard"){ DashboardScreen(navController) }
                     }
                 }
             }
