@@ -1,5 +1,6 @@
 package com.example.analyticai.service
 
+import com.example.analyticai.model.AlunoResponse
 import com.example.analyticai.model.DashboardResponse
 import com.example.analyticai.model.LoginRequest
 import com.example.analyticai.model.LoginResponse
@@ -15,8 +16,12 @@ interface ApiService {
     @POST("usuarios/login")
     suspend fun loginUsuario(@Body request: LoginRequest): Response<LoginResponse>
 
-    @GET("desempenho/turma/{idProfessor}")
+    @GET("desempenho/turma/{idAluno}")
     suspend fun getDesempenhoAluno(
         @Path("idAluno") idAluno: Int
     ): DashboardResponse
+
+    @Headers("Content-Type: application/json")
+    @GET("alunos")
+    suspend fun getAlunos(): Response<AlunoResponse>
 }

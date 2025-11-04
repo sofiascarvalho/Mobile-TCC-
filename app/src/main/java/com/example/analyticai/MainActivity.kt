@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.analyticai.screens.ConfirmEmail
 import com.example.analyticai.screens.LoginScreen
@@ -25,7 +27,10 @@ import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.BarraSuperior
 import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
+import com.example.analyticai.viewmodel.LoginViewModel
 import com.example.app.ui.screens.DashboardScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,11 +53,12 @@ class MainActivity : ComponentActivity() {
                     "dashboard"
                 )
 
+
                 Scaffold(
                     topBar = {val navBackStackEntry by navController.currentBackStackEntryAsState()
                         val currentRoute = navBackStackEntry?.destination?.route
                         if (currentRoute in topBarRoutes) {
-                            BarraSuperior(navController)
+                            BarraSuperior()
                         }
                              },
                     bottomBar = {
@@ -65,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "profile", // tela inicial
+                        startDestination = "login", // tela inicial
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("login") { LoginScreen(navController) }

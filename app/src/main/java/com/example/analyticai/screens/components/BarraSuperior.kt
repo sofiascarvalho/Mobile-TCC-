@@ -1,5 +1,6 @@
 package com.example.analyticai.screens.components
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,18 +19,45 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.analyticai.data.UserPreferences
 import com.example.analyticai.ui.theme.DarkGray
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.analyticai.screens.LoginScreen
+import com.example.analyticai.viewmodel.AlunoViewModel
+import com.example.analyticai.viewmodel.LoginViewModel
+import com.example.analyticai.model.Aluno
+
+
 @Composable
-fun BarraSuperior(navController: NavHostController?) {
+fun BarraSuperior(
+    alunoViewModel: AlunoViewModel = viewModel()) {
+    val aluno by alunoViewModel.alunoLogado.collectAsState()
+    aluno?.let { alunoAtual ->
+        Text(text = alunoAtual.nome)
+    }
+
+    val context = LocalContext.current
+    val loginViewModel: LoginViewModel = viewModel(
+    factory = LoginViewModel.provideFactory(context)
+    )
+    val userPrefs = remember { UserPreferences(context) }
+
+    val usuario by loginViewModel.usuarioFlow().collectAsState(initial = null)
+
     Column (
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -61,7 +89,11 @@ fun BarraSuperior(navController: NavHostController?) {
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text("Nome Do Aluno", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
+                Text(text =
+                    if (usuario!= null)
+                        "${usuario?.nome ?: usuario?.credencial ?: "Usuário"}"
+                    else
+                        "Carregando..." , fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
                 Text("1º Ano B", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
             }
         }
@@ -71,9 +103,10 @@ fun BarraSuperior(navController: NavHostController?) {
     }
 }
 
-
+/*
 @Preview
 @Composable
 private fun BarraSuperiorPreview() {
-    BarraSuperior(null)
+    BarraSuperior()
 }
+ */

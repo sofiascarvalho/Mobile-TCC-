@@ -1,5 +1,6 @@
 package com.example.analyticai.screens
 
+import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.analyticai.ui.theme.PurplePrimary
@@ -32,7 +34,9 @@ import com.example.analyticai.viewmodel.LoginViewModel
 @Composable
 fun LoginScreen(navegacao: NavHostController?) {
     val context = LocalContext.current
-    val loginViewModel: LoginViewModel = viewModel()
+    val loginViewModel: LoginViewModel = viewModel(
+        factory = LoginViewModel.provideFactory(context)
+    )
 
     val matriculaState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
@@ -40,6 +44,11 @@ fun LoginScreen(navegacao: NavHostController?) {
 
     var erroSenha by remember { mutableStateOf<String?>("") }
     var erroMatricula by remember { mutableStateOf<String?>("") }
+
+    //salvar dados do ussuario logado
+    val userFile= context
+        .getSharedPreferences("userFile", Context.MODE_PRIVATE)
+    val editor=userFile.edit()
 
     // Criar canal de notificação (necessário no Android 8+)
     LaunchedEffect(Unit) {
@@ -207,6 +216,8 @@ fun LoginScreen(navegacao: NavHostController?) {
                                 onSuccess = {
                                     showLoginNotification(context)
                                     Toast.makeText(context, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                    editor.putString("userFile", matriculaState.value)
+                                    editor.apply()
                                     navegacao?.navigate("dashboard")
                                 },
                                 onError = { mensagem ->
