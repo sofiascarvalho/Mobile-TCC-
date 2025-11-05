@@ -2,66 +2,52 @@ package com.example.analyticai.screens.components
 
 import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import com.example.analyticai.data.UserPreferences
-import com.example.analyticai.ui.theme.DarkGray
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.analyticai.screens.LoginScreen
+import com.example.analyticai.data.ApiRepository
+import com.example.analyticai.data.UserPreferences
+import com.example.analyticai.service.RetrofitFactory
+import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.viewmodel.AlunoViewModel
+import com.example.analyticai.viewmodel.AlunoViewModelFactory
 import com.example.analyticai.viewmodel.LoginViewModel
-import com.example.analyticai.model.Aluno
-
 
 @Composable
-fun BarraSuperior(
-    alunoViewModel: AlunoViewModel = viewModel()) {
-    val aluno by alunoViewModel.alunoLogado.collectAsState()
-    aluno?.let { alunoAtual ->
-        Text(text = alunoAtual.nome)
-    }
-
+fun BarraSuperior() {
     val context = LocalContext.current
+
+    // ✅ Cria ApiService e Repository corretamente
+    val apiService = RetrofitFactory.getApiService()
+    val repository = ApiRepository(apiService)
+
+    // ✅ Passa o repository para o ViewModel via Factory
+    val alunoViewModel: AlunoViewModel = viewModel (
+        factory = AlunoViewModelFactory(repository)
+    )
+
+    val aluno by alunoViewModel.alunoLogado.collectAsState()
     val loginViewModel: LoginViewModel = viewModel(
-    factory = LoginViewModel.provideFactory(context)
+        factory = LoginViewModel.provideFactory(context)
     )
     val userPrefs = remember { UserPreferences(context) }
-
     val usuario by loginViewModel.usuarioFlow().collectAsState(initial = null)
 
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(40.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
@@ -89,24 +75,22 @@ fun BarraSuperior(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text(text =
-                    if (usuario!= null)
-                        "${usuario?.nome ?: usuario?.credencial ?: "Usuário"}"
-                    else
-                        "Carregando..." , fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
-                Text("1º Ano B", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
+                Text(
+                    text = usuario ?: "Carregando...",
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 18.sp,
+                    color = DarkGray
+                )
+                Text(
+                    text = "1º Ano B",
+                    fontSize = 14.sp,
+                    color = DarkGray,
+                    fontWeight = FontWeight.Light
+                )
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
 
+        Spacer(modifier = Modifier.height(8.dp))
         Divider(modifier = Modifier.height(1.dp).width(380.dp))
     }
 }
-
-/*
-@Preview
-@Composable
-private fun BarraSuperiorPreview() {
-    BarraSuperior()
-}
- */

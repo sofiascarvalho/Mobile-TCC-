@@ -38,6 +38,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.graphics.RectangleShape
+import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
 import com.example.analyticai.ui.theme.getDisciplinaColor
 
@@ -75,7 +76,8 @@ fun RecursoCard(
                     Text(
                         text = recurso.titulo,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = GrayDarkMedium
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(

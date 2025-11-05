@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -71,7 +72,7 @@ fun CardPieChart(title: String, entries: List<PieEntry>) {
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            Text(title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp, color = GrayDarkMedium)
             Spacer(modifier = Modifier.height(8.dp))
             PresencaChart(entries)
         }

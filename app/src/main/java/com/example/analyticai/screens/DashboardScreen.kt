@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.app.ui.components.CardAtividade
 import com.example.app.ui.components.CardDesempenho
 import com.example.app.ui.components.CardPieChart
@@ -40,7 +41,8 @@ fun DashboardScreen(navegacao: NavHostController?) {
             Text(
                 text = "Desempenho do Aluno",
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = GrayDarkMedium
             )
             Spacer(Modifier.height(16.dp))
             CardDesempenho("Desempenho em Biologia", "9.8")
@@ -59,7 +61,8 @@ fun DashboardScreen(navegacao: NavHostController?) {
             Text(
                 text = "Desempenho em Matemática",
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = GrayDarkMedium
             )
             Spacer(Modifier.height(16.dp))
             val notasFicticias = listOf(8f, 6f, 9f, 7f)
@@ -80,7 +83,8 @@ fun DashboardScreen(navegacao: NavHostController?) {
             Text(
                 text = "Desempenho Individual",
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = GrayDarkMedium
             )
             Spacer(Modifier.height(16.dp))
             val atividadesIndividuais = listOf(

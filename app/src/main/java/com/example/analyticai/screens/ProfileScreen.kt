@@ -89,8 +89,6 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("$username", color = Color.Gray, fontSize = 12.sp)
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Settings,
@@ -115,7 +113,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
                 Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)) {
-                    Text("Informações da Escola", fontWeight = FontWeight.Bold)
+                    Text("Informações da Escola", fontWeight = FontWeight.Bold, color = GrayDarkMedium)
 
                     Spacer(modifier = Modifier.height(2.dp))
 
