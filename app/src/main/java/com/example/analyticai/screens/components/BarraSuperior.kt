@@ -29,11 +29,11 @@ import com.example.analyticai.viewmodel.LoginViewModel
 fun BarraSuperior() {
     val context = LocalContext.current
 
-    // ✅ Cria ApiService e Repository corretamente
+    //Cria ApiService e Repository
     val apiService = RetrofitFactory.getApiService()
     val repository = ApiRepository(apiService)
 
-    // ✅ Passa o repository para o ViewModel via Factory
+    // Passa o repository para o ViewModel via Factory
     val alunoViewModel: AlunoViewModel = viewModel (
         factory = AlunoViewModelFactory(repository)
     )
@@ -76,7 +76,7 @@ fun BarraSuperior() {
 
             Column {
                 Text(
-                    text = usuario ?: "Carregando...",
+                    text = usuario ?: "Nome do aluno",
                     fontWeight = FontWeight.Medium,
                     fontSize = 18.sp,
                     color = DarkGray
@@ -90,7 +90,7 @@ fun BarraSuperior() {
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Divider(modifier = Modifier.height(1.dp).width(380.dp))
     }
 }

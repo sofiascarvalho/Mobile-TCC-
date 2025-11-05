@@ -13,12 +13,63 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.analyticai.ui.theme.BlackLight
+import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.example.app.ui.screens.PurplePrimary
+
+
+//Card informações gerais
+@Composable
+fun CardInformaçõesGerais(
+    title: String,
+    matricula: Int,
+    dataNasc:String,
+    responsavel: String,
+    contato: String,
+    email: String
+    ) {
+
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White, contentColor = GrayDarkMedium)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = DarkGray,
+                modifier = Modifier.padding(start = 10.dp)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                "Matrícula: $matricula",
+                color = BlackLight,
+                fontWeight = FontWeight.Normal)
+            Text("Data de Nascimento: $dataNasc",
+                color = BlackLight,
+                fontWeight = FontWeight.Normal)
+            Text("Responsável: $responsavel",
+                color = BlackLight,
+                fontWeight = FontWeight.Normal)
+            Text("Contato: $contato",
+                color = BlackLight,
+                fontWeight = FontWeight.Normal)
+            Text(
+                "Email: $email",
+                color = BlackLight,
+                fontWeight = FontWeight.Normal
+            )
+        }
+    }
+}
 
 // Card de Desempenho com nota
 @Composable
@@ -28,32 +79,40 @@ fun CardDesempenho(title: String, nota: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color.White, contentColor = GrayDarkMedium)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(title, fontWeight = FontWeight.Medium)
-            Text(
-                nota,
-                color = PurplePrimary,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Row {
+                Text(
+                    nota,
+                    color = PurplePrimary,
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold
+                )
+Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    text = "0.3 Desde o \nÚltimo Semestre"
+                )
+            }
+
         }
     }
 }
 
 // Card de Atividade ou Avaliação
 @Composable
-fun CardAtividade(title: String) {
+fun CardAtividade(title: String, description: String) {
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color.White, contentColor = GrayDarkMedium)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(title, fontWeight = FontWeight.Medium)
+            Text(title, fontWeight = FontWeight.Medium, color = GrayDarkMedium)
+            Text(description, fontWeight = FontWeight.Normal, color = GrayDarkMedium)
         }
     }
 }
@@ -66,7 +125,7 @@ fun CardPieChart(title: String, entries: List<PieEntry>) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color.White, contentColor = GrayDarkMedium)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

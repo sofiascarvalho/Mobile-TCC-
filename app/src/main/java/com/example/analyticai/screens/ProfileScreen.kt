@@ -69,19 +69,21 @@ fun ProfileScreen(navegacao: NavHostController?) {
             .background(Color.White)
     ) {
 
+        Spacer(modifier = Modifier.height(20.dp))
+
         BarraSuperiorProfile(navegacao)
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 82.dp, start = 12.dp, end = 12.dp, bottom = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             Text(
-                "Perfil de \"$username\"",
+                "Perfil de (Nome do Aluno)",
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
                 color = Color(0xff5b5b5b)
@@ -97,7 +99,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 Text(
                     "Configurações do Sistema",
                     modifier = Modifier.padding(start = 5.dp),
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                     color = GrayDarkMedium,
                     fontWeight = FontWeight.Normal
                 )
@@ -278,9 +280,9 @@ fun BarraSuperiorProfile(navegacao: NavHostController?) {
             }
 
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-        Divider(modifier = Modifier.height(1.dp).width(380.dp))
+        Divider(modifier = Modifier.height(1.dp).width(500.dp))
     }
 }
 

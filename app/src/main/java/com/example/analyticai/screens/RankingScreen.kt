@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.analyticai.model.Recurso
+import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.ui.theme.GrayDarkMedium
 
 @Composable
@@ -57,15 +58,15 @@ fun RankingScreen(navegacao: NavHostController?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF3EEF9))
+            .background(Color.White)
             .padding(16.dp)
     ) {
         // Título
         Text(
             text = "Ranking de \"Nome do Aluno\"",
-            fontSize = 20.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = DarkGray,
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
@@ -97,7 +98,7 @@ fun RankingScreen(navegacao: NavHostController?) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xffDCCDFC), RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                .background(Color(0xfffcf5ff), RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                 .padding(vertical = 8.dp)
         ) {
             Text(
@@ -105,21 +106,24 @@ fun RankingScreen(navegacao: NavHostController?) {
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                color = DarkGray
             )
             Text(
                 "MÉDIA",
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                color = DarkGray
             )
             Text(
                 "NOME DO ALUNO",
                 modifier = Modifier.weight(2f),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                color = DarkGray
             )
         }
 
@@ -137,7 +141,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                 Row(
                     modifier = if (!isUser) Modifier.blur(8.dp) else Modifier
                         .fillMaxWidth()
-                        .background(if (isUser) Color(0xffDCCDFC) else Color.Transparent)
+                        .background(if (isUser) Color(0xfffcf5ff) else Color.Transparent)
                         .padding(vertical = 8.dp)
                 ) {
                     Text(
@@ -145,14 +149,14 @@ fun RankingScreen(navegacao: NavHostController?) {
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center,
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = DarkGray
                     )
                     Text(
                         media,
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center,
                         fontSize = 14.sp,
-                        color = Color.Black
+                        color = DarkGray
                     )
                     Text(
                         nome,
@@ -160,7 +164,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                         textAlign = TextAlign.Center,
                         fontSize = 14.sp,
                         fontWeight = if (isUser) FontWeight.Bold else FontWeight.Normal,
-                        color = Color.Black
+                        color = DarkGray
                     )
                 }
 
