@@ -46,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.analyticai.data.UserPreferences
 import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
@@ -59,9 +58,6 @@ fun ProfileScreen(navegacao: NavHostController?) {
     var isDarkMode by remember { mutableStateOf(false) }
 
     val context= LocalContext.current
-    val userPrefs = remember { UserPreferences(context) }
-
-    val username by userPrefs.credencialFlow.collectAsState(initial = "")
 
     Box(
         modifier = Modifier

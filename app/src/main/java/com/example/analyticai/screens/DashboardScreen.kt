@@ -36,10 +36,6 @@ val BackgroundColor = Color(0xFFF8F6FB)
 fun DashboardScreen(navegacao: NavHostController?) {
 
     val context = LocalContext.current
-    val loginViewModel: LoginViewModel = viewModel(
-        factory = LoginViewModel.provideFactory(context)
-    )
-    val usuario by loginViewModel.usuarioFlow().collectAsState(initial = null)
 
     LazyColumn(
         modifier = Modifier

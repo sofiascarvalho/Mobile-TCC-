@@ -2,7 +2,6 @@ package com.example.analyticai.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.analyticai.data.ApiRepository
 
 class AlunoViewModelFactory(
     private val repository: ApiRepository

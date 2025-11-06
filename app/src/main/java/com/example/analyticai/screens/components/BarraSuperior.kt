@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.analyticai.data.ApiRepository
 import com.example.analyticai.data.UserPreferences
 import com.example.analyticai.service.RetrofitFactory
 import com.example.analyticai.ui.theme.DarkGray
