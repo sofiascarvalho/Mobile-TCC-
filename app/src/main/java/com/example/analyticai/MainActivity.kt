@@ -4,32 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.analyticai.data.SharedPreferencesManager // Corrigido
 import com.example.analyticai.screens.ConfirmEmail
 import com.example.analyticai.screens.LoginScreen
-import com.example.analyticai.screens.RankingScreen
 import com.example.analyticai.screens.RecPasswd
-import com.example.analyticai.screens.RecursosScreen
+// ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
+import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
+
 import com.example.analyticai.screens.components.BarraInferior
-import com.example.analyticai.screens.components.BarraSuperior
 import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
-import com.example.analyticai.viewmodel.LoginViewModel
-import com.example.app.ui.screens.DashboardScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -38,53 +33,70 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AnalyticAITheme {
-                val navController = rememberNavController() // NavController único
-
-                val topBarRoutes = listOf(
-                    "recursos",
-                    "ranking",
-                    "dashboard"
-                )
-                // Rotas que devem exibir a barra inferior
-                val bottomBarRoutes = listOf(
-                    "profile",
-                    "recursos",
-                    "ranking",
-                    "dashboard"
-                )
-
-
-                Scaffold(
-                    topBar = {val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentRoute = navBackStackEntry?.destination?.route
-                        if (currentRoute in topBarRoutes) {
-                            BarraSuperior()
-                        }
-                             },
-                    bottomBar = {
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentRoute = navBackStackEntry?.destination?.route
-                        if (currentRoute in bottomBarRoutes) {
-                            BarraInferior(navController)
-                        }
-                    }
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = "dashboard", // tela inicial
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        composable("login") { LoginScreen(navController) }
-                        composable("recPasswd") { RecPasswd(navController) }
-                        composable("email") { ConfirmEmail(navController) }
-                        composable("profile") { ProfileScreen(navController) }
-                        composable("recursos") { RecursosScreen(navController) }
-                        composable("ranking") { RankingScreen(navController) }
-                        composable ("dashboard"){ DashboardScreen(navController) }
-                    }
-                }
+                AppNavigationContainer()
             }
         }
     }
 }
 
+@Composable
+fun AppNavigationContainer() {
+    val context = LocalContext.current
+    val navController = rememberNavController()
+    // Instância do Manager para checar o estado da sessão
+    val sharedPrefsManager = remember { SharedPreferencesManager(context) }
+
+    // --- Lógica de Redirecionamento Inicial (Start Destination) ---
+    val startDestination = if (sharedPrefsManager.getCredential() != null) {
+        // Se há credenciais salvas, direciona para o dashboard correto
+        when (sharedPrefsManager.getNivel()?.lowercase()) {
+            "professor" -> "dashboardProfessor"
+            "gestão" -> "dashboardGestao"
+            else -> "dashboardAluno" // Default para aluno se o nível for nulo ou desconhecido
+        }
+    } else {
+        // Se não há credenciais, vai para a tela de Login
+        "login"
+    }
+    // -------------------------------------------------------------
+
+    // Rotas que devem exibir a barra inferior (Dashboard, Recursos, Ranking, Perfil)
+    val bottomBarRoutes = listOf(
+        "dashboardAluno", "dashboardProfessor", "dashboardGestao", // Todos os dashboards
+        "recursos",
+        "ranking",
+        "profile"
+    )
+
+    Scaffold(
+        bottomBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            // Mostra a barra inferior apenas se a rota atual for de dashboard/funcionalidade principal
+            if (currentRoute in bottomBarRoutes) {
+                BarraInferior(navController)
+            }
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = startDestination, // Usa o destino determinado pela checagem de sessão
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            // Rotas de Autenticação/Recuperação (sem Barra Inferior)
+            composable("login") { LoginScreen(navController) }
+            composable("recPasswd") { RecPasswd(navController) }
+            composable("email") { ConfirmEmail(navController) }
+
+            // Rotas de Dashboards (Com Barra Inferior)
+            // ⚠️ Aqui você precisa mapear os 3 tipos de dashboard para o Composable correto
+            composable("dashboard") { DashboardScreen(navController) }
+
+
+            // Outras Rotas Principais (Com Barra Inferior)
+            composable("profile") { ProfileScreen(navController) }
+            // composable("recursos") { RecursosScreen(navController) }
+            // composable("ranking") { RankingScreen(navController) }
+        }
+    }
+}

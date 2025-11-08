@@ -89,12 +89,22 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation("androidx.datastore:datastore-preferences-core:1.1.7")
 
+    // Retrofit (Cliente HTTP)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Converter de JSON para Objetos Kotlin (Gson é um dos mais comuns)
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Coroutines para chamadas assíncronas
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
     // optional - RxJava2 support
     implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.7")
 
     // optional - RxJava3 support
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.7")
 
+    implementation("androidx.compose.foundation:foundation:1.7.0")
+    implementation("androidx.compose.ui:ui-graphics:1.7.0")
 
 }
 
