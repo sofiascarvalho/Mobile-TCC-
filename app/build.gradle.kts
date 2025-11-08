@@ -106,5 +106,13 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.7.0")
     implementation("androidx.compose.ui:ui-graphics:1.7.0")
 
+    // Lifecycle ViewModel + Compose
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+
+// Integração com Compose
+    implementation ("androidx.activity:activity-compose:1.8.0")
+
+
 }
 

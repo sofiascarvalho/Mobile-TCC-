@@ -1,4 +1,4 @@
-package com.example.analyticai.ViewModel
+package com.example.analyticai.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

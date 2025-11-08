@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import android.widget.Toast
-import com.example.analyticai.ViewModel.LoginViewModel // Importe seu ViewModel
+import com.example.analyticai.viewmodel.LoginViewModel // Importe seu ViewModel
 import com.example.analyticai.data.SharedPreferencesManager // Importe seu Manager
 
 /**
@@ -195,6 +195,9 @@ fun LoginScreen(navegacao: NavHostController?) {
                                         } else {
                                             sharedPrefsManager.clearCredentials()
                                         }
+
+                                        sharedPrefsManager.saveUsuario(usuarioLogado)
+
 
                                         Toast.makeText(context, "Bem-vindo(a), ${usuarioLogado.nome}!", Toast.LENGTH_LONG).show()
 
