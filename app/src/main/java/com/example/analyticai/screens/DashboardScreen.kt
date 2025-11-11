@@ -11,13 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.screens.components.*
+import com.example.analyticai.viewmodel.DesempenhoViewModel
 
 val PurplePrimary = Color(0xFF673AB7)
 val BackgroundColor = Color(0xFFF8F6FB)
@@ -28,8 +29,6 @@ val TextGray = Color(0xFF6F6F6F)
 fun DashboardScreen(navegacao: NavHostController?) {
     val context = LocalContext.current
     val sharedPrefs = remember { SharedPreferencesManager(context) }
-
-    // Recupera usuário salvo no SharedPreferences
     val usuario: Usuario? = sharedPrefs.getUsuario()
 
     val userName = usuario?.nome ?: "Usuário"
@@ -41,23 +40,13 @@ fun DashboardScreen(navegacao: NavHostController?) {
     val telefone = usuario?.telefone ?: "(00) 00000-0000"
     val email = usuario?.email ?: "exemplo@email.com"
 
+    // ViewModel
+    val viewModel: DesempenhoViewModel = viewModel()
 
-    // Dados mockados para outros cards
-    val performanceScore = 9.8
-    val scoreChange = 0.3
-    val presencePercentage = 90f
-    val mathPerformanceData = listOf(
-        BarData("Atividade", 8.0f),
-        BarData("Prova", 9.2f),
-        BarData("Seminário", 7.3f),
-        BarData("Prova", 10.0f)
-    )
-
-    val disciplinas = remember { listOf("Todas as Disciplinas", "Matemática", "Português", "Ciências", "História") }
-    val periodos = remember { listOf("1º Semestre - 2025", "2º Semestre - 2025", "Ano Letivo", "Geral") }
-
-    var selectedDisciplina by remember { mutableStateOf(disciplinas.first()) }
-    var selectedPeriodo by remember { mutableStateOf(periodos.first()) }
+    // Carrega dados do backend
+    LaunchedEffect(Unit) {
+        viewModel.loadPerformance()
+    }
 
     val scrollState = rememberScrollState()
 
@@ -69,7 +58,8 @@ fun DashboardScreen(navegacao: NavHostController?) {
             .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        // Header com nome do usuário
+
+        // Header
         Text(
             text = "Dashboard de $userName",
             fontSize = 20.sp,
@@ -77,103 +67,98 @@ fun DashboardScreen(navegacao: NavHostController?) {
             color = TextDark
         )
 
-        // Filtros
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            FilterDropdown(
-                label = "Disciplina",
-                selectedValue = selectedDisciplina,
-                options = disciplinas,
-                onSelect = { selectedDisciplina = it },
-                modifier = Modifier.weight(1f)
-            )
-            FilterDropdown(
-                label = "Período",
-                selectedValue = selectedPeriodo,
-                options = periodos,
-                onSelect = { selectedPeriodo = it },
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        // Card Informações Gerais com dados reais
-        DashboardCard(title = "Informações Gerais") {
-            InfoLine("Nome:", userName)
-            InfoLine("Matrícula:", userCredential)
-            InfoLine("Nascimento:", dataNascimento)
-            if (userNivel.lowercase() == "aluno") {
-                InfoLine("Turma:", turma)
-                InfoLine("Responsável:", responsavel)
+        if (viewModel.isLoading) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = PurplePrimary)
             }
-            InfoLine("Contato:", telefone)
-            InfoLine("E-mail:", email)
-            InfoLine("Nível:", userNivel)
-        }
+        } else {
+            // **CORREÇÃO: Renomeado a variável temporária para ser consistente com a verificação de nulo.**
+            val desempenho = viewModel.desempenho
 
-        // Card Desempenho
-        PerformanceKpiCard(
-            score = performanceScore,
-            change = scoreChange,
-            modifier = Modifier.fillMaxWidth()
-        )
+            if (desempenho != null) { // Agora verifica-se o nome 'desempenho'
 
-        // Card Frequência
-        FrequencyKpiCard(
-            presentPercentage = presencePercentage,
-            modifier = Modifier.fillMaxWidth()
-        )
+                // Valores para os cards
+                val media = desempenho.media.toFloatOrNull() ?: 0f // Usando 'desempenho'
+                val freqPercent = desempenho.frequencia.porcentagem_frequencia // Usando 'desempenho'
+                    .replace("%", "")
+                    .toFloatOrNull() ?: 0f
+                val atividades = desempenho.atividades.map { BarData(it.atividade, it.nota.toFloat()) }
 
-        // Card Gráfico
-        SubjectPerformanceChartCard(
-            subject = selectedDisciplina,
-            data = mathPerformanceData
-        )
+                // Card Informações Gerais
+                DashboardCard(title = "Informações Gerais") {
+                    InfoLine("Matrícula:", userCredential)
+                    InfoLine("Nascimento:", dataNascimento)
+                    if (userNivel.lowercase() == "aluno") {
+                        InfoLine("Turma:", turma)
+                        InfoLine("Responsável:", responsavel)
+                    }
+                    InfoLine("Contato:", telefone)
+                    InfoLine("E-mail:", email)
+                }
 
-        // Relatórios e Insights
-        Text(
-            text = "Relatórios e Insights por Matéria",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextDark,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+                // Card Desempenho
+                PerformanceKpiCard(
+                    score = media,
+                    change = 0.0f, // Pode calcular variação se tiver histórico
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            InsightCard(
-                title = "Avaliação de Matemática",
-                date = "01/06/2025",
-                description = "Com excelente compreensão de álgebra e geometria. As notas de prova indicam grande domínio do conteúdo."
-            )
-            InsightCard(
-                title = "Seminário de Matemática",
-                date = "18/06/2025",
-                description = "As notas de prova indicam grande domínio do conteúdo e bom entendimento sobre o conteúdo aprendido."
-            )
-        }
+                // Card Frequência
+                FrequencyKpiCard(
+                    presentPercentage = freqPercent,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        // Relatórios para Download
-        Text(
-            text = "Relatórios para Download",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextDark,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+                // Card Gráfico de Atividades
+                SubjectPerformanceChartCard(
+                    subject = desempenho.materia.materia,
+                    data = atividades
+                )
 
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            DownloadCardRefined("Relatório Completo de Matemática", "18/05/2025")
-            DownloadCardRefined("Relatório de Frequência", "18/05/2025")
-            DownloadCardRefined("Relatório de Desempenho", "18/05/2025")
-            DownloadCardRefined("Observações e Análise de Desempenho", "18/05/2025")
+                // Insights
+                Text(
+                    text = "Relatórios e Insights por Matéria",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = TextDark,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    desempenho.atividades.forEach { atividade ->
+                        InsightCard(
+                            title = atividade.atividade,
+                            date = "—",
+                            description = atividade.descricao
+                        )
+                    }
+                }
+
+                // Relatórios para download
+                Text(
+                    text = "Relatórios para Download",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = TextDark,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    DownloadCardRefined("Relatório Completo de ${desempenho.materia.materia}", "18/05/2025")
+                    DownloadCardRefined("Relatório de Frequência", "18/05/2025")
+                    DownloadCardRefined("Relatório de Desempenho", "18/05/2025")
+                    DownloadCardRefined("Observações e Análise de Desempenho", "18/05/2025")
+                }
+
+            } else {
+                Text("Nenhum dado de desempenho encontrado.", color = TextGray)
+            }
         }
 
         Spacer(Modifier.height(50.dp))
     }
 }
 
-// Componente para uma linha de informação
 @Composable
 fun InfoLine(label: String, value: String) {
     Row(
@@ -186,7 +171,6 @@ fun InfoLine(label: String, value: String) {
     Spacer(modifier = Modifier.height(6.dp))
 }
 
-// Componente para os cards de insights
 @Composable
 fun InsightCard(title: String, date: String, description: String) {
     DashboardCard(title = title) {
@@ -194,11 +178,4 @@ fun InsightCard(title: String, date: String, description: String) {
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = description, fontSize = 14.sp, color = TextDark)
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun DashboardPreview() {
-    DashboardScreen(null)
 }
