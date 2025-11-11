@@ -21,6 +21,7 @@ import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.RecPasswd
 // ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
 import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
+import com.example.analyticai.screens.RankingScreen
 
 import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.ProfileScreen
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        setContentView(R.layout.main)
         setContent {
             AnalyticAITheme {
                 AppNavigationContainer()
@@ -56,7 +58,7 @@ fun AppNavigationContainer() {
         }
     } else {
         // Se não há credenciais, vai para a tela de Login
-        "login"
+        "ranking"
     }
     // -------------------------------------------------------------
 
@@ -96,7 +98,7 @@ fun AppNavigationContainer() {
             // Outras Rotas Principais (Com Barra Inferior)
             composable("profile") { ProfileScreen(navController) }
             // composable("recursos") { RecursosScreen(navController) }
-            // composable("ranking") { RankingScreen(navController) }
+             composable("ranking") { RankingScreen(navController) }
         }
     }
 }
