@@ -17,15 +17,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.analyticai.data.SharedPreferencesManager // Corrigido
-import com.example.analyticai.screens.ConfirmEmail
+import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
-import com.example.analyticai.screens.RecPasswd
 // ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
 //import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
 
 import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.BarraSuperior
-import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
 
 
@@ -58,7 +56,7 @@ fun AppNavigationContainer() {
         }
     } else {
         // Se não há credenciais, vai para a tela de Login
-        "ranking"
+        "dashboard"
     }
     // -------------------------------------------------------------
 
@@ -103,16 +101,13 @@ fun AppNavigationContainer() {
         ) {
             // Rotas de Autenticação/Recuperação (sem Barra Inferior)
             composable("login") { LoginScreen(navController) }
-            composable("recPasswd") { RecPasswd(navController) }
-            composable("email") { ConfirmEmail(navController) }
 
             // Rotas de Dashboards (Com Barra Inferior)
             // ⚠️ Aqui você precisa mapear os 3 tipos de dashboard para o Composable correto
-            //composable("dashboard") { DashboardScreen(navController) }
+            composable("dashboard") { DashboardScreen(navController) }
 
 
             // Outras Rotas Principais (Com Barra Inferior)
-            composable("profile") { ProfileScreen(navController) }
             // composable("recursos") { RecursosScreen(navController) }
              composable("ranking") { RankingScreen(navController) }
         }

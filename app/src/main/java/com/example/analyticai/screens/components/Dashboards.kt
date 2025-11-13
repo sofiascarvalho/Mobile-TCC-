@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.*
-import androidx.compose.material.icons.outlined.LibraryBooks
 import androidx.compose.material.icons.outlined.BarChart // <-- NOVO ÍCONE DE GRÁFICO IMPORTADO
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -23,8 +22,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -35,19 +32,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.analyticai.ui.theme.PurplePrimary
 
 // Cores usadas especificamente nos gráficos
-
+val PurplePrimary = Color(0xFF673AB7)
+val BackgroundColor = Color(0xFFF8F6FB)
 val TextGray = Color(0xFF6F6F6F)
 val LightPurple = PurplePrimary.copy(alpha = 0.4f)
 val ChartBarColor = PurplePrimary
 val ChartBackgroundColor = Color(0xFFF0E5FF)
 val ChartTextGray = TextGray.copy(alpha = 0.9f)
-
-val PurplePrimary = Color(0xFF673AB7)
-    val BackgroundColor = Color(0xFFF8F6FB)
-    val TextDark = Color(0xFF3C3C3C)
+val TextDark = Color(0xFF3C3C3C)
 
 
 // --- Cards de KPI Refinados (Conforme imagens) ---
