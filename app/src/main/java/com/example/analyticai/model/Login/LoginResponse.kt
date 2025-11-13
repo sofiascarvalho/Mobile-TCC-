@@ -1,5 +1,7 @@
 package com.example.analyticai.model.Login
 
+import com.example.analyticai.model.Login.Usuario
+
 data class LoginResponse(
     val status: Boolean,
     val status_code: Int,

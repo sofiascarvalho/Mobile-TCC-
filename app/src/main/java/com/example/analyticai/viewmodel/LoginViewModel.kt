@@ -9,8 +9,8 @@ import android.util.Log // ⬅️ Importação necessária
 
 import com.example.analyticai.model.Login.LoginRequest
 import com.example.analyticai.model.Login.LoginResponse
-import com.example.analyticai.service.LoginService
 import com.example.analyticai.service.Conexao
+import com.example.analyticai.service.LoginService
 
 class LoginViewModel(
     private val loginService: LoginService = Conexao.loginService

@@ -7,6 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Conexao {
 
     private const val BASE_URL = "http://10.107.140.3:8080/v1/analytica-ai/"
+<<<<<<< HEAD
+=======
+
+>>>>>>> dee438d3bb6b9610bc4f4a6d3bc5de9153ae3c8f
     // A instância do Retrofit é inicializada preguiçosamente (lazy)
     private val conexao: Retrofit by lazy {
         Retrofit
