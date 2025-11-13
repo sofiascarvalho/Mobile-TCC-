@@ -6,46 +6,42 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.screens.components.*
+import com.example.analyticai.viewmodel.DesempenhoViewModel
 
 @Composable
 fun DashboardScreen(navegacao: NavHostController) {
-    val PurplePrimary = Color(0xFF673AB7)
-    val BackgroundColor = Color(0xFFF8F6FB)
-    val TextDark = Color(0xFF3C3C3C)
-    val TextGray = Color(0xFF6F6F6F)
+    val context = LocalContext.current
+    val sharedPrefs = remember { SharedPreferencesManager(context) }
+    val usuario: Usuario? = sharedPrefs.getUsuario()
+    val userName = usuario?.nome ?: "Usuário"
 
-    // Dados estáticos
-    val userName = "Usuário Estático"
-    val userNivel = "aluno"
-    val userCredential = "12345678"
-    val turma = "Turma A"
-    val responsavel = if (userNivel.lowercase() == "aluno") "Nome do Responsável" else "—"
-    val dataNascimento = "01/01/2010"
-    val telefone = "(11) 91234-5678"
-    val email = "usuario@exemplo.com"
+    val usuarioId = sharedPrefs.getUsuario()?.id_usuario ?: ""
+    LaunchedEffect(usuarioId) {
+        if (usuarioId.isNotEmpty()) {
+            viewModel.loadPerformance(usuarioId)
+        }
+    }
 
-    // Dados estáticos de desempenho
-    val media = 7.8f
-    val freqPercent = 95.0f
-    val atividades = listOf(
-        BarData("Matemática", 8.5f),
-        BarData("Português", 7.0f),
-        BarData("Ciências", 8.0f),
-    )
-    val descricaoAtividades = listOf(
-        Triple("Matemática", "—", "Bom desempenho nas últimas avaliações."),
-        Triple("Português", "—", "Precisa melhorar a interpretação de texto."),
-        Triple("Ciências", "—", "Ótimo entendimento dos conceitos."),
-    )
-    val materia = "Matemática"
+    val viewModel: DesempenhoViewModel = viewModel()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadPerformance(alunoId = )
+    }
+
+    val desempenho = viewModel.desempenho // <-- Aqui ficam os dados reais da API
     val scrollState = rememberScrollState()
 
     Column(
@@ -57,7 +53,6 @@ fun DashboardScreen(navegacao: NavHostController) {
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        // Header
         Text(
             text = "Dashboard de $userName",
             fontSize = 20.sp,
@@ -65,76 +60,57 @@ fun DashboardScreen(navegacao: NavHostController) {
             color = TextDark
         )
 
-        // Informações Gerais
-        DashboardCard(title = "Informações Gerais") {
-            InfoLine("Matrícula:", userCredential)
-            InfoLine("Nascimento:", dataNascimento)
-            if (userNivel.lowercase() == "aluno") {
-                InfoLine("Turma:", turma)
-                InfoLine("Responsável:", responsavel)
+        desempenho?.let { dashboard ->
+
+            // Mostra só a primeira matéria por enquanto (podemos depois iterar todas)
+            val primeiro = dashboard.desempenho.firstOrNull()
+
+            if (primeiro != null) {
+
+                // --- Desempenho ---
+                PerformanceKpiCard(
+                    score = primeiro.atividades.map { it.nota }.average(),
+                    change = 0.0, // TODO: se a API trouxer comparação, colocar aqui
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // --- Frequência ---
+                FrequencyKpiCard(
+                    presentPercentage = primeiro.frequencia.porcentagem_frequencia.toFloat(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // --- Gráfico de Barras das Atividades ---
+                val barData = primeiro.atividades.map {
+                    BarData(it.categoria, it.nota.toFloat())
+                }
+                SubjectPerformanceChartCard(
+                    subject = primeiro.materia.materia,
+                    data = barData
+                )
+
+                // --- Relatórios para Download (mantém estáticos por enquanto) ---
+                Text(
+                    text = "Relatórios para Download",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = TextDark,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    DownloadCardRefined("Relatório Completo de ${primeiro.materia.materia}", "18/05/2025")
+                    DownloadCardRefined("Relatório de Frequência", "18/05/2025")
+                    DownloadCardRefined("Relatório de Desempenho", "18/05/2025")
+                    DownloadCardRefined("Observações e Análise de Desempenho", "18/05/2025")
+                }
+            } else {
+                Text("Nenhum desempenho encontrado.")
             }
-            InfoLine("Contato:", telefone)
-            InfoLine("E-mail:", email)
-        }
 
-        // Desempenho
-        PerformanceKpiCard(
-            score = 7.5,
-            change = 0.0,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Frequência
-        FrequencyKpiCard(
-            presentPercentage = freqPercent,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Gráfico de Atividades
-        SubjectPerformanceChartCard(
-            subject = materia,
-            data = atividades
-        )
-
-        // Insights
-        Text(
-            text = "Relatórios e Insights por Matéria",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextDark,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            descricaoAtividades.forEach { (title, date, description) ->
-//                InsightCard(
-//                    title = title,
-//                    date = date,
-//                    description = description
-//                )
-            }
-        }
-
-        // Relatórios para download (dados estáticos)
-        Text(
-            text = "Relatórios para Download",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextDark,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            DownloadCardRefined("Relatório Completo de $materia", "18/05/2025")
-            DownloadCardRefined("Relatório de Frequência", "18/05/2025")
-            DownloadCardRefined("Relatório de Desempenho", "18/05/2025")
-            DownloadCardRefined("Observações e Análise de Desempenho", "18/05/2025")
-        }
-
-        Spacer(Modifier.height(50.dp))
+        } ?: Text("Carregando dados...")
     }
 }
-
 @Composable
 fun InfoLine(label: String, value: String) {
     Row(

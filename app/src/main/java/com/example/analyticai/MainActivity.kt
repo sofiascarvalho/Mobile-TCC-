@@ -56,7 +56,7 @@ fun AppNavigationContainer() {
         }
     } else {
         // Se não há credenciais, vai para a tela de Login
-        "dashboard"
+        "login"
     }
     // -------------------------------------------------------------
 
