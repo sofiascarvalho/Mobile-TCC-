@@ -27,7 +27,7 @@ class LoginViewModel(
     fun validarSenha(senha: String): String? {
         return when {
             senha.isBlank() -> "A senha é obrigatória."
-            senha.length < 6 -> "A senha deve ter pelo menos 6 caracteres."
+            senha.length < 5 -> "A senha deve ter pelo menos 6 caracteres."
             else -> null
         }
     }
