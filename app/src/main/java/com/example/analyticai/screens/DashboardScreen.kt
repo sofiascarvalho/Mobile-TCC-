@@ -20,13 +20,16 @@ import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.screens.components.*
 import com.example.analyticai.viewmodel.DesempenhoViewModel
 
-val PurplePrimary = Color(0xFF673AB7)
-val BackgroundColor = Color(0xFFF8F6FB)
-val TextDark = Color(0xFF3C3C3C)
-val TextGray = Color(0xFF6F6F6F)
+private val Usuario.nome: Any
 
 @Composable
 fun DashboardScreen(navegacao: NavHostController?) {
+
+    val PurplePrimary = Color(0xFF673AB7)
+    val BackgroundColor = Color(0xFFF8F6FB)
+    val TextDark = Color(0xFF3C3C3C)
+    val TextGray = Color(0xFF6F6F6F)
+
     val context = LocalContext.current
     val sharedPrefs = remember { SharedPreferencesManager(context) }
     val usuario: Usuario? = sharedPrefs.getUsuario()
@@ -157,6 +160,11 @@ fun DashboardScreen(navegacao: NavHostController?) {
 
         Spacer(Modifier.height(50.dp))
     }
+}
+
+@Composable
+fun SharedPreferencesManager(x0: Context) {
+    TODO("Not yet implemented")
 }
 
 @Composable

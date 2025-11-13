@@ -1,5 +1,6 @@
 package com.example.analyticai
 
+import RankingScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,10 +21,10 @@ import com.example.analyticai.screens.ConfirmEmail
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.RecPasswd
 // ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
-import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
-import com.example.analyticai.screens.RankingScreen
+//import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
 
 import com.example.analyticai.screens.components.BarraInferior
+import com.example.analyticai.screens.components.BarraSuperior
 import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
 
@@ -32,7 +33,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.main)
         setContent {
             AnalyticAITheme {
                 AppNavigationContainer()
@@ -69,8 +69,24 @@ fun AppNavigationContainer() {
         "ranking",
         "profile"
     )
+    val topBarRoutes = listOf(
+        "dashboardAluno", "dashboardProfessor", "dashboardGestao", // Todos os dashboards
+        "recursos",
+        "ranking",
+        "profile"
+    )
 
     Scaffold(
+        topBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            // Mostra a Barra Superior apenas nas rotas principais
+            if (currentRoute in topBarRoutes) {
+                // Supondo que BarraSuperior seja um TopAppBar ou componente similar
+                BarraSuperior(navController)
+            }
+        },
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
@@ -92,7 +108,7 @@ fun AppNavigationContainer() {
 
             // Rotas de Dashboards (Com Barra Inferior)
             // ⚠️ Aqui você precisa mapear os 3 tipos de dashboard para o Composable correto
-            composable("dashboard") { DashboardScreen(navController) }
+            //composable("dashboard") { DashboardScreen(navController) }
 
 
             // Outras Rotas Principais (Com Barra Inferior)

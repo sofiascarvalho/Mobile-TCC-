@@ -35,15 +35,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.analyticai.screens.PurplePrimary
-import com.example.analyticai.screens.TextDark
-import com.example.analyticai.screens.TextGray
+import com.example.analyticai.ui.theme.PurplePrimary
 
 // Cores usadas especificamente nos gráficos
+
+val TextGray = Color(0xFF6F6F6F)
 val LightPurple = PurplePrimary.copy(alpha = 0.4f)
 val ChartBarColor = PurplePrimary
 val ChartBackgroundColor = Color(0xFFF0E5FF)
 val ChartTextGray = TextGray.copy(alpha = 0.9f)
+
+val PurplePrimary = Color(0xFF673AB7)
+    val BackgroundColor = Color(0xFFF8F6FB)
+    val TextDark = Color(0xFF3C3C3C)
+
 
 // --- Cards de KPI Refinados (Conforme imagens) ---
 
