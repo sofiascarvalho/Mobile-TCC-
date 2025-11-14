@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,13 +21,17 @@ import com.example.analyticai.screens.components.*
 import com.example.analyticai.viewmodel.DesempenhoViewModel
 
 @Composable
-fun DashboardScreen(navegacao: NavHostController) {
+fun DashboardScreen(navegacao: NavHostController?) {
     val context = LocalContext.current
     val sharedPrefs = remember { SharedPreferencesManager(context) }
     val usuario: Usuario? = sharedPrefs.getUsuario()
     val userName = usuario?.nome ?: "Usuário"
 
+    var disciplinaSelecionada by remember { mutableStateOf("Todas as disciplinas") }
+    var periodoSelecionado by remember { mutableStateOf("1º Semestre") }
 
+    val disciplinas = listOf("Todas as disciplinas", "Filosofia", "Matemática", "Biologia")
+    val periodos = listOf("1º Semestre", "2º Semestre")
 
     val viewModel: DesempenhoViewModel = viewModel()
 
@@ -57,6 +62,27 @@ fun DashboardScreen(navegacao: NavHostController) {
             fontWeight = FontWeight.Bold,
             color = TextDark
         )
+
+        // Filtros
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            DropdownFiltro(
+                label = "Disciplina:",
+                opcoes = disciplinas,
+                selecionado = disciplinaSelecionada,
+                onSelecionar = { disciplinaSelecionada = it },
+            )
+
+            DropdownFiltro(
+                label = "Período:",
+                opcoes = periodos,
+                selecionado = periodoSelecionado,
+                onSelecionar = { periodoSelecionado = it }
+            )
+        }
+
 
         desempenho?.let { dashboard ->
 
@@ -119,4 +145,44 @@ fun InfoLine(label: String, value: String) {
         Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = TextDark)
     }
     Spacer(modifier = Modifier.height(6.dp))
+}
+
+@Composable
+fun DropdownFiltro(
+    label: String,
+    opcoes: List<String>,
+    selecionado: String,
+    onSelecionar: (String) -> Unit
+) {
+    var expandido by remember { mutableStateOf(false) }
+
+    Column {
+        Text(
+            text = label,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp
+        )
+        Box {
+            OutlinedButton(onClick = { expandido = true }) {
+                Text(selecionado)
+            }
+            DropdownMenu(expanded = expandido, onDismissRequest = { expandido = false }) {
+                opcoes.forEach { opcao ->
+                    DropdownMenuItem(
+                        text = { Text(opcao) },
+                        onClick = {
+                            onSelecionar(opcao)
+                            expandido = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun DashboardScreenPreview() {
+    DashboardScreen(null)
 }
