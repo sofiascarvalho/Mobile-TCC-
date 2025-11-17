@@ -19,23 +19,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
-<<<<<<< HEAD
 import com.example.analyticai.screens.RecPasswd
 // ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
 import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
 
 import dagger.hilt.android.AndroidEntryPoint
 
-=======
->>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.BarraSuperior
 import com.example.analyticai.ui.theme.AnalyticAITheme
 
-<<<<<<< HEAD
 @AndroidEntryPoint
-=======
->>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +48,6 @@ fun AppNavigationContainer() {
     val navController = rememberNavController()
     val sharedPrefsManager = remember { SharedPreferencesManager(context) }
 
-<<<<<<< HEAD
     // --- Lógica de Redirecionamento Inicial (Start Destination) ---
     val startDestination = if (sharedPrefsManager.getCredential() != null) {
         // Se há credenciais salvas, direciona para o dashboard correto
@@ -67,15 +60,7 @@ fun AppNavigationContainer() {
         "login"
     }
     // -------------------------------------------------------------
-=======
     // ---- START DESTINATION CORRIGIDO ----
-    val startDestination =
-        if (sharedPrefsManager.getCredential() != null)
-            "dashboard"
-        else
-            "login"
-    // --------------------------------------
->>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 
     val bottomBarRoutes = listOf("dashboard", "ranking", "profile")
     val topBarRoutes = listOf("dashboard", "ranking", "profile")

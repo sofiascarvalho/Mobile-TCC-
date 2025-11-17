@@ -7,17 +7,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-<<<<<<< HEAD
+
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.BarChart
-=======
+
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.*
 import androidx.compose.material.icons.outlined.BarChart // <-- NOVO ÍCONE DE GRÁFICO IMPORTADO
->>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,10 +26,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-<<<<<<< HEAD
-=======
-import androidx.compose.ui.graphics.vector.ImageVector
->>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
+
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +36,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-<<<<<<< HEAD
+
 import com.example.analyticai.screens.PurplePrimary
 import com.example.analyticai.screens.TextDark
 import com.example.analyticai.screens.TextGray
@@ -52,13 +48,8 @@ import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
 
 // --- Cores dos gráficos ---
-=======
 
-// Cores usadas especificamente nos gráficos
-val PurplePrimary = Color(0xFF673AB7)
-val BackgroundColor = Color(0xFFF8F6FB)
-val TextGray = Color(0xFF6F6F6F)
->>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
+
 val LightPurple = PurplePrimary.copy(alpha = 0.4f)
 val ChartBarColor = PurplePrimary
 val ChartBackgroundColor = Color(0xFFF0E5FF)
