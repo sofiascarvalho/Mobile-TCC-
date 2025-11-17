@@ -14,20 +14,26 @@ import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.service.Conexao
 
 class DesempenhoViewModel : ViewModel() {
-    var desempenho by mutableStateOf<Usuario?>(null)
+
+    var desempenho by mutableStateOf<DashboardResponse?>(null)
         private set
 
     var isLoading by mutableStateOf(true)
 
-    fun loadPerformance(loginRequest: LoginRequest) {
-        println("********************")
+    fun loadPerformance(
+        idAluno: Int,
+        idMateria: Int? = null,
+        idSemestre: Int? = null
+    ) {
         viewModelScope.launch {
             isLoading = true
             try {
-                val response: LoginResponse = Conexao.desempenhoService.getAluno(loginRequest)
-
-                Log.d("DEBUG_API", "Response: $response")
-                desempenho = response.usuario
+                val response = Conexao.desempenhoService.getDesempenho(
+                    idAluno = idAluno,
+                    idMateria = idMateria,
+                    idSemestre = idSemestre
+                )
+                desempenho = response
             } catch (e: Exception) {
                 Log.e("DEBUG_API", "Erro ao carregar desempenho", e)
                 desempenho = null

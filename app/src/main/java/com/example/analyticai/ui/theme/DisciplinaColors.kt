@@ -2,7 +2,7 @@ package com.example.analyticai.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val disciplinaColors = mapOf(
+val disciplinaColors: Map<String, Color> = mapOf(
     "Filosofia" to Color(0xffA180AF),
     "Matemática" to Color(0xffBA8867),
     "Biologia" to Color(0xffC6CD9F),

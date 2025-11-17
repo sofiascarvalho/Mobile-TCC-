@@ -184,7 +184,7 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                     Spacer(modifier = Modifier.height(30.dp))
                     Button(
                         onClick = {
-                            navegacao!!.navigate("login")
+                            navegacao?.navigate("login")
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = PurplePrimary
@@ -356,7 +356,7 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
                     Spacer(modifier = Modifier.height(45.dp))
                     Button(
                         onClick = {
-                            navegacao!!.navigate("home")
+                            navegacao?.navigate("home")
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = PurplePrimary
