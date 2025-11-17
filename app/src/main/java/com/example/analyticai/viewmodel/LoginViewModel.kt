@@ -9,6 +9,11 @@ import javax.inject.Inject
 import com.example.analyticai.data.repository.LoginRepository
 import android.util.Log // Importação necessária
 import com.example.analyticai.model.Login.LoginResponse
+<<<<<<< HEAD
+=======
+import com.example.analyticai.service.Conexao
+import com.example.analyticai.service.LoginService
+>>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 
 /**
  * ViewModel responsável pela lógica de tela de Login.
@@ -34,7 +39,7 @@ class LoginViewModel @Inject constructor(
     fun validarSenha(senha: String): String? {
         return when {
             senha.isBlank() -> "A senha é obrigatória."
-            senha.length < 6 -> "A senha deve ter pelo menos 6 caracteres."
+            senha.length < 5 -> "A senha deve ter pelo menos 6 caracteres."
             else -> null
         }
     }

@@ -7,16 +7,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.analyticai.data.SharedPreferencesManager
-import com.example.analyticai.model.Login.Usuario
+import com.example.analyticai.model.Dashboard.DesempenhoResponse
 import com.example.analyticai.screens.components.*
+<<<<<<< HEAD
 import com.example.analyticai.viewmodel.FiltrosViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -24,24 +26,33 @@ val PurplePrimary = Color(0xFF673AB7)
 val BackgroundColor = Color(0xFFF8F6FB)
 val TextDark = Color(0xFF3C3C3C)
 val TextGray = Color(0xFF6F6F6F)
+=======
+import com.example.analyticai.viewmodel.DesempenhoViewModel
+>>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 
 @Composable
-fun DashboardScreen(navegacao: NavHostController?) {
+fun DashboardScreen(
+    navController: NavController? = null,
+    viewModel: DesempenhoViewModel = viewModel()
+) {
     val context = LocalContext.current
     val sharedPrefs = remember { SharedPreferencesManager(context) }
+    val usuarioSalvo = sharedPrefs.getUsuario()
 
-    // Recupera usuário salvo no SharedPreferences
-    val usuario: Usuario? = sharedPrefs.getUsuario()
+    // Filtros selecionados
+    var disciplinaSelecionada by remember { mutableStateOf<String?>(null) }
+    var periodoSelecionado by remember { mutableStateOf<String?>(null) }
 
-    val userName = usuario?.nome ?: "Usuário"
-    val userNivel = usuario?.nivel_usuario ?: "aluno"
-    val userCredential = usuario?.credencial ?: "00000000"
-    val turma = usuario?.turma?.turma ?: "—"
-    val responsavel = if (userNivel.lowercase() == "aluno") "Nome do Responsável" else "—"
-    val dataNascimento = usuario?.data_nascimento ?: "00/00/0000"
-    val telefone = usuario?.telefone ?: "(00) 00000-0000"
-    val email = usuario?.email ?: "exemplo@email.com"
+    // Carregar desempenho do usuário
+    LaunchedEffect(usuarioSalvo, disciplinaSelecionada, periodoSelecionado) {
+        usuarioSalvo?.id_usuario?.let { idAluno ->
+            // Mapear IDs a partir do desempenho atual (ou null se não houver filtro)
+            val dashboardAtual = viewModel.desempenho
+            val idMateria = dashboardAtual?.desempenho
+                ?.firstOrNull { it.materia.materia == disciplinaSelecionada }
+                ?.materia?.materia_id
 
+<<<<<<< HEAD
     // Dados mockados para outros cards
     val performanceScore = 9.8
     val scoreChange = 0.3
@@ -52,12 +63,48 @@ fun DashboardScreen(navegacao: NavHostController?) {
         BarData("Seminário", 7.3f),
         BarData("Prova", 10.0f)
     )
+=======
+            val idSemestre = periodoSelecionado?.let { selecionado ->
+                dashboardAtual?.desempenho
+                    ?.firstOrNull { it.semestre == selecionado }
+                    ?.id_semestre
+            }
 
-    val disciplinas = remember { listOf("Todas as Disciplinas", "Matemática", "Português", "Ciências", "História") }
-    val periodos = remember { listOf("1º Semestre - 2025", "2º Semestre - 2025", "Ano Letivo", "Geral") }
+            viewModel.loadPerformance(
+                idAluno = idAluno,
+                idMateria = idMateria,
+                idSemestre = idSemestre
+            )
+        }
+    }
+>>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
 
-    var selectedDisciplina by remember { mutableStateOf(disciplinas.first()) }
-    var selectedPeriodo by remember { mutableStateOf(periodos.first()) }
+    val dashboard = viewModel.desempenho
+    val loading = viewModel.isLoading
+
+    if (loading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    val nomeUsuario = usuarioSalvo?.nome ?: "Usuário"
+
+    // Filtros dinâmicos
+    val disciplinasDisponiveis = dashboard?.desempenho
+        ?.map { it.materia.materia }
+        ?.distinct()
+        ?.toMutableList()
+        ?: mutableListOf()
+    disciplinasDisponiveis.add(0, "Todas as disciplinas")
+
+    val periodosDisponiveis = dashboard?.desempenho
+        ?.map { it.semestre }
+        ?.distinct()
+        ?.toMutableList()
+        ?: mutableListOf()
+    periodosDisponiveis.sort()
 
     val scrollState = rememberScrollState()
 
@@ -69,14 +116,14 @@ fun DashboardScreen(navegacao: NavHostController?) {
             .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        // Header com nome do usuário
         Text(
-            text = "Dashboard de $userName",
+            text = "Dashboard de $nomeUsuario",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = TextDark
         )
 
+<<<<<<< HEAD
         // --- INÍCIO DA CORREÇÃO ---
 
         // Cria o ViewModel de filtros.
@@ -98,98 +145,120 @@ fun DashboardScreen(navegacao: NavHostController?) {
             if (userNivel.equals("aluno", ignoreCase = true)) {
                 InfoLine("Turma:", turma)
                 InfoLine("Responsável:", responsavel)
+=======
+        // Filtros
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            DropdownFiltro(
+                label = "Disciplina:",
+                opcoes = disciplinasDisponiveis,
+                selecionado = disciplinaSelecionada ?: "Todas as disciplinas",
+                onSelecionar = { disciplinaSelecionada = it.takeIf { it != "Todas as disciplinas" } }
+            )
+            DropdownFiltro(
+                label = "Período:",
+                opcoes = periodosDisponiveis,
+                selecionado = periodoSelecionado ?: periodosDisponiveis.firstOrNull().orEmpty(),
+                onSelecionar = { periodoSelecionado = it }
+            )
+        }
+
+        // Conteúdo
+        dashboard?.desempenho
+            ?.filter { item ->
+                (disciplinaSelecionada == null || item.materia.materia == disciplinaSelecionada)
+                        && (periodoSelecionado == null || item.semestre == periodoSelecionado)
+>>>>>>> 20f283375523d43930bb7040e6acde64f45b9784
             }
-            InfoLine("Contato:", telefone)
-            InfoLine("E-mail:", email)
-            InfoLine("Nível:", userNivel)
-        }
+            ?.forEach { item ->
 
-        // Card Desempenho
-        PerformanceKpiCard(
-            score = performanceScore,
-            change = scoreChange,
-            modifier = Modifier.fillMaxWidth()
-        )
+                // --- KPI DE DESEMPENHO ---
+                val mediaScore = item.media.toFloatOrNull() ?: 0f
+                PerformanceKpiCard(
+                    score = mediaScore.toDouble(),
+                    change = 0.0,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        // Card Frequência
-        FrequencyKpiCard(
-            presentPercentage = presencePercentage,
-            modifier = Modifier.fillMaxWidth()
-        )
+                // --- KPI DE FREQUÊNCIA ---
+                val frequenciaFloat = item.frequencia.porcentagem_frequencia
+                    .replace("%", "")
+                    .toFloatOrNull() ?: 0f
+                FrequencyKpiCard(
+                    presentPercentage = frequenciaFloat,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        // Card Gráfico
-        SubjectPerformanceChartCard(
-            subject = selectedDisciplina,
-            data = mathPerformanceData
-        )
+                // --- GRÁFICO DE DESEMPENHO POR ATIVIDADE ---
+                val barData = item.atividades.map {
+                    BarData(label = it.categoria, value = it.nota)
+                }
+                SubjectPerformanceChartCard(
+                    subject = item.materia.materia,
+                    data = barData
+                )
 
-        // Relatórios e Insights
-        Text(
-            text = "Relatórios e Insights por Matéria",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextDark,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+                // --- RELATÓRIOS ---
+                Text(
+                    text = "Relatórios para Download",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = TextDark,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
 
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            InsightCard(
-                title = "Avaliação de Matemática",
-                date = "01/06/2025",
-                description = "Com excelente compreensão de álgebra e geometria. As notas de prova indicam grande domínio do conteúdo."
-            )
-            InsightCard(
-                title = "Seminário de Matemática",
-                date = "18/06/2025",
-                description = "As notas de prova indicam grande domínio do conteúdo e bom entendimento sobre o conteúdo aprendido."
-            )
-        }
-
-        // Relatórios para Download
-        Text(
-            text = "Relatórios para Download",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextDark,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            DownloadCardRefined("Relatório Completo de Matemática", "18/05/2025")
-            DownloadCardRefined("Relatório de Frequência", "18/05/2025")
-            DownloadCardRefined("Relatório de Desempenho", "18/05/2025")
-            DownloadCardRefined("Observações e Análise de Desempenho", "18/05/2025")
-        }
-
-        Spacer(Modifier.height(50.dp))
+//                // Se houver campo de relatórios no backend, mapear dinamicamente:
+//                item.relatorios?.forEach { rel ->
+//                    DownloadCardRefined(rel.titulo, rel.dataGeracao)
+//                }
+            } ?: Text("Nenhum dado encontrado.")
     }
 }
 
-// Componente para uma linha de informação
 @Composable
-fun InfoLine(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = label, fontSize = 14.sp, color = TextGray)
-        Text(text = value, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = TextDark)
-    }
-    Spacer(modifier = Modifier.height(6.dp))
-}
+fun DropdownFiltro(
+    label: String,
+    opcoes: List<String>,
+    selecionado: String,
+    onSelecionar: (String) -> Unit
+) {
+    var expandido by remember { mutableStateOf(false) }
 
-// Componente para os cards de insights
-@Composable
-fun InsightCard(title: String, date: String, description: String) {
-    DashboardCard(title = title) {
-        Text(text = date, fontSize = 12.sp, color = TextGray)
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = description, fontSize = 14.sp, color = TextDark)
+    Column {
+        Text(
+            text = label,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp
+        )
+        Box {
+            OutlinedButton(onClick = { expandido = true }) {
+                Text(selecionado)
+            }
+            DropdownMenu(expanded = expandido, onDismissRequest = { expandido = false }) {
+                opcoes.forEach { opcao ->
+                    DropdownMenuItem(
+                        text = { Text(opcao) },
+                        onClick = {
+                            onSelecionar(opcao)
+                            expandido = false
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
+<<<<<<< HEAD
 private fun DashboardPreview() {
     DashboardScreen(null)
 }
+=======
+fun DashboardScreenPreview() {
+    DashboardScreen(rememberNavController())
+}
+>>>>>>> 20f283375523d43930bb7040e6acde64f45b9784

@@ -15,5 +15,4 @@ interface LoginService {
     suspend fun login(
         @Body request: LoginRequest
     ): Response<LoginResponse>
-
 }
