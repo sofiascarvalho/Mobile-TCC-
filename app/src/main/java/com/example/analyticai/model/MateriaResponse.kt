@@ -1,4 +1,4 @@
-package com.example.analyticai.model.Dashboard
+package com.example.analyticai.model
 
 data class MateriaResponse(
     val materia_id: Int,

@@ -1,9 +1,11 @@
 package com.example.analyticai.model.Dashboard
 
 import com.example.analyticai.model.Login.Usuario
+import com.example.analyticai.model.MateriaResponse
 
 data class DesempenhoResponse(
     val aluno: List<Usuario>,
+    val id_semestre: Int,
     val semestre: String,
     val frequencia: FrequenciaResponse,
     val materia: MateriaResponse,

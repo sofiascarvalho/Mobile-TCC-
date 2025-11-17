@@ -43,9 +43,11 @@ fun DashboardScreen(
                 ?.firstOrNull { it.materia.materia == disciplinaSelecionada }
                 ?.materia?.materia_id
 
-            val idSemestre = dashboardAtual?.desempenho
-                ?.firstOrNull { it.semestre == periodoSelecionado }
-                ?.semestre
+            val idSemestre = periodoSelecionado?.let { selecionado ->
+                dashboardAtual?.desempenho
+                    ?.firstOrNull { it.semestre == selecionado }
+                    ?.id_semestre
+            }
 
             viewModel.loadPerformance(
                 idAluno = idAluno,
@@ -161,10 +163,10 @@ fun DashboardScreen(
                     modifier = Modifier.padding(top = 8.dp)
                 )
 
-                // Se houver campo de relatórios no backend, mapear dinamicamente:
-                item.relatorios?.forEach { rel ->
-                    DownloadCardRefined(rel.titulo, rel.dataGeracao)
-                }
+//                // Se houver campo de relatórios no backend, mapear dinamicamente:
+//                item.relatorios?.forEach { rel ->
+//                    DownloadCardRefined(rel.titulo, rel.dataGeracao)
+//                }
             } ?: Text("Nenhum dado encontrado.")
     }
 }
