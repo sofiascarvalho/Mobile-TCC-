@@ -6,7 +6,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -18,6 +17,8 @@ import androidx.navigation.NavHostController
 import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.screens.components.*
+import com.example.analyticai.viewmodel.FiltrosViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 val PurplePrimary = Color(0xFF673AB7)
 val BackgroundColor = Color(0xFFF8F6FB)
@@ -40,7 +41,6 @@ fun DashboardScreen(navegacao: NavHostController?) {
     val dataNascimento = usuario?.data_nascimento ?: "00/00/0000"
     val telefone = usuario?.telefone ?: "(00) 00000-0000"
     val email = usuario?.email ?: "exemplo@email.com"
-
 
     // Dados mockados para outros cards
     val performanceScore = 9.8
@@ -77,33 +77,25 @@ fun DashboardScreen(navegacao: NavHostController?) {
             color = TextDark
         )
 
-        // Filtros
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            FilterDropdown(
-                label = "Disciplina",
-                selectedValue = selectedDisciplina,
-                options = disciplinas,
-                onSelect = { selectedDisciplina = it },
-                modifier = Modifier.weight(1f)
-            )
-            FilterDropdown(
-                label = "Período",
-                selectedValue = selectedPeriodo,
-                options = periodos,
-                onSelect = { selectedPeriodo = it },
-                modifier = Modifier.weight(1f)
-            )
-        }
+        // --- INÍCIO DA CORREÇÃO ---
+
+        // Cria o ViewModel de filtros.
+        // ATENÇÃO: Você provavelmente precisará de uma factory aqui, similar ao LoginViewModel,
+        // pois FiltrosViewModel recebe 'api' no construtor.
+        // Exemplo: val filtrosViewModel: FiltrosViewModel = viewModel(factory = FiltrosViewModel.provideFactory())
+        val filtrosViewModel: FiltrosViewModel = hiltViewModel()
+
+        // Chama o composable de filtros passando o viewModel corretamente
+        FiltrosVerticais(viewModel = filtrosViewModel)
+
+        // --- FIM DA CORREÇÃO ---
 
         // Card Informações Gerais com dados reais
         DashboardCard(title = "Informações Gerais") {
             InfoLine("Nome:", userName)
             InfoLine("Matrícula:", userCredential)
             InfoLine("Nascimento:", dataNascimento)
-            if (userNivel.lowercase() == "aluno") {
+            if (userNivel.equals("aluno", ignoreCase = true)) {
                 InfoLine("Turma:", turma)
                 InfoLine("Responsável:", responsavel)
             }
@@ -195,7 +187,6 @@ fun InsightCard(title: String, date: String, description: String) {
         Text(text = description, fontSize = 14.sp, color = TextDark)
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

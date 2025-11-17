@@ -22,11 +22,13 @@ import com.example.analyticai.screens.RecPasswd
 // ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
 import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
 
+import dagger.hilt.android.AndroidEntryPoint
+
 import com.example.analyticai.screens.components.BarraInferior
 import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.ui.theme.AnalyticAITheme
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +52,8 @@ fun AppNavigationContainer() {
     val startDestination = if (sharedPrefsManager.getCredential() != null) {
         // Se há credenciais salvas, direciona para o dashboard correto
         when (sharedPrefsManager.getNivel()?.lowercase()) {
-            "professor" -> "dashboardProfessor"
-            "gestão" -> "dashboardGestao"
-            else -> "dashboardAluno" // Default para aluno se o nível for nulo ou desconhecido
+            "aluno" -> "dashboard"
+            else -> "login" // Default para aluno se o nível for nulo ou desconhecido
         }
     } else {
         // Se não há credenciais, vai para a tela de Login

@@ -1,20 +1,27 @@
 package com.example.analyticai.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import android.util.Log // ⬅️ Importação necessária
+import javax.inject.Inject
 
-import com.example.analyticai.model.Login.LoginRequest
+import com.example.analyticai.data.repository.LoginRepository
+import android.util.Log // Importação necessária
 import com.example.analyticai.model.Login.LoginResponse
-import com.example.analyticai.service.LoginService
-import com.example.analyticai.service.Conexao
 
-class LoginViewModel(
-    private val loginService: LoginService = Conexao.loginService
+/**
+ * ViewModel responsável pela lógica de tela de Login.
+ *
+ * Ele recebe o LoginRepository injetado pelo Hilt.
+ * O ViewModel se comunica apenas com o Repository, que por sua vez, lida com a API e o DataStore.
+ */
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository
 ) : ViewModel() {
+
+    // --- Lógica de Validação (Movida para o ViewModel) ---
 
     fun validarCredencial(credencial: String): String? {
         return when {
@@ -32,59 +39,42 @@ class LoginViewModel(
         }
     }
 
+    // --- Lógica de Login (Usando o Repository) ---
+
+    /**
+     * Tenta realizar o login usando o Repositório.
+     *
+     * @param credencial A matrícula do usuário.
+     * @param senha A senha do usuário.
+     * @param onSuccess Callback executado se o login for bem-sucedido e o token for salvo,
+     * passando o LoginResponse para que a tela possa validar o nível de usuário.
+     * @param onError Callback executado se houver falha na API ou no DataStore.
+     */
     fun login(
         credencial: String,
         senha: String,
-        onSuccess: (LoginResponse) -> Unit,
+        onSuccess: (LoginResponse) -> Unit, // FIX: Agora passa o LoginResponse
         onError: (String) -> Unit
     ) {
         viewModelScope.launch {
             try {
-                val request = LoginRequest(credencial = credencial, senha = senha)
-                val response: Response<LoginResponse> = loginService.login(request)
+                // FIX: O repositório agora retorna o LoginResponse
+                val response = loginRepository.loginUser(credencial, senha)
 
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    if (body?.status == true && body.usuario != null) {
-                        onSuccess(body)
-                    } else if (body?.status == false) {
-                        onError("Credenciais inválidas. Tente novamente.")
-                    } else {
-                        onError("Erro desconhecido na resposta do servidor.")
-                    }
+                // Verifica se a resposta foi bem-sucedida (status=true)
+                if (response.status && response.usuario != null) {
+                    // Se o login foi um sucesso E o usuário foi retornado, repassa a resposta completa.
+                    onSuccess(response)
                 } else {
-                    val code = response.code()
-                    val errorBody = response.errorBody()?.string()
-
-                    val mensagemErro = when (code) {
-                        400 -> "Requisição inválida. Verifique os dados enviados."
-                        401 -> "Credenciais incorretas. Verifique seu login e senha."
-                        403 -> "Acesso negado. Permissões insuficientes."
-                        404 -> "Usuário não encontrado. Verifique sua credencial."
-                        415 -> "Erro de formato. O servidor só aceita JSON."
-                        500 -> "Erro interno no servidor. Tente novamente mais tarde."
-                        502, 503, 504 -> "Servidor temporariamente indisponível. Tente mais tarde."
-                        else -> "Erro inesperado (${code}): ${errorBody ?: "Sem detalhes"}"
-                    }
-
-                    Log.e("LOGIN_API_ERROR", "Erro HTTP $code: $errorBody")
-                    onError(mensagemErro)
+                    // Login falhou (status=false ou usuario=null)
+                    // A mensagem de erro específica poderia vir do response.message, mas estamos
+                    // usando uma genérica por enquanto.
+                    onError("Credenciais inválidas.")
                 }
 
             } catch (e: Exception) {
-                Log.e("LOGIN_API_ERROR", "Falha de Rede (Exceção Capturada): ", e)
-                onError("Falha na conexão: Verifique sua internet ou tente novamente mais tarde.")
-            }
-        }
-    }
-
-    companion object {
-        fun provideFactory(
-            loginService: LoginService = Conexao.loginService
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return LoginViewModel(loginService) as T
+                Log.e("LOGIN_ERROR", "Falha de Rede ou Exceção no Repositório: ", e)
+                onError("Falha na conexão ou erro interno. Tente novamente.")
             }
         }
     }
