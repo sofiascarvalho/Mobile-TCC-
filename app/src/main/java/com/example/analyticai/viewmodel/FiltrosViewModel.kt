@@ -4,41 +4,45 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import dagger.hilt.android.lifecycle.HiltViewModel
 
-import com.example.analyticai.service.FiltrosApi // Necessário para a injeção
+import com.example.analyticai.service.MockFiltrosApi
 import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
-import javax.inject.Inject
 
-@HiltViewModel
-class FiltrosViewModel @Inject constructor(
-    // 1. ✅ PARÂMETRO INJETADO: Apenas as dependências do Hilt vão aqui.
-    private val api: FiltrosApi // Agora o Hilt pode injetar o FiltrosApi
-) : ViewModel() {
+class FiltrosViewModel : ViewModel() {
 
-    // 2. ✅ VARIÁVEIS DE ESTADO: Declaradas dentro do corpo da classe, não no construtor.
+    // 1. Estados dos Filtros
     private val _materias = MutableStateFlow<List<Materia>>(emptyList())
-    val materias: StateFlow<List<Materia>> = _materias
+    val materias: StateFlow<List<Materia>> = _materias.asStateFlow()
 
     private val _semestres = MutableStateFlow<List<Semestre>>(emptyList())
-    val semestres: StateFlow<List<Semestre>> = _semestres
+    val semestres: StateFlow<List<Semestre>> = _semestres.asStateFlow()
+
+    // 2. Estado de Carregamento (CORRIGIDO):
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    // 3. API Mock
+    private val api = MockFiltrosApi()
 
     init {
         carregarFiltros()
     }
 
-    private fun carregarFiltros() {
+    fun carregarFiltros() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                // Acessa o serviço injetado 'api'
                 _materias.value = api.getMaterias().materias
                 _semestres.value = api.getSemestres().semestres
-
             } catch (e: Exception) {
                 e.printStackTrace()
-                // Log do erro aqui
+                // Em caso de erro, você pode querer manter o isLoading=false,
+                // mas também mostrar uma mensagem de erro na tela (não implementado aqui).
+            } finally {
+                _isLoading.value = false
             }
         }
     }

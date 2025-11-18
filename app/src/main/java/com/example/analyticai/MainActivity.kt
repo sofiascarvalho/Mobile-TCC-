@@ -1,6 +1,6 @@
 package com.example.analyticai
 
-import RankingScreen
+import com.example.analyticai.screens.RankingScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,11 +17,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.analyticai.data.SharedPreferencesManager
-import com.example.analyticai.screens.DashboardScreen
+import com.example.analyticai.ui.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
+import com.example.analyticai.screens.components.ProfileScreen
 import com.example.analyticai.screens.RecPasswd
-// ⚠️ IMPORT CORRIGIDO: Assumindo que DashboardScreen está em com.example.analyticai.screens
-import com.example.analyticai.screens.DashboardScreen // <--- AGORA REFERENCIA O PACOTE CORRETO
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -96,11 +95,15 @@ fun AppNavigationContainer() {
 
             // ---- ÚNICO DASHBOARD EXISTENTE ----
             composable("dashboard") {
-                DashboardScreen(navController)
+                DashboardScreen()
             }
 
             composable("ranking") {
                 RankingScreen(navController)
+            }
+
+            composable("profile") {
+                ProfileScreen(navController)
             }
         }
     }

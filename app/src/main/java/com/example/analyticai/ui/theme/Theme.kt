@@ -37,7 +37,7 @@ val LightTextSecondary = Color(0xFF363636)
 val DarkPrimary = Color(0xFF7D53F3)
 val DarkSecondary = Color(0xFFC6B2FF)
 
-val DarkBackground = Color(0xFF000000)
+val DarkBackground = Color(0xFFF5F5F5)
 val DarkSurface = Color(0xFF363636)
 
 val DarkTextPrimary = Color(0xFFFFFFFF)
@@ -108,8 +108,8 @@ val AppShapes = Shapes(
 // -----------------------------
 @Composable
 fun AnalyticAITheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = false, // Forçar tema claro
+    dynamicColor: Boolean = false, // Desativar cores dinâmicas
     content: @Composable () -> Unit
 ) {
 

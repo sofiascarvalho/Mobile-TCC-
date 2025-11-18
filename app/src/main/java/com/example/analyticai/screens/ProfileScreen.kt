@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
@@ -52,173 +54,175 @@ import com.example.analyticai.ui.theme.PurplePrimary
 
 @Composable
 fun ProfileScreen(navegacao: NavHostController?) {
-    var nomeUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("")) }
-    var emailUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("")) }
-    var telefoneUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("")) }
+    // Manter estados e contexto
+    var nomeUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("João Victor Campos dos Santos")) }
+    var emailUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("joaosantos20071009@gmail.com")) }
+    var telefoneUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("(11) 9 0000-0000")) }
     var isDarkMode by remember { mutableStateOf(false) }
 
-    val context= LocalContext.current
+    val scrollState = rememberScrollState()
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .verticalScroll(scrollState) // A rolagem agora abrange todo o conteúdo
+            .padding(horizontal = 16.dp)
     ) {
-
         Spacer(modifier = Modifier.height(20.dp))
 
-        BarraSuperiorProfile(navegacao)
+        // Título Principal - Configurações do Aluno
+        Text(
+            text = "Configurações Do Aluno: \"${nomeUsuario.text}\"",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = Color.Black
+        )
+        Text(
+            text = "Gerencie suas informações e preferências do sistema",
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(25.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 82.dp, start = 12.dp, end = 12.dp, bottom = 16.dp)
+        // Card principal contendo as seções E O BOTÃO SALVAR
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(2.dp)
         ) {
-            Spacer(modifier = Modifier.height(15.dp))
+            Column(modifier = Modifier.padding(20.dp)) {
 
-            Text(
-                "Perfil de (Nome do Aluno)",
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp,
-                color = Color(0xff5b5b5b)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings"
-                )
+                // 1. Informações do Aluno
                 Text(
-                    "Configurações do Sistema",
-                    modifier = Modifier.padding(start = 5.dp),
+                    "Informações do Aluno",
+                    fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = GrayDarkMedium,
-                    fontWeight = FontWeight.Normal
+                    color = PurplePrimary
                 )
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Card com as informações
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xfffcf5ff)),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
-                Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)) {
-                    Text("Informações da Escola", fontWeight = FontWeight.Bold, color = GrayDarkMedium)
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    // Nome
-                    OutlinedTextField(
-                        value = nomeUsuario,
-                        onValueChange = { nomeUsuario = it },
-                        label = { Text("Nome do Usuário", fontWeight = FontWeight.ExtraLight) },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xffF9FAFB),
-                            unfocusedContainerColor = Color(0xffF9FAFB),
-                            focusedBorderColor = Color(0xffE1E4E7),
-                            unfocusedBorderColor = Color(0xffE1E4E7),
-                            focusedLabelColor = Color(0xffC2ACAF),
-                            unfocusedLabelColor = Color(0xffC2ACAF)
-                        )
+                // Nome
+                OutlinedTextField(
+                    value = nomeUsuario,
+                    onValueChange = { nomeUsuario = it },
+                    label = { Text("Nome do aluno", fontWeight = FontWeight.Normal) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = PurplePrimary,
+                        unfocusedBorderColor = Color(0xffE1E4E7),
+                        focusedLabelColor = PurplePrimary,
+                        unfocusedLabelColor = Color.Gray
                     )
+                )
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                    // Email
-                    OutlinedTextField(
-                        value = emailUsuario,
-                        onValueChange = { emailUsuario = it },
-                        label = { Text("Email de Contato", fontWeight = FontWeight.ExtraLight) },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xffF9FAFB),
-                            unfocusedContainerColor = Color(0xffF9FAFB),
-                            focusedBorderColor = Color(0xffE1E4E7),
-                            unfocusedBorderColor = Color(0xffE1E4E7),
-                            focusedLabelColor = Color(0xffC2ACAF),
-                            unfocusedLabelColor = Color(0xffC2ACAF)
-                        )
+                // Email
+                OutlinedTextField(
+                    value = emailUsuario,
+                    onValueChange = { emailUsuario = it },
+                    label = { Text("Email de Contato", fontWeight = FontWeight.Normal) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = PurplePrimary,
+                        unfocusedBorderColor = Color(0xffE1E4E7),
+                        focusedLabelColor = PurplePrimary,
+                        unfocusedLabelColor = Color.Gray
                     )
+                )
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                    // Telefone
-                    OutlinedTextField(
-                        value = telefoneUsuario,
-                        onValueChange = { telefoneUsuario = it },
-                        label = { Text("Telefone de Contato") },
-                        leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(18.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xffF9FAFB),
-                            unfocusedContainerColor = Color(0xffF9FAFB),
-                            focusedBorderColor = Color(0xffE1E4E7),
-                            unfocusedBorderColor = Color(0xffE1E4E7),
-                            focusedLabelColor = Color(0xffC2ACAF),
-                            unfocusedLabelColor = Color(0xffC2ACAF)
-                        )
+                // Telefone
+                OutlinedTextField(
+                    value = telefoneUsuario,
+                    onValueChange = { telefoneUsuario = it },
+                    label = { Text("Telefone de Contato", fontWeight = FontWeight.Normal) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = PurplePrimary,
+                        unfocusedBorderColor = Color(0xffE1E4E7),
+                        focusedLabelColor = PurplePrimary,
+                        unfocusedLabelColor = Color.Gray
                     )
+                )
 
-                    Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                    Divider()
+                Divider()
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-                    Text("Aparência", fontWeight = FontWeight.Medium, color = GrayDarkMedium)
+                // 2. Preferências do Aluno
+                Text(
+                    "Preferências do Aluno",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = PurplePrimary
+                )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("Modo dark", fontWeight = FontWeight.Normal, color = GrayDarkMedium)
-
+                // Modo Dark
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        "Modo Dark",
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
                     Row(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             "Troca as cores da tela para um modo escuro.",
-                            modifier = Modifier
-                                .weight(1f),
+                            modifier = Modifier.weight(1f),
                             fontWeight = FontWeight.Normal,
-                            fontSize = 12.sp,
-                            color = GrayDarkMedium
+                            fontSize = 14.sp,
+                            color = Color.Gray
                         )
+                        Spacer(modifier = Modifier.width(10.dp))
                         Switch(
                             checked = isDarkMode,
                             onCheckedChange = { checked: Boolean -> isDarkMode = checked }
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(6.dp))
                 }
 
-                // Botão Salvar
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+
+                // Botão "Salvar Alterações" (no rodapé do Card, alinhado à direita)
                 Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(end = 10.dp, bottom = 15.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.Bottom
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = { /* Lógica de salvar */ },
                         modifier = Modifier
-                            .height(50.dp)
+                            .height(45.dp)
                             .width(180.dp),
-                        shape = RoundedCornerShape(28.dp),
+                        shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(PurplePrimary)
                     ) {
                         Text("Salvar Alterações", color = Color.White)
@@ -226,59 +230,28 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 }
             }
         }
-    }
-}
 
-@Composable
-fun BarraSuperiorProfile(navegacao: NavHostController?) {
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
+        // --- BOTÃO SAIR DA CONTA (FORA DO CARD) ---
+        Spacer(modifier = Modifier.height(30.dp))
+
+        // Botão "Sair da conta" (alinhado à esquerda e fora do Card)
+        Button(
+            onClick = { /* Lógica de sair */ navegacao?.navigate("login") },
             modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+                .height(45.dp)
+                .align(Alignment.CenterHorizontally), // Alinha o botão à esquerda dentro da Column
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent, // Fundo transparente
+                contentColor = Color.Black
+            ),
+            elevation = ButtonDefaults.buttonElevation(0.dp) // Sem elevação
         ) {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(Color.LightGray)
-                    .padding(start = 10.dp, end = 10.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Foto",
-                    tint = DarkGray,
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Column {
-                Text("Nome Do Aluno", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
-                Text("1º Ano B", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
-            }
-
-            Row {
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "",
-                    tint = PurplePrimary,
-                    modifier = Modifier.padding(start = 125.dp)
-                        .clickable { navegacao?.navigate("login") }
-                )
-            }
-
+            Text("Sair da conta", color = Color.Gray, fontWeight = FontWeight.Medium)
         }
-        Spacer(modifier = Modifier.height(10.dp))
 
-        Divider(modifier = Modifier.height(1.dp).width(500.dp))
+        // Espaçador final
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

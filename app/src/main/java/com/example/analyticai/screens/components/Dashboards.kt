@@ -88,14 +88,14 @@ fun PerformanceKpiCard(
             }
             Spacer(Modifier.height(12.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Column {
                 Text(
                     text = String.format("%.1f", score),
                     fontWeight = FontWeight.Light,
                     fontSize = 42.sp,
                     color = TextDark
                 )
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.height(8.dp))
 
                 val changeText = buildAnnotatedString {
                     withStyle(
@@ -108,7 +108,7 @@ fun PerformanceKpiCard(
                         append("▲ ${String.format("%.1f", change)} no último semestre")
                     }
                 }
-                Text(changeText, modifier = Modifier.padding(top = 8.dp))
+                Text(changeText)
             }
 
             Spacer(Modifier.height(10.dp))
@@ -152,16 +152,16 @@ fun FrequencyKpiCard(
             }
             Spacer(Modifier.height(12.dp))
 
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PieChart(
                     percentage = presentPercentage,
                     modifier = Modifier.size(80.dp)
                 )
-                Column(horizontalAlignment = Alignment.End) {
+                Spacer(Modifier.height(12.dp))
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = "${presentPercentage.toInt()}%",
                         fontWeight = FontWeight.Bold,
@@ -178,7 +178,7 @@ fun FrequencyKpiCard(
 
             Spacer(Modifier.height(12.dp))
 
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 LegendItem(color = LightPurple, label = "Presença (${presentPercentage.toInt()}%)")
                 LegendItem(color = PurplePrimary, label = "Faltas (${(100 - presentPercentage).toInt()}%)")
             }
@@ -480,7 +480,7 @@ fun FiltrosVerticais(
             label = "Matéria",
             selectedValue = selectedMateria.ifEmpty { "Selecione a Matéria" },
             // CORREÇÃO 2: Usando a lista corretamente tipada (materiaList) e mantendo a tipagem explícita na lambda para robustez.
-            options = listOf("Selecione a Matéria") + materiaList.map { it.materia },
+            options = listOf("Selecione a Matéria") + materiaList.map { it.name },
             onSelect = { selected: String -> selectedMateria = selected }
         )
 
@@ -489,7 +489,7 @@ fun FiltrosVerticais(
             label = "Período",
             selectedValue = selectedSemestre.ifEmpty { "Selecione o Período" },
             // CORREÇÃO 3: Usando a lista corretamente tipada (semestreList)
-            options = listOf("Selecione o Período") + semestreList.map { it.semestre },
+            options = listOf("Selecione o Período") + semestreList.map { it.name },
             onSelect = { selected: String -> selectedSemestre = selected }
         )
 
