@@ -1,4 +1,4 @@
-package com.example.analyticai.screens.components
+package com.example.analyticai.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

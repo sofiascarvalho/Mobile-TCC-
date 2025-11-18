@@ -17,9 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.analyticai.data.SharedPreferencesManager
-import com.example.analyticai.ui.screens.DashboardScreen
+import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
-import com.example.analyticai.screens.components.ProfileScreen
+import com.example.analyticai.screens.ProfileScreen
 import com.example.analyticai.screens.RecPasswd
 
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,16 +1,25 @@
-package com.example.analyticai.ui.screens
+package com.example.analyticai.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.viewmodel.FiltrosViewModel
 import com.example.analyticai.viewmodel.DashboardViewModel
 import com.example.analyticai.screens.components.DashboardHeader
@@ -33,7 +42,7 @@ fun DashboardScreen() {
     val filtrosViewModel: FiltrosViewModel = viewModel()
     val dashboardViewModel: DashboardViewModel = viewModel()
 
-    // 1. COLETAR ESTADOS
+    // Estados
     val isFiltrosLoading by filtrosViewModel.isLoading.collectAsState()
     val materias by filtrosViewModel.materias.collectAsState()
     val semestres by filtrosViewModel.semestres.collectAsState()
@@ -67,11 +76,11 @@ fun DashboardScreen() {
                 .fillMaxSize(),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            // Header com filtros
+
+            // ---- FILTROS ----
             item {
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Linha de Filtros
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -103,7 +112,13 @@ fun DashboardScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // 2. LÓGICA DE CARREGAMENTO E DADOS
+            // ---- CARD DO ALUNO ----
+            item {
+                StudentInfoCard()
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // ---- CARREGAMENTO ----
             if (totalLoading) {
                 item {
                     Box(
@@ -116,14 +131,17 @@ fun DashboardScreen() {
                     }
                 }
             }
+
+            // ---- PAINEL ----
             else if (dashboard != null) {
-                // Conteúdo do dashboard
+
+                // Conteúdo principal do painel
                 item {
                     DashboardContent(dashboard = dashboard)
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
-                // Título dos relatórios
+                // Título dos Relatórios
                 item {
                     Text(
                         "Relatórios de Download",
@@ -132,15 +150,21 @@ fun DashboardScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                // Mock de relatórios de download
-                items(getMockRelatorios(dashboard.materia.materia)) { item ->
+                // PEGAR NOME DA MATÉRIA DE FORMA SEGURA
+                val materiaNome = dashboard.materia.materia
+
+
+                // Lista de relatórios
+                items(getMockRelatorios(materiaNome)) { rel ->
                     DownloadCardRefined(
-                        title = item.titulo,
-                        date = item.dataGeracao
+                        title = rel.titulo,
+                        date = rel.dataGeracao
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+
+            // ---- ERRO ----
             else {
                 item {
                     Box(
@@ -160,8 +184,102 @@ fun DashboardScreen() {
     }
 }
 
-// Função mock para gerar relatórios de download
-private fun getMockRelatorios(materiaNome: String): List<RelatorioResponse> {
+@Composable
+fun StudentInfoCard() {
+    val context = LocalContext.current
+    val sharedPrefs = remember { SharedPreferencesManager(context) }
+    val usuario: Usuario? = sharedPrefs.getUsuario()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(12.dp),
+                clip = false
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(0.dp) // usa só a shadow()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Ícone do aluno",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Text(
+                        text = "Informações do Aluno",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Dados
+            if (usuario != null) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    InfoRow(label = "Nome:", value = usuario.nome)
+                    InfoRow(label = "Matrícula:", value = usuario.matricula ?: "Não informada")
+                    InfoRow(label = "Email:", value = usuario.email)
+                    InfoRow(label = "Telefone:", value = usuario.telefone)
+                    InfoRow(label = "Nível:", value = usuario.nivel_usuario)
+
+                    usuario.turma?.let { turma ->
+                        InfoRow(label = "Turma:", value = turma.turma)
+                    }
+                }
+            } else {
+                Text(
+                    text = "Dados do aluno não disponíveis",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun InfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(0.3f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(0.7f)
+        )
+    }
+}
+
+// ---- MOCK DOS RELATÓRIOS ----
+fun getMockRelatorios(materiaNome: String): List<RelatorioResponse> {
     return listOf(
         RelatorioResponse(
             titulo = "Relatório Completo - $materiaNome",
@@ -170,7 +288,7 @@ private fun getMockRelatorios(materiaNome: String): List<RelatorioResponse> {
         ),
         RelatorioResponse(
             titulo = "Resumo de Desempenho - $materiaNome",
-            dataGeracao = "24/11/2025", 
+            dataGeracao = "24/11/2025",
             link = "#"
         ),
         RelatorioResponse(
