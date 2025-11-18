@@ -48,6 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
@@ -55,9 +57,14 @@ import com.example.analyticai.ui.theme.PurplePrimary
 @Composable
 fun ProfileScreen(navegacao: NavHostController?) {
     // Manter estados e contexto
-    var nomeUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("João Victor Campos dos Santos")) }
-    var emailUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("joaosantos20071009@gmail.com")) }
-    var telefoneUsuario: TextFieldValue by remember { mutableStateOf(TextFieldValue("(11) 9 0000-0000")) }
+    val context = LocalContext.current
+    val sharedPrefs = remember { SharedPreferencesManager(context) }
+    val usuario: Usuario? = sharedPrefs.getUsuario()
+
+    val userName = usuario?.nome ?: "Usuário"
+    val emailUsuario = usuario?.email ?: "Email"
+    val telefoneUsuario = usuario?.telefone ?: "Telefone"
+
     var isDarkMode by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
@@ -73,7 +80,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
         // Título Principal - Configurações do Aluno
         Text(
-            text = "Configurações Do Aluno: \"${nomeUsuario.text}\"",
+            text = "Configurações Do Aluno: \"${userName}\"",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             color = Color.Black
@@ -108,8 +115,8 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
                 // Nome
                 OutlinedTextField(
-                    value = nomeUsuario,
-                    onValueChange = { nomeUsuario = it },
+                    value = userName,
+                    onValueChange = { usuario},
                     label = { Text("Nome do aluno", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -128,7 +135,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 // Email
                 OutlinedTextField(
                     value = emailUsuario,
-                    onValueChange = { emailUsuario = it },
+                    onValueChange = { usuario },
                     label = { Text("Email de Contato", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -147,7 +154,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 // Telefone
                 OutlinedTextField(
                     value = telefoneUsuario,
-                    onValueChange = { telefoneUsuario = it },
+                    onValueChange = { usuario },
                     label = { Text("Telefone de Contato", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),

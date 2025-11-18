@@ -16,12 +16,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
@@ -64,6 +67,14 @@ val mockPeriodos = listOf(
 
 @Composable
 fun RankingScreen(navegacao: NavHostController?) {
+
+    val context = LocalContext.current
+    val sharedPrefs = remember { SharedPreferencesManager(context) }
+    val usuario: Usuario? = sharedPrefs.getUsuario()
+
+    val userName = usuario?.nome ?: "Usuário"
+
+
     // --- States for Filters (Mantidos) ---
     var selectedDisciplina by remember { mutableStateOf(mockDisciplinas.first()) }
     var isDisciplinaExpanded by remember { mutableStateOf(false) }
@@ -71,7 +82,7 @@ fun RankingScreen(navegacao: NavHostController?) {
     var selectedPeriodo by remember { mutableStateOf(mockPeriodos.first()) }
     var isPeriodoExpanded by remember { mutableStateOf(false) }
 
-    val currentAlunoName = "João Victor"
+    val currentAlunoName = "$userName"
 
     // 1. Lógica para mostrar o Ranking
     val showRanking = selectedDisciplina.id != "placeholder" && selectedPeriodo.id != "placeholder"

@@ -90,6 +90,7 @@ dependencies {
     // --- Gráficos e Imagens ---
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.androidx.runtime)
 
     // --- HILT (Dependências necessárias para injeção) ---
     val hiltVersion = "2.51"

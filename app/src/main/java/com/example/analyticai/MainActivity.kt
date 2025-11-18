@@ -20,7 +20,7 @@ import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.ProfileScreen
-import com.example.analyticai.screens.RecPasswd
+import com.example.analyticai.screens.RecursosScreen
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -56,13 +56,13 @@ fun AppNavigationContainer() {
         }
     } else {
         // Se não há credenciais, vai para a tela de Login
-        "login"
+        "dashboard"
     }
     // -------------------------------------------------------------
     // ---- START DESTINATION CORRIGIDO ----
 
-    val bottomBarRoutes = listOf("dashboard", "ranking", "profile")
-    val topBarRoutes = listOf("dashboard", "ranking", "profile")
+    val bottomBarRoutes = listOf("dashboard", "recursos","ranking", "profile")
+    val topBarRoutes = listOf("dashboard", "recursos","ranking", "profile")
 
     Scaffold(
         topBar = {
@@ -96,6 +96,10 @@ fun AppNavigationContainer() {
             // ---- ÚNICO DASHBOARD EXISTENTE ----
             composable("dashboard") {
                 DashboardScreen()
+            }
+
+            composable ("recursos"){
+                RecursosScreen(navController)
             }
 
             composable("ranking") {
