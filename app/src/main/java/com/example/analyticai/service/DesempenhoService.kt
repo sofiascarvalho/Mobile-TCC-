@@ -1,6 +1,7 @@
 package com.example.analyticai.service
 
 import com.example.analyticai.model.Dashboard.DashboardResponse
+import com.example.analyticai.model.Dashboard.InsightResponse
 import com.example.analyticai.model.Dashboard.RelatorioGeradoResponse
 import com.example.analyticai.model.Login.LoginRequest
 import com.example.analyticai.model.Login.LoginResponse
@@ -41,4 +42,11 @@ interface DesempenhoService {
         @Query("semestre") idSemestre: Int,
         @Body body: DashboardResponse
     ): RelatorioGeradoResponse
+
+    @POST("insights/aluno")
+    suspend fun getInsights(
+        @Query("materia") idMateria: Int,
+        @Query("semestre") idSemestre: Int,
+        @Body body: DashboardResponse
+    ): InsightResponse
 }

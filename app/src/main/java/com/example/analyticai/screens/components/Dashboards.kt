@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -32,8 +33,10 @@ import com.example.analyticai.screens.TextGray
 import com.example.analyticai.viewmodel.FiltrosViewModel
 import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
+import com.example.analyticai.model.Dashboard.Insight
 import com.example.analyticai.model.Dashboard.RelatorioCardState
 import com.example.analyticai.model.Dashboard.RelatorioTipo
+import com.example.analyticai.viewmodel.InsightState
 import kotlin.math.max
 import kotlin.math.min
 
@@ -231,7 +234,7 @@ fun SubjectPerformanceChartCard(
     isPlaceholder: Boolean = false
 ) {
     val hasData = data.isNotEmpty() && !isPlaceholder
-    DashboardCard(title = "Desempenho em \"$subject\"", icon = Icons.Outlined.BarChart) {
+    DashboardCard(title = "Notas em \"$subject\"", icon = Icons.Outlined.BarChart) {
         Spacer(Modifier.height(8.dp))
         if (hasData) {
             BarChart(
@@ -523,6 +526,133 @@ fun DashboardCard(title: String, icon: androidx.compose.ui.graphics.vector.Image
             }
             Spacer(Modifier.height(12.dp))
             content()
+        }
+    }
+}
+
+// --- Seção de Insights ---
+@Composable
+fun InsightsSection(
+    insightState: InsightState,
+    hasFiltersSelected: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Título da seção
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Default.AutoAwesome,
+                contentDescription = null,
+                tint = Color.Black,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                "Relatórios e Insights por Matéria",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                color = TextDark
+            )
+        }
+
+        // Conteúdo baseado no estado
+        when {
+            insightState.isLoading -> {
+                // Estado de carregamento
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(40.dp),
+                            color = PurplePrimary
+                        )
+                        Text(
+                            "Gerando insights...",
+                            color = TextGray,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+            insightState.insight != null -> {
+                // Mostrar insight quando disponível
+                InsightCard(insight = insightState.insight)
+            }
+            else -> {
+                // Estado inicial - sem filtros selecionados ou sem dados
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color(0xFFF5F5F5)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (hasFiltersSelected) {
+                            "Nenhum insight disponível para os filtros selecionados."
+                        } else {
+                            "Selecione os filtros para visualizar os insights."
+                        },
+                        color = TextGray,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp),
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun InsightCard(
+    insight: Insight,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            // Título do insight
+            Text(
+                text = insight.titulo,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = TextDark
+            )
+            
+            Spacer(Modifier.height(8.dp))
+            
+            // Data
+            Text(
+                text = insight.data,
+                fontSize = 12.sp,
+                color = TextGray
+            )
+            
+            Spacer(Modifier.height(12.dp))
+            
+            // Conteúdo do insight
+            Text(
+                text = insight.conteudo,
+                fontSize = 14.sp,
+                color = TextDark,
+                lineHeight = 20.sp
+            )
         }
     }
 }

@@ -28,6 +28,7 @@ import com.example.analyticai.screens.components.DashboardHeader
 import com.example.analyticai.screens.components.DownloadCardRefined
 import com.example.analyticai.screens.components.FilterDropdown
 import com.example.analyticai.screens.components.DashboardContent
+import com.example.analyticai.screens.components.InsightsSection
 
 @Composable
 fun LoadingIndicator() {
@@ -58,6 +59,7 @@ fun DashboardScreen() {
     val selectedMateria by dashboardViewModel.selectedMateria.collectAsState()
     val selectedSemestre by dashboardViewModel.selectedSemestre.collectAsState()
     val relatoriosState by dashboardViewModel.relatoriosState.collectAsState()
+    val insightState by dashboardViewModel.insightState.collectAsState()
     val context = LocalContext.current
 
     Scaffold(
@@ -75,7 +77,7 @@ fun DashboardScreen() {
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 DashboardHeader(
-                    title = "Dashboard Analítico",
+                    title = "Dashboard",
                     onActionClick = {
                         dashboardViewModel.carregarDashboard()
                         filtrosViewModel.carregarFiltros()
@@ -160,7 +162,16 @@ fun DashboardScreen() {
                         dashboard = dashboard,
                         isPlaceholder = dashboardState.isPlaceholder
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(48.dp))
+                }
+
+                // Seção de Insights (entre o card de desempenho e os relatórios)
+                item {
+                    InsightsSection(
+                        insightState = insightState,
+                        hasFiltersSelected = selectedMateria != null && selectedSemestre != null
+                    )
+                    Spacer(modifier = Modifier.height(48.dp))
                 }
 
                 // Título dos Relatórios

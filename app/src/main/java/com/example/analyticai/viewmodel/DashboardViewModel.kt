@@ -7,6 +7,7 @@ import com.example.analyticai.model.Dashboard.DashboardResponse
 import com.example.analyticai.model.Dashboard.DashboardState
 import com.example.analyticai.model.Dashboard.DesempenhoResponse
 import com.example.analyticai.model.Dashboard.FrequenciaResponse
+import com.example.analyticai.model.Dashboard.Insight
 import com.example.analyticai.model.Dashboard.RelatorioCardState
 import com.example.analyticai.model.Dashboard.RelatorioTipo
 import com.example.analyticai.model.Dashboards.Materia
@@ -46,6 +47,15 @@ class DashboardViewModel @Inject constructor(
     private val _selectedSemestre = MutableStateFlow<Semestre?>(null)
     val selectedSemestre: StateFlow<Semestre?> = _selectedSemestre.asStateFlow()
 
+    private val _insightState = MutableStateFlow<InsightState>(
+        InsightState(
+            insight = null,
+            isLoading = false,
+            error = null
+        )
+    )
+    val insightState: StateFlow<InsightState> = _insightState.asStateFlow()
+
     fun setSelectedMateria(materia: Materia?) {
         _selectedMateria.value = materia
         handleFilterUpdate()
@@ -64,6 +74,8 @@ class DashboardViewModel @Inject constructor(
         val materia = _selectedMateria.value
         val semestre = _selectedSemestre.value
         if (materia != null && semestre != null) {
+            // Resetar insights quando mudar os filtros
+            resetInsightState()
             fetchDashboard(materia, semestre)
         } else {
             setPlaceholderState(
@@ -71,6 +83,7 @@ class DashboardViewModel @Inject constructor(
                 relatoriosMessage = RELATORIO_FILTROS_NAO_SELECIONADOS,
                 showError = false
             )
+            resetInsightState()
         }
     }
 
@@ -102,19 +115,77 @@ class DashboardViewModel @Inject constructor(
                         isPlaceholder = false
                     )
                     gerarRelatorios(response, materia, semestre)
+                    fetchInsights(response, materia, semestre)
                 } else {
                     setPlaceholderState(
                         message = "Sem dados para os filtros selecionados.",
                         relatoriosMessage = RELATORIO_INDISPONIVEL
                     )
+                    resetInsightState()
                 }
             } catch (e: Exception) {
                 setPlaceholderState(
                     message = "Não foi possível carregar os dados.",
                     relatoriosMessage = RELATORIO_INDISPONIVEL
                 )
+                resetInsightState()
             }
         }
+    }
+
+    private fun fetchInsights(
+        response: DashboardResponse,
+        materia: Materia,
+        semestre: Semestre
+    ) {
+        viewModelScope.launch {
+            // Garantir que o estado de loading seja definido
+            _insightState.value = InsightState(
+                insight = null,
+                isLoading = true,
+                error = null
+            )
+
+            try {
+                val insightResponse = desempenhoService.getInsights(
+                    idMateria = materia.id_materia,
+                    idSemestre = semestre.id_semestre,
+                    body = response
+                )
+
+                // Verificar se a resposta tem status_code 200 e insight não nulo
+                if (insightResponse.status_code == 200 && insightResponse.insight != null) {
+                    _insightState.value = InsightState(
+                        insight = insightResponse.insight,
+                        isLoading = false,
+                        error = null
+                    )
+                } else {
+                    // Se não houver insight válido, voltar ao estado inicial
+                    _insightState.value = InsightState(
+                        insight = null,
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            } catch (e: Exception) {
+                // Em caso de erro, voltar ao estado inicial
+                // Log do erro pode ser adicionado aqui para debug
+                _insightState.value = InsightState(
+                    insight = null,
+                    isLoading = false,
+                    error = null
+                )
+            }
+        }
+    }
+
+    private fun resetInsightState() {
+        _insightState.value = InsightState(
+            insight = null,
+            isLoading = false,
+            error = null
+        )
     }
 
     private fun setPlaceholderState(
@@ -266,3 +337,9 @@ class DashboardViewModel @Inject constructor(
         }
     }
 }
+
+data class InsightState(
+    val insight: Insight?,
+    val isLoading: Boolean,
+    val error: String?
+)
