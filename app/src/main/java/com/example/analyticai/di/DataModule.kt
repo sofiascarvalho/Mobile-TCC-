@@ -14,6 +14,7 @@ import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import com.example.analyticai.data.SharedPreferencesManager
 
 /**
  * Módulo Hilt responsável por fornecer dependências relacionadas à persistência de dados.
@@ -44,6 +45,14 @@ object DataModule {
         ) {
             context.preferencesDataStoreFile(USER_PREFERENCES_NAME)
         }
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferencesManager(
+        @ApplicationContext context: Context
+    ): SharedPreferencesManager {
+        return SharedPreferencesManager(context)
     }
 
 

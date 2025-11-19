@@ -7,16 +7,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.BarChart
-
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.runtime.*
-import androidx.compose.material.icons.outlined.BarChart // <-- NOVO ÍCONE DE GRÁFICO IMPORTADO
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,33 +21,24 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import com.example.analyticai.screens.PurplePrimary
 import com.example.analyticai.screens.TextDark
 import com.example.analyticai.screens.TextGray
 import com.example.analyticai.viewmodel.FiltrosViewModel
-
-// Importe as classes diretamente, não o pacote Dashboards
-// Certifique-se de que esses caminhos estão corretos e as classes Materia e Semestre existem.
 import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
-
-// --- Cores dos gráficos ---
-
+import com.example.analyticai.model.Dashboard.RelatorioCardState
+import com.example.analyticai.model.Dashboard.RelatorioTipo
+import kotlin.math.max
+import kotlin.math.min
 
 val LightPurple = PurplePrimary.copy(alpha = 0.4f)
 val ChartBarColor = PurplePrimary
-val ChartBackgroundColor = Color(0xFFF0E5FF)
 val ChartTextGray = TextGray.copy(alpha = 0.9f)
 val TextDark = Color(0xFF3C3C3C)
 
@@ -61,9 +47,20 @@ val TextDark = Color(0xFF3C3C3C)
 @Composable
 fun PerformanceKpiCard(
     score: Double,
-    change: Double,
-    modifier: Modifier = Modifier
+    subjectName: String,
+    modifier: Modifier = Modifier,
+    isPlaceholder: Boolean = false
 ) {
+    val titleColor = if (isPlaceholder) TextGray else TextDark
+    val accentColor = if (isPlaceholder) TextGray.copy(alpha = 0.7f) else PurplePrimary
+    val valueColor = if (isPlaceholder) TextGray else TextDark
+    val displayScore = if (isPlaceholder) "--" else String.format("%.1f", score)
+    val infoText = if (isPlaceholder) {
+        "Selecione matéria e semestre para visualizar."
+    } else {
+        "Desempenho da matéria $subjectName"
+    }
+
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -75,7 +72,7 @@ fun PerformanceKpiCard(
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Desempenho",
-                    tint = TextDark,
+                    tint = titleColor,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
@@ -83,42 +80,26 @@ fun PerformanceKpiCard(
                     "Desempenho na Matéria",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
-                    color = TextDark
+                    color = titleColor
                 )
             }
             Spacer(Modifier.height(12.dp))
 
             Column {
                 Text(
-                    text = String.format("%.1f", score),
+                    text = displayScore,
                     fontWeight = FontWeight.Light,
                     fontSize = 42.sp,
-                    color = TextDark
+                    color = valueColor
                 )
                 Spacer(Modifier.height(8.dp))
-
-                val changeText = buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            color = PurplePrimary,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    ) {
-                        append("▲ ${String.format("%.1f", change)} no último semestre")
-                    }
-                }
-                Text(changeText)
+                Text(
+                    text = infoText,
+                    color = accentColor,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
-
-            Spacer(Modifier.height(10.dp))
-
-            Text(
-                text = "Média do Semestre",
-                color = TextGray,
-                fontSize = 14.sp,
-                textDecoration = TextDecoration.Underline
-            )
         }
     }
 }
@@ -126,8 +107,15 @@ fun PerformanceKpiCard(
 @Composable
 fun FrequencyKpiCard(
     presentPercentage: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPlaceholder: Boolean = false
 ) {
+    val chartPercentage = if (isPlaceholder) 0f else presentPercentage.coerceIn(0f, 100f)
+    val valueColor = if (isPlaceholder) TextGray else TextDark
+    val placeholderColor = TextGray.copy(alpha = 0.4f)
+    val primaryColor = if (isPlaceholder) placeholderColor else PurplePrimary
+    val secondaryColor = if (isPlaceholder) placeholderColor.copy(alpha = 0.5f) else LightPurple
+
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -139,7 +127,7 @@ fun FrequencyKpiCard(
                 Icon(
                     imageVector = Icons.Default.Schedule,
                     contentDescription = "Frequência",
-                    tint = TextDark,
+                    tint = valueColor,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
@@ -147,7 +135,7 @@ fun FrequencyKpiCard(
                     "Frequência no Período",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
-                    color = TextDark
+                    color = valueColor
                 )
             }
             Spacer(Modifier.height(12.dp))
@@ -157,21 +145,23 @@ fun FrequencyKpiCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PieChart(
-                    percentage = presentPercentage,
-                    modifier = Modifier.size(80.dp)
+                    percentage = chartPercentage,
+                    modifier = Modifier.size(80.dp),
+                    primaryColor = primaryColor,
+                    backgroundColor = secondaryColor
                 )
                 Spacer(Modifier.height(12.dp))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${presentPercentage.toInt()}%",
+                        text = if (isPlaceholder) "--%" else "${chartPercentage.toInt()}%",
                         fontWeight = FontWeight.Bold,
                         fontSize = 42.sp,
-                        color = TextDark
+                        color = valueColor
                     )
                     Text(
                         text = "Frequência",
                         fontSize = 16.sp,
-                        color = TextGray
+                        color = if (isPlaceholder) TextGray else TextGray
                     )
                 }
             }
@@ -179,26 +169,37 @@ fun FrequencyKpiCard(
             Spacer(Modifier.height(12.dp))
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                LegendItem(color = LightPurple, label = "Presença (${presentPercentage.toInt()}%)")
-                LegendItem(color = PurplePrimary, label = "Faltas (${(100 - presentPercentage).toInt()}%)")
+                LegendItem(
+                    color = secondaryColor,
+                    label = "Presença (${if (isPlaceholder) "--" else chartPercentage.toInt()}%)"
+                )
+                LegendItem(
+                    color = primaryColor,
+                    label = "Faltas (${if (isPlaceholder) "--" else (100 - chartPercentage).toInt()}%)"
+                )
             }
         }
     }
 }
 
 @Composable
-fun PieChart(percentage: Float, modifier: Modifier = Modifier) {
+fun PieChart(
+    percentage: Float,
+    modifier: Modifier = Modifier,
+    primaryColor: Color = PurplePrimary,
+    backgroundColor: Color = LightPurple
+) {
     val sweepAngle = percentage * 360f / 100f
     Canvas(modifier = modifier) {
         drawArc(
-            color = LightPurple,
+            color = backgroundColor,
             startAngle = 0f,
             sweepAngle = 360f,
             useCenter = true,
             size = size
         )
         drawArc(
-            color = PurplePrimary,
+            color = primaryColor,
             startAngle = 270f,
             sweepAngle = -sweepAngle,
             useCenter = true,
@@ -226,16 +227,51 @@ data class BarData(val label: String, val value: Float)
 @Composable
 fun SubjectPerformanceChartCard(
     subject: String,
-    data: List<BarData>
+    data: List<BarData>,
+    isPlaceholder: Boolean = false
 ) {
+    val hasData = data.isNotEmpty() && !isPlaceholder
     DashboardCard(title = "Desempenho em \"$subject\"", icon = Icons.Outlined.BarChart) {
         Spacer(Modifier.height(8.dp))
-        BarChart(data = data, modifier = Modifier.fillMaxWidth().height(200.dp))
+        if (hasData) {
+            BarChart(
+                data = data,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color(0xFFF5F5F5)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (isPlaceholder) {
+                        "Selecione os filtros para visualizar o desempenho."
+                    } else {
+                        "Nenhum dado disponível para os filtros selecionados."
+                    },
+                    color = TextGray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun BarChart(data: List<BarData>, modifier: Modifier = Modifier) {
+fun BarChart(
+    data: List<BarData>,
+    modifier: Modifier = Modifier,
+    barColor: Color = ChartBarColor,
+    valueColor: Color = TextDark,
+    gridColor: Color = ChartTextGray.copy(alpha = 0.5f)
+) {
     val scaleMaxY = 10f
     Box(modifier = modifier.clip(RoundedCornerShape(12.dp))) {
         Canvas(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp)) {
@@ -245,21 +281,27 @@ fun BarChart(data: List<BarData>, modifier: Modifier = Modifier) {
             val chartHeight = size.height - labelHeight
             val totalWidth = size.width
             val spacing = 20.dp.toPx()
-            val barWidth = (totalWidth - spacing * (barCount - 1)) / barCount
+            val maxBarWidth = 60.dp.toPx()
+            val minBarWidth = 24.dp.toPx()
+            val availableWidth = totalWidth - spacing * max(0, barCount - 1)
+            val baseBarWidth = if (barCount > 0) availableWidth / barCount else 0f
+            val barWidth = baseBarWidth.coerceIn(minBarWidth, maxBarWidth)
+            val totalBarsWidth = barWidth * barCount + spacing * max(0, barCount - 1)
+            val startX = max(0f, (totalWidth - totalBarsWidth) / 2f)
 
             data.forEachIndexed { index, item ->
                 val barHeightRatio = (item.value / scaleMaxY) * chartHeight
-                val barX = index * (barWidth + spacing)
+                val barX = startX + index * (barWidth + spacing)
                 val barY = chartHeight - barHeightRatio
                 drawRect(
-                    color = ChartBarColor,
+                    color = barColor,
                     topLeft = Offset(barX, barY),
                     size = Size(barWidth, barHeightRatio)
                 )
             }
 
             drawLine(
-                color = ChartTextGray.copy(alpha = 0.5f),
+                color = gridColor,
                 start = Offset(0f, chartHeight),
                 end = Offset(totalWidth, chartHeight),
                 strokeWidth = 2.dp.toPx(),
@@ -290,7 +332,7 @@ fun BarChart(data: List<BarData>, modifier: Modifier = Modifier) {
                         text = String.format("%.1f", item.value),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
-                        color = TextDark
+                        color = valueColor
                     )
                 }
             }
@@ -383,7 +425,40 @@ fun FilterDropdown(
 }
 
 @Composable
-fun DownloadCardRefined(title: String, date: String, modifier: Modifier = Modifier) {
+fun DownloadCardRefined(
+    state: RelatorioCardState,
+    subject: String?,
+    onDownloadClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val title = if (!subject.isNullOrBlank()) {
+        "${state.tipo.titulo} - $subject"
+    } else {
+        state.tipo.titulo
+    }
+
+    val infoText = state.lastUpdate?.let { "Última atualização: $it" } ?: state.statusMessage
+    val infoColor = if (state.hasError) Color(0xFFD32F2F) else TextGray
+
+    val buttonColor = when {
+        state.isLoading -> PurplePrimary.copy(alpha = 0.4f)
+        state.isEnabled -> PurplePrimary
+        state.hasError -> Color(0xFFBDBDBD)
+        else -> TextGray.copy(alpha = 0.2f)
+    }
+
+    val buttonModifier = Modifier
+        .size(40.dp)
+        .clip(RoundedCornerShape(50.dp))
+        .background(buttonColor)
+        .let { base ->
+            if (state.isEnabled && !state.isLoading) {
+                base.clickable { onDownloadClick() }
+            } else {
+                base
+            }
+        }
+
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -400,21 +475,26 @@ fun DownloadCardRefined(title: String, date: String, modifier: Modifier = Modifi
             Column(modifier = Modifier.weight(1f)) {
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = TextDark)
                 Spacer(Modifier.height(4.dp))
-                Text("Última atualização: $date", fontSize = 12.sp, color = TextGray)
+                Text(infoText, fontSize = 12.sp, color = infoColor)
             }
             Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(50.dp))
-                    .background(PurplePrimary),
+                modifier = buttonModifier,
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.Download,
-                    contentDescription = "Download",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = Color.White
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Download,
+                        contentDescription = "Download",
+                        tint = if (state.isEnabled) Color.White else Color.White.copy(alpha = 0.6f),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         }
     }
@@ -480,7 +560,7 @@ fun FiltrosVerticais(
             label = "Matéria",
             selectedValue = selectedMateria.ifEmpty { "Selecione a Matéria" },
             // CORREÇÃO 2: Usando a lista corretamente tipada (materiaList) e mantendo a tipagem explícita na lambda para robustez.
-            options = listOf("Selecione a Matéria") + materiaList.map { it.name },
+            options = listOf("Selecione a Matéria") + materiaList.map { it.materia },
             onSelect = { selected: String -> selectedMateria = selected }
         )
 
@@ -489,7 +569,7 @@ fun FiltrosVerticais(
             label = "Período",
             selectedValue = selectedSemestre.ifEmpty { "Selecione o Período" },
             // CORREÇÃO 3: Usando a lista corretamente tipada (semestreList)
-            options = listOf("Selecione o Período") + semestreList.map { it.name },
+            options = listOf("Selecione o Período") + semestreList.map { it.semestre },
             onSelect = { selected: String -> selectedSemestre = selected }
         )
 
@@ -515,10 +595,8 @@ private fun ComponentsPreview() {
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            PerformanceKpiCard(9.8, 0.3, modifier = Modifier.weight(1f))
-            FrequencyKpiCard(90f, modifier = Modifier.weight(1f))
-        }
+        PerformanceKpiCard(score = 9.8, subjectName = "Matemática")
+        FrequencyKpiCard(presentPercentage = 90f)
 
         val mockData = listOf(
             BarData("Atividade", 8.0f),
@@ -543,6 +621,15 @@ private fun ComponentsPreview() {
             )
         }
 
-        DownloadCardRefined(title = "Relatório de Desempenho", date = "05/11/2025")
+        DownloadCardRefined(
+            state = RelatorioCardState(
+                tipo = RelatorioTipo.DESEMPENHO,
+                statusMessage = "Disponível para download",
+                lastUpdate = "05/11/2025",
+                isEnabled = true
+            ),
+            subject = "Matemática",
+            onDownloadClick = {}
+        )
     }
 }

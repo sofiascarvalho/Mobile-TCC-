@@ -1,6 +1,8 @@
 package com.example.analyticai.screens
 
-import android.util.Log
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.viewmodel.FiltrosViewModel
@@ -26,7 +28,6 @@ import com.example.analyticai.screens.components.DashboardHeader
 import com.example.analyticai.screens.components.DownloadCardRefined
 import com.example.analyticai.screens.components.FilterDropdown
 import com.example.analyticai.screens.components.DashboardContent
-import com.example.analyticai.model.Dashboard.RelatorioResponse
 
 @Composable
 fun LoadingIndicator() {
@@ -39,8 +40,8 @@ fun LoadingIndicator() {
 
 @Composable
 fun DashboardScreen() {
-    val filtrosViewModel: FiltrosViewModel = viewModel()
-    val dashboardViewModel: DashboardViewModel = viewModel()
+    val filtrosViewModel: FiltrosViewModel = hiltViewModel()
+    val dashboardViewModel: DashboardViewModel = hiltViewModel()
 
     // Estados
     val isFiltrosLoading by filtrosViewModel.isLoading.collectAsState()
@@ -56,17 +57,10 @@ fun DashboardScreen() {
 
     val selectedMateria by dashboardViewModel.selectedMateria.collectAsState()
     val selectedSemestre by dashboardViewModel.selectedSemestre.collectAsState()
+    val relatoriosState by dashboardViewModel.relatoriosState.collectAsState()
+    val context = LocalContext.current
 
     Scaffold(
-        topBar = {
-            DashboardHeader(
-                title = "Dashboard Analítico",
-                onActionClick = {
-                    dashboardViewModel.carregarDashboard()
-                    filtrosViewModel.carregarFiltros()
-                }
-            )
-        },
         modifier = Modifier.fillMaxSize()
     ) { paddingValues ->
         LazyColumn(
@@ -76,6 +70,18 @@ fun DashboardScreen() {
                 .fillMaxSize(),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
+
+            // ---- CABEÇALHO ----
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                DashboardHeader(
+                    title = "Dashboard Analítico",
+                    onActionClick = {
+                        dashboardViewModel.carregarDashboard()
+                        filtrosViewModel.carregarFiltros()
+                    }
+                )
+            }
 
             // ---- FILTROS ----
             item {
@@ -88,10 +94,10 @@ fun DashboardScreen() {
                 ) {
                     FilterDropdown(
                         label = "Matéria",
-                        selectedValue = selectedMateria?.name ?: "Selecione",
-                        options = materias.map { it.name },
+                        selectedValue = selectedMateria?.materia ?: "Selecione",
+                        options = materias.map { it.materia },
                         onSelect = { selectedName ->
-                            val materia = materias.find { it.name == selectedName }
+                            val materia = materias.find { it.materia == selectedName }
                             dashboardViewModel.setSelectedMateria(materia)
                         },
                         modifier = Modifier.weight(1f)
@@ -99,10 +105,10 @@ fun DashboardScreen() {
 
                     FilterDropdown(
                         label = "Semestre",
-                        selectedValue = selectedSemestre?.name ?: "Selecione",
-                        options = semestres.map { it.name },
+                        selectedValue = selectedSemestre?.semestre ?: "Selecione",
+                        options = semestres.map { it.semestre },
                         onSelect = { selectedName ->
-                            val semestre = semestres.find { it.name == selectedName }
+                            val semestre = semestres.find { it.semestre == selectedName }
                             dashboardViewModel.setSelectedSemestre(semestre)
                         },
                         modifier = Modifier.weight(1f)
@@ -110,6 +116,19 @@ fun DashboardScreen() {
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            if (erro != null) {
+                item {
+                    Text(
+                        text = erro,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                    )
+                }
             }
 
             // ---- CARD DO ALUNO ----
@@ -137,7 +156,10 @@ fun DashboardScreen() {
 
                 // Conteúdo principal do painel
                 item {
-                    DashboardContent(dashboard = dashboard)
+                    DashboardContent(
+                        dashboard = dashboard,
+                        isPlaceholder = dashboardState.isPlaceholder
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
@@ -151,14 +173,17 @@ fun DashboardScreen() {
                 }
 
                 // PEGAR NOME DA MATÉRIA DE FORMA SEGURA
-                val materiaNome = dashboard.materia.materia
+                val materiaNome = dashboard.materia.materia.takeIf { !dashboardState.isPlaceholder }
 
-
-                // Lista de relatórios
-                items(getMockRelatorios(materiaNome)) { rel ->
+                items(relatoriosState) { rel ->
                     DownloadCardRefined(
-                        title = rel.titulo,
-                        date = rel.dataGeracao
+                        state = rel,
+                        subject = materiaNome,
+                        onDownloadClick = {
+                            rel.link?.let { link ->
+                                openExternalLink(context, link)
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -278,23 +303,9 @@ private fun InfoRow(label: String, value: String) {
     }
 }
 
-// ---- MOCK DOS RELATÓRIOS ----
-fun getMockRelatorios(materiaNome: String): List<RelatorioResponse> {
-    return listOf(
-        RelatorioResponse(
-            titulo = "Relatório Completo - $materiaNome",
-            dataGeracao = "25/11/2025",
-            link = "#"
-        ),
-        RelatorioResponse(
-            titulo = "Resumo de Desempenho - $materiaNome",
-            dataGeracao = "24/11/2025",
-            link = "#"
-        ),
-        RelatorioResponse(
-            titulo = "Análise de Frequência - $materiaNome",
-            dataGeracao = "23/11/2025",
-            link = "#"
-        )
-    )
+private fun openExternalLink(context: Context, link: String) {
+    runCatching {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        context.startActivity(intent)
+    }
 }

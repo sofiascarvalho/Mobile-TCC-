@@ -6,9 +6,9 @@ import com.example.analyticai.model.Dashboards.SemestreResponse
 
 interface FiltrosApi {
 
-    @GET("v1/analytica-ai/semestre")
+    @GET("semestre")
     suspend fun getSemestres(): SemestreResponse
 
-    @GET("v1/analytica-ai/materia")
+    @GET("materia")
     suspend fun getMaterias(): MateriaResponse
 }

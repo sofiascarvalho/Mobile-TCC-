@@ -4,11 +4,14 @@ import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.example.analyticai.service.DesempenhoService
+import com.example.analyticai.service.LoginService
+import com.example.analyticai.service.FiltrosApi
 
 // ⚠️ CORREÇÃO 1: Mudei para 'object' para acessar as propriedades estaticamente
 object Conexao {
 //    http://localhost:8080/v1/analytica-ai/aluno/11
-    private const val BASE_URL = "http://10.0.2.2:8080/v1/analytica-ai/"
+    private const val BASE_URL = "http://192.168.0.103:8080/v1/analytica-ai/"
 
     val client = OkHttpClient.Builder()
         .addInterceptor { chain ->
@@ -37,5 +40,9 @@ object Conexao {
     val loginService: LoginService by lazy {
         // CORREÇÃO 3: Usamos a referência à classe (::class.java), não o construtor ()
         conexao.create(LoginService::class.java)
+    }
+
+    val filtrosApi: FiltrosApi by lazy {
+        conexao.create(FiltrosApi::class.java)
     }
 }

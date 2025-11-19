@@ -7,11 +7,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-import com.example.analyticai.service.MockFiltrosApi
+import com.example.analyticai.service.FiltrosApi
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
 
-class FiltrosViewModel : ViewModel() {
+@HiltViewModel
+class FiltrosViewModel @Inject constructor(
+    private val api: FiltrosApi
+) : ViewModel() {
 
     // 1. Estados dos Filtros
     private val _materias = MutableStateFlow<List<Materia>>(emptyList())
@@ -23,9 +28,6 @@ class FiltrosViewModel : ViewModel() {
     // 2. Estado de Carregamento (CORRIGIDO):
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    // 3. API Mock
-    private val api = MockFiltrosApi()
 
     init {
         carregarFiltros()

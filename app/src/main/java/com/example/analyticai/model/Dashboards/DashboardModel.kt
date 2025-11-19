@@ -10,7 +10,7 @@ data class MateriaResponse(
 
 data class Materia(
     val id_materia: Int,
-    val name: String,
+    val materia: String,
     val cor_materia: String
 )
 
@@ -24,5 +24,5 @@ data class SemestreResponse(
 
 data class Semestre(
     val id_semestre: Int,
-    val name: String
+    val semestre: String
 )

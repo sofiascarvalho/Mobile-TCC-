@@ -5,8 +5,22 @@ import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.SemestreResponse
 import com.example.analyticai.model.Dashboards.Semestre
 
-class MockFiltrosApi : FiltrosApi {
+class FiltrosApiImpl : FiltrosApi {
     
+    override suspend fun getMaterias(): MateriaResponse {
+        // Usa a API real através do Retrofit
+        return Conexao.filtrosApi.getMaterias()
+    }
+    
+    override suspend fun getSemestres(): SemestreResponse {
+        // Usa a API real através do Retrofit
+        return Conexao.filtrosApi.getSemestres()
+    }
+}
+
+// Mantém a classe Mock para referência futura
+/*
+class MockFiltrosApi : FiltrosApi {
     override suspend fun getMaterias(): MateriaResponse {
         // Simula delay de rede
         kotlinx.coroutines.delay(500)
@@ -42,3 +56,4 @@ class MockFiltrosApi : FiltrosApi {
         )
     }
 }
+*/

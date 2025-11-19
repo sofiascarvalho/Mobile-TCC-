@@ -9,9 +9,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-// 💡 IMPORTS CUSTOMIZADOS: Assumindo que seus serviços estão no pacote 'service'
+// IMPORTS CUSTOMIZADOS: Assumindo que seus serviços estão no pacote 'service'
 import com.example.analyticai.service.LoginService
 import com.example.analyticai.service.FiltrosApi
+import com.example.analyticai.service.FiltrosApiImpl
+import com.example.analyticai.service.DesempenhoService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -78,8 +80,17 @@ object NetworkModule {
      */
     @Provides
     @Singleton
-    fun provideFiltrosApi(retrofit: Retrofit): FiltrosApi {
-        return retrofit.create(FiltrosApi::class.java)
+    fun provideFiltrosApi(): FiltrosApi {
+        return FiltrosApiImpl()
+    }
+
+    /**
+     * Fornece a interface DesempenhoService.
+     */
+    @Provides
+    @Singleton
+    fun provideDesempenhoService(retrofit: Retrofit): DesempenhoService {
+        return retrofit.create(DesempenhoService::class.java)
     }
 
     // Você pode remover o AnalyticaiService de exemplo se ele for desnecessário.
