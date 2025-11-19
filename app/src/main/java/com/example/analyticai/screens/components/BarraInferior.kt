@@ -11,12 +11,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,34 +21,30 @@ import com.example.analyticai.R
 
 @Composable
 fun BarraInferior(navController: NavHostController) {
-    // cor do background da barra - branco total
-    val containerColor = Color.White
+    // cor do background da barra (use seu BackgroundLightPink se preferir)
+    val containerColor = Color(0xFFFCF5FF)
+    val iconColor = Color(0xFF363636)
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(0.dp),
-                clip = false,
-                ambientColor = Color.Black.copy(alpha = 0.15f),
-                spotColor = Color.Black.copy(alpha = 0.15f)
-            )
+    NavigationBar(
+        containerColor = containerColor,
+        contentColor = iconColor
     ) {
-        NavigationBar(
-            containerColor = containerColor,
-            modifier = Modifier.fillMaxWidth()
-        ) {
         NavigationItem(
             route = "dashboard",
             currentRoute = currentRoute,
             navController = navController,
             label = "Dashboard",
-            iconPainter = painterResource(R.drawable.dashboard_icon),
-            isVectorIcon = false
+            iconComposable = {
+                Icon(
+                    painter = painterResource(R.drawable.dashboard_icon),
+                    contentDescription = "Dashboard",
+                    tint = iconColor,
+                    modifier = Modifier.size(25.dp)
+                )
+            }
         )
 
         NavigationItem(
@@ -59,8 +52,14 @@ fun BarraInferior(navController: NavHostController) {
             currentRoute = currentRoute,
             navController = navController,
             label = "Recursos",
-            iconPainter = painterResource(R.drawable.recursos_icon),
-            isVectorIcon = false
+            iconComposable = {
+                Icon(
+                    painter = painterResource(R.drawable.recursos_icon),
+                    contentDescription = "Recursos",
+                    tint = iconColor,
+                    modifier = Modifier.size(25.dp)
+                )
+            }
         )
 
         NavigationItem(
@@ -68,19 +67,30 @@ fun BarraInferior(navController: NavHostController) {
             currentRoute = currentRoute,
             navController = navController,
             label = "Ranking",
-            iconPainter = painterResource(R.drawable.ranking_icon),
-            isVectorIcon = false
+            iconComposable = {
+                Icon(
+                    painter = painterResource(R.drawable.ranking_icon),
+                    contentDescription = "Ranking",
+                    tint = iconColor,
+                    modifier = Modifier.size(25.dp)
+                )
+            }
         )
 
         NavigationItem(
             route = "profile",
             currentRoute = currentRoute,
             navController = navController,
-            label = "Perfil",
-            iconVector = Icons.Default.Person,
-            isVectorIcon = true
+            label = "profile",
+            iconComposable = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "profile",
+                    tint = iconColor,
+                    modifier = Modifier.size(25.dp)
+                )
+            }
         )
-        }
     }
 }
 
@@ -90,15 +100,9 @@ private fun RowScope.NavigationItem(
     currentRoute: String?,
     navController: NavHostController,
     label: String,
-    iconPainter: Painter? = null,
-    iconVector: ImageVector? = null,
-    isVectorIcon: Boolean
+    iconComposable: @Composable () -> Unit
 ) {
     val selected = currentRoute == route
-    val selectedColor = Color(0xFF7D53F3) // Roxo para item selecionado
-    val unselectedIconColor = Color(0xFF363636) // Preto para ícones não selecionados
-    val unselectedTextColor = Color(0xFF363636) // Preto para texto não selecionados
-    val iconColor = if (selected) Color.White else unselectedIconColor
 
     NavigationBarItem(
         selected = selected,
@@ -112,30 +116,20 @@ private fun RowScope.NavigationItem(
             }
         },
         icon = {
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = if (selected) selectedColor else Color.Transparent,
-                        shape = RoundedCornerShape(12.dp)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                iconComposable()
+                Spacer(modifier = Modifier.height(4.dp))
+                if (selected) {
+                    // barrinha roxa pequena
+                    Box(
+                        modifier = Modifier
+                            .width(24.dp)
+                            .height(3.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color(0xFF7D53F3))
                     )
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (isVectorIcon && iconVector != null) {
-                        Icon(
-                            imageVector = iconVector,
-                            contentDescription = label,
-                            tint = iconColor,
-                            modifier = Modifier.size(25.dp)
-                        )
-                    } else if (!isVectorIcon && iconPainter != null) {
-                        Icon(
-                            painter = iconPainter,
-                            contentDescription = label,
-                            tint = iconColor,
-                            modifier = Modifier.size(25.dp)
-                        )
-                    }
+                } else {
+                    Spacer(modifier = Modifier.height(3.dp))
                 }
             }
         },
@@ -143,16 +137,15 @@ private fun RowScope.NavigationItem(
             Text(
                 text = label,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = if (selected) Color.Black else unselectedTextColor
+                overflow = TextOverflow.Ellipsis
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = Color.White, // Branco quando selecionado
-            selectedTextColor = Color.White, // Branco quando selecionado
-            indicatorColor = Color.Transparent, // Sem indicador padrão, usamos o Box
-            unselectedIconColor = unselectedIconColor,
-            unselectedTextColor = unselectedTextColor
+            selectedIconColor = Color(0xFF363636),
+            selectedTextColor = Color(0xFF363636),
+            indicatorColor = Color(0xFFD6C6FF), // fundo lilás quando ativo
+            unselectedIconColor = Color(0xFF8A8A8A),
+            unselectedTextColor = Color(0xFF8A8A8A)
         )
     )
 }

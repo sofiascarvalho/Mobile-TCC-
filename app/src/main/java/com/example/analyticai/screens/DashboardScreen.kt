@@ -70,11 +70,12 @@ fun DashboardScreen() {
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
                 .fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 8.dp)
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
 
             // ---- CABEÇALHO ----
             item {
+                Spacer(modifier = Modifier.height(8.dp))
                 DashboardHeader(
                     title = "Dashboard",
                     onActionClick = {
