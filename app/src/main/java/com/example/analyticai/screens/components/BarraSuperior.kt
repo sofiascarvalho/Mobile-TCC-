@@ -42,10 +42,7 @@ fun BarraSuperior(navController: NavHostController?) {
     val usuario: Usuario? = sharedPrefs.getUsuario()
 
     val userName = usuario?.nome ?: "Usuário"
-    val userNivel = usuario?.nivel_usuario ?: "aluno"
-    val userCredential = usuario?.credencial ?: "00000000"
-
-
+    val userTurma = usuario?.turma?.turma ?: "Turma não informada"
 
         Column (
             horizontalAlignment = Alignment.CenterHorizontally
@@ -79,7 +76,7 @@ fun BarraSuperior(navController: NavHostController?) {
 
                 Column {
                     Text("$userName", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
-                    Text("1º Ano B", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
+                    Text("$userTurma", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
