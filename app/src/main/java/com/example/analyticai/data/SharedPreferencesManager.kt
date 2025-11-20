@@ -48,4 +48,12 @@ class SharedPreferencesManager(context: Context) {
         val json = prefs.getString(KEY_USUARIO_JSON, null)
         return json?.let { Gson().fromJson(it, Usuario::class.java) }
     }
+
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.unregisterOnSharedPreferenceChangeListener(listener)
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.analyticai.screens.components
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,8 +18,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,27 +26,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.analyticai.data.SharedPreferencesManager
-import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.ui.theme.DarkGray
-import com.example.analyticai.viewmodel.LoginViewModel
 
 @Composable
 fun BarraSuperior(navController: NavHostController?) {
 
     val context = LocalContext.current
     val sharedPrefs = remember { SharedPreferencesManager(context) }
-    val usuario: Usuario? = sharedPrefs.getUsuario()
+    var usuario by remember { mutableStateOf(sharedPrefs.getUsuario()) }
+
+    DisposableEffect(sharedPrefs) {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+            usuario = sharedPrefs.getUsuario()
+        }
+        sharedPrefs.registerListener(listener)
+        onDispose { sharedPrefs.unregisterListener(listener) }
+    }
 
     val userName = usuario?.nome ?: "Usuário"
     val userTurma = usuario?.turma?.turma ?: "Turma não informada"
 
         Column (
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(start = 15.dp, end = 15.dp, top = 5.dp)
         ){
             Spacer(modifier = Modifier.height(40.dp))
             Row(
@@ -55,13 +63,13 @@ fun BarraSuperior(navController: NavHostController?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White)
-                    .padding(top = 10.dp, start = 15.dp, end = 15.dp)
+                    .padding(top = 10.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color.LightGray)
+                        .background(Color.Gray)
                         .padding(start = 10.dp, end = 10.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -69,19 +77,19 @@ fun BarraSuperior(navController: NavHostController?) {
                         imageVector = Icons.Default.Person,
                         contentDescription = "Foto",
                         tint = White,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Column {
-                    Text("$userName", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray)
+                    Text("$userName", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray, overflow = TextOverflow.Ellipsis, maxLines = 1)
                     Text("$userTurma", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Divider(modifier = Modifier.height(1.dp).width(380.dp))
+            Divider(modifier = Modifier.height(1.dp).fillMaxWidth())
         }
     }

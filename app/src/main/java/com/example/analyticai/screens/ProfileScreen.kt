@@ -1,5 +1,6 @@
 package com.example.analyticai.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,18 +26,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,22 +46,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.analyticai.data.SharedPreferencesManager
-import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.ui.theme.DarkGray
 import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.analyticai.viewmodel.ProfileViewModel
+import com.example.analyticai.viewmodel.ProfileViewModelFactory
 
 @Composable
 fun ProfileScreen(navegacao: NavHostController?) {
     // Manter estados e contexto
     val context = LocalContext.current
-    val sharedPrefs = remember { SharedPreferencesManager(context) }
-    val usuario: Usuario? = sharedPrefs.getUsuario()
-
-    val userName = usuario?.nome ?: "Usuário"
-    val emailUsuario = usuario?.email ?: "Email"
-    val telefoneUsuario = usuario?.telefone ?: "Telefone"
+    val profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory(context))
+    val userName = profileViewModel.nome
+    val emailUsuario = profileViewModel.email
+    val telefoneUsuario = profileViewModel.telefone
+    val successMessage = profileViewModel.successMessage
+    val errorMessage = profileViewModel.errorMessage
+    val isSaving = profileViewModel.isLoading
+    val hasChanges = profileViewModel.hasChanges
 
     var isDarkMode by remember { mutableStateOf(false) }
 
@@ -80,7 +81,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
         // Título Principal - Configurações do Aluno
         Text(
-            text = "Configurações Do Aluno: \"${userName}\"",
+            text = "Configurações Do Aluno",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             color = Color.Black
@@ -113,10 +114,30 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                successMessage?.let {
+                    Text(
+                        text = it,
+                        color = Color(0xFF0F9D58),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
+                errorMessage?.let {
+                    Text(
+                        text = it,
+                        color = Color(0xFFD93025),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
                 // Nome
                 OutlinedTextField(
                     value = userName,
-                    onValueChange = { usuario},
+                    onValueChange = { profileViewModel.updateNome(it) },
                     label = { Text("Nome do aluno", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -135,7 +156,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 // Email
                 OutlinedTextField(
                     value = emailUsuario,
-                    onValueChange = { usuario },
+                    onValueChange = { profileViewModel.updateEmail(it) },
                     label = { Text("Email de Contato", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -154,7 +175,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 // Telefone
                 OutlinedTextField(
                     value = telefoneUsuario,
-                    onValueChange = { usuario },
+                    onValueChange = { profileViewModel.updateTelefone(it) },
                     label = { Text("Telefone de Contato", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -207,7 +228,15 @@ fun ProfileScreen(navegacao: NavHostController?) {
                         Spacer(modifier = Modifier.width(10.dp))
                         Switch(
                             checked = isDarkMode,
-                            onCheckedChange = { checked: Boolean -> isDarkMode = checked }
+                            onCheckedChange = { checked: Boolean -> isDarkMode = checked },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.White,          // Cor da bolinha ligada
+                                uncheckedThumbColor = Color.LightGray,    // Cor da bolinha desligada
+                                checkedTrackColor = PurplePrimary,        // Cor da trilha ligada
+                                uncheckedTrackColor = Color.Transparent,  // Cor da trilha desligada
+                                checkedBorderColor = PurplePrimary,
+                                uncheckedBorderColor = Color.LightGray
+                            )
                         )
                     }
                 }
@@ -225,14 +254,26 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(
-                        onClick = { /* Lógica de salvar */ },
+                        onClick = { profileViewModel.salvarPerfil() },
                         modifier = Modifier
                             .height(45.dp)
                             .width(180.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(PurplePrimary)
+                        enabled = hasChanges && !isSaving,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = PurplePrimary,
+                            disabledContainerColor = PurplePrimary.copy(alpha = 0.5f)
+                        )
                     ) {
-                        Text("Salvar Alterações", color = Color.White)
+                        if (isSaving) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text("Salvar Alterações", color = Color.White)
+                        }
                     }
                 }
             }
@@ -248,6 +289,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 .height(45.dp)
                 .align(Alignment.CenterHorizontally), // Alinha o botão à esquerda dentro da Column
             shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, Color.LightGray),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent, // Fundo transparente
                 contentColor = Color.Black

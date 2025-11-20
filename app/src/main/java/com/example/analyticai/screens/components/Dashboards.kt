@@ -410,6 +410,7 @@ fun FilterDropdown(
         }
 
         DropdownMenu(
+            containerColor = Color.White,
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.width(IntrinsicSize.Max)
