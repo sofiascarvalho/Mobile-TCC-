@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -141,11 +142,11 @@ fun FrequencyKpiCard(
                     color = valueColor
                 )
             }
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(24.dp))
 
-            Column(
+            Row (
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalArrangement = Arrangement.Center
             ) {
                 PieChart(
                     percentage = chartPercentage,
@@ -153,7 +154,7 @@ fun FrequencyKpiCard(
                     primaryColor = primaryColor,
                     backgroundColor = secondaryColor
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.width(12.dp))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = if (isPlaceholder) "--%" else "${chartPercentage.toInt()}%",
@@ -169,7 +170,7 @@ fun FrequencyKpiCard(
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(24.dp))
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 LegendItem(

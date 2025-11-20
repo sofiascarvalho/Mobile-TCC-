@@ -7,6 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import com.example.analyticai.service.DesempenhoService
 import com.example.analyticai.service.LoginService
 import com.example.analyticai.service.FiltrosApi
+import com.example.analyticai.service.RankingService
 
 // ⚠️ CORREÇÃO 1: Mudei para 'object' para acessar as propriedades estaticamente
 object Conexao {
@@ -44,5 +45,9 @@ object Conexao {
 
     val filtrosApi: FiltrosApi by lazy {
         conexao.create(FiltrosApi::class.java)
+    }
+
+    val rankingService: RankingService by lazy {
+        conexao.create(RankingService::class.java)
     }
 }

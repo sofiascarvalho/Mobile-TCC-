@@ -4,58 +4,65 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.analyticai.model.Dashboard.DashboardResponse
-import com.example.analyticai.service.Conexao
 import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.model.Ranking.RankingItem
+import com.example.analyticai.service.Conexao
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.analyticai.model.Login.Usuario
 
 class RankingViewModel(private val context: Context) : ViewModel() {
 
-    var alunoMedia by mutableStateOf<Double?>(null)
-        private set
-
-    var rankingData by mutableStateOf<DashboardResponse?>(null)
+    var rankingItems by mutableStateOf<List<RankingItem>>(emptyList())
         private set
 
     var isLoading by mutableStateOf(false)
+        private set
 
-    fun loadRankingAndPerformance() {
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
 
-        // Carrega o usuário salvo no SharedPreferences
-        val sharedPrefs = SharedPreferencesManager(context)
+    private val sharedPrefs = SharedPreferencesManager(context)
+
+    fun loadRanking(materiaId: Int, semestreId: Int) {
         val usuario = sharedPrefs.getUsuario()
 
-        if (usuario == null) {
-            Log.e("RankingViewModel", "Usuário não encontrado no SharedPreferences!")
-            return
-        }
-
-        // O ID correto é usuario.id (vem do seu SharedPreferencesManager)
-        val idAluno = usuario.id_usuario
-
-        if (idAluno == null) {
-            Log.e("RankingViewModel", "ID do usuário é nulo!")
+        val idPerfil = usuario?.id_perfil
+        if (idPerfil == null) {
+            errorMessage = "Não foi possível identificar o usuário."
+            rankingItems = emptyList()
             return
         }
 
         viewModelScope.launch {
             isLoading = true
+            errorMessage = null
             try {
+                val response = Conexao.rankingService.getRanking(
+                    perfilId = idPerfil,
+                    materiaId = materiaId,
+                    semestreId = semestreId
+                )
 
-                // ⚠ VERIFICAR se o endpoint espera INT ou STRING
-                val response = Conexao.desempenhoService.getDesempenho(idAluno)
+                val itens = response.ranking
 
-                Log.d("DEBUG_API_RANKING", "Resposta carregada: $response")
-
-                rankingData = response
-
+                if (itens.isEmpty()) {
+                    rankingItems = emptyList()
+                    errorMessage = "Não encontramos dados para os filtros selecionados."
+                } else {
+                    rankingItems = itens.mapIndexed { index, item ->
+                        RankingItem(
+                            posicao = index + 1,
+                            media = item.media ?: 0.0,
+                            nome = item.nome
+                        )
+                    }
+                }
             } catch (e: Exception) {
-                Log.e("DEBUG_API_RANKING", "Erro ao carregar dados", e)
-                rankingData = null
+                Log.e("RankingViewModel", "Erro ao carregar ranking", e)
+                rankingItems = emptyList()
+                errorMessage = "Não foi possível carregar o ranking. Tente novamente."
             } finally {
                 isLoading = false
             }

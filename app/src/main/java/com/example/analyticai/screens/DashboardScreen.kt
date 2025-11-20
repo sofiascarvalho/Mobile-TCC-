@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.model.Login.Usuario
@@ -62,158 +63,152 @@ fun DashboardScreen() {
     val insightState by dashboardViewModel.insightState.collectAsState()
     val context = LocalContext.current
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        contentPadding = PaddingValues(bottom = 16.dp)
+    ) {
 
-            // ---- CABEÇALHO ----
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                DashboardHeader(
-                    title = "Dashboard",
-                    onActionClick = {
-                        dashboardViewModel.carregarDashboard()
-                        filtrosViewModel.carregarFiltros()
-                    }
+        // ---- CABEÇALHO ----
+        item {
+            DashboardHeader(
+                title = "Dashboard",
+                onActionClick = {
+                    dashboardViewModel.carregarDashboard()
+                    filtrosViewModel.carregarFiltros()
+                }
+            )
+        }
+
+        // ---- FILTROS ----
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                FilterDropdown(
+                    label = "Matéria",
+                    selectedValue = selectedMateria?.materia ?: "Selecione",
+                    options = materias.map { it.materia },
+                    onSelect = { selectedName ->
+                        val materia = materias.find { it.materia == selectedName }
+                        dashboardViewModel.setSelectedMateria(materia)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+
+                FilterDropdown(
+                    label = "Semestre",
+                    selectedValue = selectedSemestre?.semestre ?: "Selecione",
+                    options = semestres.map { it.semestre },
+                    onSelect = { selectedName ->
+                        val semestre = semestres.find { it.semestre == selectedName }
+                        dashboardViewModel.setSelectedSemestre(semestre)
+                    },
+                    modifier = Modifier.weight(1f)
                 )
             }
 
-            // ---- FILTROS ----
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+        if (erro != null) {
+            item {
+                Text(
+                    text = erro,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+            }
+        }
+
+        // ---- CARD DO ALUNO ----
+        item {
+            StudentInfoCard()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        // ---- CARREGAMENTO ----
+        if (totalLoading) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    FilterDropdown(
-                        label = "Matéria",
-                        selectedValue = selectedMateria?.materia ?: "Selecione",
-                        options = materias.map { it.materia },
-                        onSelect = { selectedName ->
-                            val materia = materias.find { it.materia == selectedName }
-                            dashboardViewModel.setSelectedMateria(materia)
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    FilterDropdown(
-                        label = "Semestre",
-                        selectedValue = selectedSemestre?.semestre ?: "Selecione",
-                        options = semestres.map { it.semestre },
-                        onSelect = { selectedName ->
-                            val semestre = semestres.find { it.semestre == selectedName }
-                            dashboardViewModel.setSelectedSemestre(semestre)
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            if (erro != null) {
-                item {
-                    Text(
-                        text = erro,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    )
+                    LoadingIndicator()
                 }
             }
+        }
 
-            // ---- CARD DO ALUNO ----
+        // ---- PAINEL ----
+        else if (dashboard != null) {
+
+            // Conteúdo principal do painel
             item {
-                StudentInfoCard()
-                Spacer(modifier = Modifier.height(16.dp))
+                DashboardContent(
+                    dashboard = dashboard,
+                    isPlaceholder = dashboardState.isPlaceholder
+                )
+                Spacer(modifier = Modifier.height(48.dp))
             }
 
-            // ---- CARREGAMENTO ----
-            if (totalLoading) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        LoadingIndicator()
-                    }
-                }
+            // Seção de Insights (entre o card de desempenho e os relatórios)
+            item {
+                InsightsSection(
+                    insightState = insightState,
+                    hasFiltersSelected = selectedMateria != null && selectedSemestre != null
+                )
+                Spacer(modifier = Modifier.height(48.dp))
             }
 
-            // ---- PAINEL ----
-            else if (dashboard != null) {
+            // Título dos Relatórios
+            item {
+                Text(
+                    "Relatórios de Download",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
-                // Conteúdo principal do painel
-                item {
-                    DashboardContent(
-                        dashboard = dashboard,
-                        isPlaceholder = dashboardState.isPlaceholder
-                    )
-                    Spacer(modifier = Modifier.height(48.dp))
-                }
+            // PEGAR NOME DA MATÉRIA DE FORMA SEGURA
+            val materiaNome = dashboard.materia.materia.takeIf { !dashboardState.isPlaceholder }
 
-                // Seção de Insights (entre o card de desempenho e os relatórios)
-                item {
-                    InsightsSection(
-                        insightState = insightState,
-                        hasFiltersSelected = selectedMateria != null && selectedSemestre != null
-                    )
-                    Spacer(modifier = Modifier.height(48.dp))
-                }
-
-                // Título dos Relatórios
-                item {
-                    Text(
-                        "Relatórios de Download",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                // PEGAR NOME DA MATÉRIA DE FORMA SEGURA
-                val materiaNome = dashboard.materia.materia.takeIf { !dashboardState.isPlaceholder }
-
-                items(relatoriosState) { rel ->
-                    DownloadCardRefined(
-                        state = rel,
-                        subject = materiaNome,
-                        onDownloadClick = {
-                            rel.link?.let { link ->
-                                openExternalLink(context, link)
-                            }
+            items(relatoriosState) { rel ->
+                DownloadCardRefined(
+                    state = rel,
+                    subject = materiaNome,
+                    onDownloadClick = {
+                        rel.link?.let { link ->
+                            openExternalLink(context, link)
                         }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-
-            // ---- ERRO ----
-            else {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = erro ?: "Selecione os filtros ou ocorreu um erro ao carregar os dados.",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
                     }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+
+        // ---- ERRO ----
+        else {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = erro ?: "Selecione os filtros ou ocorreu um erro ao carregar os dados.",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             }
         }
@@ -255,7 +250,7 @@ fun StudentInfoCard() {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Ícone do aluno",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = Color.Black,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
@@ -278,11 +273,6 @@ fun StudentInfoCard() {
                     InfoRow(label = "Matrícula:", value = usuario.matricula ?: "Não informada")
                     InfoRow(label = "Email:", value = usuario.email)
                     InfoRow(label = "Telefone:", value = usuario.telefone)
-                    InfoRow(label = "Nível:", value = usuario.nivel_usuario)
-
-                    usuario.turma?.let { turma ->
-                        InfoRow(label = "Turma:", value = turma.turma)
-                    }
                 }
             } else {
                 Text(
@@ -304,12 +294,16 @@ private fun InfoRow(label: String, value: String) {
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.weight(0.3f)
+            modifier = Modifier.weight(0.3f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(0.7f)
+            modifier = Modifier.weight(0.7f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.analyticai.screens.PurplePrimary
 import com.example.analyticai.screens.TextDark
@@ -22,7 +23,7 @@ fun DashboardHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 0.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -37,14 +38,14 @@ fun DashboardHeader(
             onClick = onActionClick,
             modifier = Modifier
                     .background(
-                        PurplePrimary.copy(alpha = 0.1f), 
+                        PurplePrimary,
                         shape = androidx.compose.foundation.shape.CircleShape
                     )
         ) {
             Icon(
                 imageVector = Icons.Default.Refresh,
                 contentDescription = "Atualizar",
-                tint = PurplePrimary
+                tint = Color.White
             )
         }
     }

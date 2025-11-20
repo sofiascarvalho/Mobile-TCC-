@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,11 +55,11 @@ fun BarraSuperior(navController: NavHostController?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White)
-                    .padding(top = 10.dp, start = 5.dp, end = 5.dp)
+                    .padding(top = 10.dp, start = 15.dp, end = 15.dp)
             ) {
                 Box(
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(50.dp)
                         .clip(CircleShape)
                         .background(Color.LightGray)
                         .padding(start = 10.dp, end = 10.dp),
@@ -67,7 +68,7 @@ fun BarraSuperior(navController: NavHostController?) {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Foto",
-                        tint = DarkGray,
+                        tint = White,
                         modifier = Modifier.size(32.dp)
                     )
                 }

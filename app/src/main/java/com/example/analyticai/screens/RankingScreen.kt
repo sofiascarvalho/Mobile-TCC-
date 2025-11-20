@@ -1,33 +1,38 @@
 package com.example.analyticai.screens
 
-import androidx.compose.foundation.BorderStroke
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.model.Dashboards.Materia
+import com.example.analyticai.model.Dashboards.Semestre
 import com.example.analyticai.model.Login.Usuario
 import com.example.analyticai.ui.theme.DarkGray
-import com.example.analyticai.ui.theme.GrayDarkMedium
 import com.example.analyticai.ui.theme.PurplePrimary
+import com.example.analyticai.screens.components.FilterDropdown
+import com.example.analyticai.viewmodel.FiltrosViewModel
+import com.example.analyticai.viewmodel.RankingViewModel
+import com.example.analyticai.viewmodel.RankingViewModelFactory
 
 // --- Mock Data Structures e Data (Mantidos) ---
 data class RankItem(
@@ -37,55 +42,51 @@ data class RankItem(
     val isCurrentUser: Boolean = false
 )
 
-data class FilterOption(
-    val id: String,
-    val name: String
-)
-
-val mockRankings = listOf(
-    RankItem(ranking = "1º", media = "9.8", nomeAluno = "João Victor", isCurrentUser = true),
-    RankItem(ranking = "2º", media = "9.2", nomeAluno = "Maria Eduarda", isCurrentUser = false),
-    RankItem(ranking = "3º", media = "8.7", nomeAluno = "Helena Alves Lopes Alves", isCurrentUser = false),
-    RankItem(ranking = "4º", media = "8.5", nomeAluno = "Pedro Henrique", isCurrentUser = false),
-    RankItem(ranking = "5º", media = "8.2", nomeAluno = "Ana Carolina", isCurrentUser = false),
-    RankItem(ranking = "6º", media = "7.9", nomeAluno = "Lucas Fernandes", isCurrentUser = false),
-    RankItem(ranking = "7º", media = "7.6", nomeAluno = "Gabriela Silva", isCurrentUser = false)
-)
-
-val mockDisciplinas = listOf(
-    FilterOption("placeholder", "Selecione"),
-    FilterOption("math", "Matemática"),
-    FilterOption("port", "Português"),
-    FilterOption("hist", "História")
-)
-
-val mockPeriodos = listOf(
-    FilterOption("placeholder", "Selecione"),
-    FilterOption("1sem", "1º Semestre"),
-    FilterOption("2sem", "2º Semestre")
-)
-
 @Composable
 fun RankingScreen(navegacao: NavHostController?) {
 
+    val filtrosViewModel: FiltrosViewModel = hiltViewModel()
     val context = LocalContext.current
     val sharedPrefs = remember { SharedPreferencesManager(context) }
     val usuario: Usuario? = sharedPrefs.getUsuario()
+    val rankingViewModel: RankingViewModel = viewModel(factory = RankingViewModelFactory(context))
 
     val userName = usuario?.nome ?: "Usuário"
 
+    val materias by filtrosViewModel.materias.collectAsState()
+    val semestres by filtrosViewModel.semestres.collectAsState()
+    val isFiltrosLoading by filtrosViewModel.isLoading.collectAsState()
 
-    // --- States for Filters (Mantidos) ---
-    var selectedDisciplina by remember { mutableStateOf(mockDisciplinas.first()) }
-    var isDisciplinaExpanded by remember { mutableStateOf(false) }
+    var selectedMateria by remember { mutableStateOf<Materia?>(null) }
+    var selectedSemestre by remember { mutableStateOf<Semestre?>(null) }
 
-    var selectedPeriodo by remember { mutableStateOf(mockPeriodos.first()) }
-    var isPeriodoExpanded by remember { mutableStateOf(false) }
+    val rankingItems = rankingViewModel.rankingItems
+    val isRankingLoading = rankingViewModel.isLoading
+    val rankingError = rankingViewModel.errorMessage
 
     val currentAlunoName = "$userName"
 
-    // 1. Lógica para mostrar o Ranking
-    val showRanking = selectedDisciplina.id != "placeholder" && selectedPeriodo.id != "placeholder"
+    val showRanking = selectedMateria != null && selectedSemestre != null
+
+    LaunchedEffect(selectedMateria?.id_materia, selectedSemestre?.id_semestre) {
+        val materiaId = selectedMateria?.id_materia
+        val semestreId = selectedSemestre?.id_semestre
+        if (materiaId != null && semestreId != null) {
+            rankingViewModel.loadRanking(materiaId, semestreId)
+        }
+    }
+
+    val tableItems = remember(rankingItems, usuario) {
+        val currentName = usuario?.nome.orEmpty()
+        rankingItems.map { item ->
+            RankItem(
+                ranking = "${item.posicao}º",
+                media = String.format("%.1f", item.media),
+                nomeAluno = item.nome,
+                isCurrentUser = item.nome.equals(currentName, ignoreCase = true)
+            )
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -96,12 +97,18 @@ fun RankingScreen(navegacao: NavHostController?) {
         // 1. Título e Subtítulo
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "Ranking Do Aluno: \"$currentAlunoName\"",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                text = "Ranking Do Aluno",
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 22.sp,
                 color = PurplePrimary
             )
-            Divider(modifier = Modifier.padding(vertical = 4.dp), color = PurplePrimary, thickness = 2.dp)
+            Divider(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .fillMaxWidth(),
+                color = Color(0xFFE0E3EB),
+                thickness = 1.dp
+            )
             Text(
                 text = "Visão geral da sua classificação em relação aos colegas.",
                 fontWeight = FontWeight.Normal,
@@ -112,39 +119,43 @@ fun RankingScreen(navegacao: NavHostController?) {
         }
 
         // 2. Informações do Aluno e Filtros (Reorganizado para mobile)
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
+            if (isFiltrosLoading) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    color = PurplePrimary
+                )
+            }
 
             // B. Filtros
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Filtro Disciplina
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Disciplina:", fontWeight = FontWeight.Medium, fontSize = 14.sp, color = DarkGray)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    DropdownFilter(
-                        selectedOption = selectedDisciplina,
-                        options = mockDisciplinas,
-                        onOptionSelected = { selectedDisciplina = it },
-                        isExpanded = isDisciplinaExpanded,
-                        onExpandChange = { isDisciplinaExpanded = it }
-                    )
-                }
+                val materiaLabel = selectedMateria?.materia ?: if (materias.isEmpty()) "Carregando..." else "Selecione"
+                FilterDropdown(
+                    label = "Matéria",
+                    selectedValue = materiaLabel,
+                    options = materias.map { it.materia },
+                    onSelect = { selectedName ->
+                        selectedMateria = materias.find { it.materia == selectedName }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-                // Filtro Período
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Período:", fontWeight = FontWeight.Medium, fontSize = 14.sp, color = DarkGray)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    DropdownFilter(
-                        selectedOption = selectedPeriodo,
-                        options = mockPeriodos,
-                        onOptionSelected = { selectedPeriodo = it },
-                        isExpanded = isPeriodoExpanded,
-                        onExpandChange = { isPeriodoExpanded = it }
-                    )
-                }
+                val semestreLabel = selectedSemestre?.semestre ?: if (semestres.isEmpty()) "Carregando..." else "Selecione"
+                FilterDropdown(
+                    label = "Semestre",
+                    selectedValue = semestreLabel,
+                    options = semestres.map { it.semestre },
+                    onSelect = { selectedName ->
+                        selectedSemestre = semestres.find { it.semestre == selectedName }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
 
@@ -154,10 +165,41 @@ fun RankingScreen(navegacao: NavHostController?) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // 3. Exibição Condicional da Tabela/Mensagem (Mantida)
+        // 3. Exibição Condicional da Tabela/Mensagem
         Box(modifier = Modifier.fillMaxSize()) {
             if (showRanking) {
-                RankingTable(rankings = mockRankings)
+                when {
+                    isRankingLoading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center),
+                            color = PurplePrimary
+                        )
+                    }
+
+                    tableItems.isNotEmpty() -> {
+                        RankingTable(rankings = tableItems)
+                    }
+
+                    else -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Center)
+                                .padding(bottom = 100.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = rankingError
+                                    ?: "Não encontramos dados para os filtros selecionados.",
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.Gray,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(horizontal = 32.dp)
+                            )
+                        }
+                    }
+                }
             } else {
                 Column(
                     modifier = Modifier
@@ -180,89 +222,31 @@ fun RankingScreen(navegacao: NavHostController?) {
     }
 }
 
-// --- Componentes Reutilizáveis ---
-
-@Composable
-fun DropdownFilter(
-    selectedOption: FilterOption,
-    options: List<FilterOption>,
-    onOptionSelected: (FilterOption) -> Unit,
-    isExpanded: Boolean,
-    onExpandChange: (Boolean) -> Unit
-) {
-    Box {
-        OutlinedButton(
-            onClick = { onExpandChange(true) },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = Color.White,
-                contentColor = DarkGray
-            ),
-            border = BorderStroke(1.dp, Color(0xFFE1E4E7)),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(selectedOption.name, fontSize = 14.sp)
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, Modifier.size(18.dp))
-            }
-        }
-
-        DropdownMenu(
-            expanded = isExpanded,
-            onDismissRequest = { onExpandChange(false) }
-        ) {
-            options.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option.name) },
-                    onClick = {
-                        onOptionSelected(option)
-                        onExpandChange(false)
-                    }
-                )
-            }
-        }
-    }
-}
-
 @Composable
 fun RankingTable(rankings: List<RankItem>) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Cabeçalho da Tabela
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.LightGray.copy(alpha = 0.2f))
-                .padding(vertical = 12.dp)
-        ) {
-            HeaderCell("RANKING", Modifier.weight(0.2f))
-            HeaderCell("MÉDIA", Modifier.weight(0.2f))
-            HeaderCell("NOME DO ALUNO", Modifier.weight(0.6f))
-        }
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
+            RankingHeader()
+            Divider(color = Color(0xFFE4E6EF), thickness = 1.dp, modifier = Modifier.padding(top = 12.dp))
 
-        // Corpo da Tabela (LazyColumn preenchendo o restante)
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            itemsIndexed(rankings) { index, item ->
-                val rowColor = if (item.isCurrentUser) PurplePrimary else Color.White
-                val contentColor = if (item.isCurrentUser) Color.White else DarkGray
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(55.dp)
-                        .background(rowColor)
-                        .border(
-                            width = 1.dp,
-                            color = if (item.isCurrentUser) PurplePrimary else Color(0xFFE1E4E7)
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                itemsIndexed(rankings) { index, item ->
+                    RankingRow(item = item)
+                    if (index != rankings.lastIndex) {
+                        Divider(
+                            color = Color(0xFFEDEFF5),
+                            thickness = 1.dp,
+                            modifier = Modifier.padding(horizontal = 8.dp)
                         )
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ContentCell(item.ranking, Modifier.weight(0.2f), contentColor)
-                    ContentCell(item.media, Modifier.weight(0.2f), contentColor)
-                    // Célula do Nome, agora chamando a versão com Tarja
-                    NameCell(item.nomeAluno, Modifier.weight(0.6f), item.isCurrentUser)
+                    }
                 }
             }
         }
@@ -270,26 +254,70 @@ fun RankingTable(rankings: List<RankItem>) {
 }
 
 @Composable
+private fun RankingHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        HeaderCell("RANKING", Modifier.weight(0.25f))
+        HeaderCell("MÉDIA", Modifier.weight(0.25f))
+        HeaderCell("NOME DO ALUNO", Modifier.weight(0.5f))
+    }
+}
+
+@Composable
 fun HeaderCell(text: String, modifier: Modifier) {
     Text(
         text = text,
-        modifier = modifier.padding(horizontal = 8.dp),
+        modifier = modifier,
         fontWeight = FontWeight.Bold,
-        fontSize = 12.sp,
-        color = DarkGray,
+        fontSize = 13.sp,
+        color = DarkGray.copy(alpha = 0.8f),
         textAlign = TextAlign.Start
     )
+}
+
+@Composable
+fun RankingRow(item: RankItem) {
+    val shape = RoundedCornerShape(32.dp)
+    val isCurrent = item.isCurrentUser
+    val background = if (isCurrent) PurplePrimary else Color.Transparent
+    val borderColor = if (isCurrent) PurplePrimary else Color.Transparent
+    val textColor = if (isCurrent) Color.White else DarkGray
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(background)
+            .border(1.dp, borderColor, shape)
+            .padding(horizontal = 20.dp, vertical = 18.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        ContentCell(item.ranking, Modifier.weight(0.25f), textColor, isBold = true)
+        ContentCell(item.media, Modifier.weight(0.25f), textColor, isBold = true)
+        NameCell(
+            text = item.nomeAluno,
+            modifier = Modifier.weight(0.5f),
+            isCurrentUser = isCurrent
+        )
+    }
 }
 
 @Composable
 fun ContentCell(text: String, modifier: Modifier, color: Color, isBold: Boolean = false) {
     Text(
         text = text,
-        modifier = modifier.padding(horizontal = 8.dp),
+        modifier = modifier,
         fontWeight = if (isBold) FontWeight.SemiBold else FontWeight.Normal,
         fontSize = 14.sp,
         color = color,
-        textAlign = TextAlign.Start
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
     )
 }
 
@@ -303,45 +331,43 @@ fun NameCell(
     val paddingModifier = modifier.padding(horizontal = 8.dp)
 
     if (isCurrentUser) {
-        // Aluno logado: Exibe o nome normalmente, em branco (devido ao fundo roxo)
         Text(
             text = text,
             modifier = paddingModifier,
             fontWeight = FontWeight.SemiBold,
             fontSize = 14.sp,
             color = Color.White,
-            textAlign = TextAlign.Start
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     } else {
-        // Outros alunos: Exibe uma tarja cinza claro sobre o espaço do nome.
-        // O efeito da imagem de PC é uma tarja que cobre o nome.
-        Box(
+        BlurredNameText(
+            text = text,
             modifier = paddingModifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.9f) // Ocupa a maior parte da largura da célula, como uma tarja
-        ) {
-            // Tarja Cinza Clara (simulando a cor do desfoque/tarja)
-            // Usamos DarkGray com baixa opacidade para simular o efeito "apagado"
-            Spacer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(4.dp)) // Borda sutilmente arredondada
-                    .background(DarkGray.copy(alpha = 0.2f))
-            )
-
-            // Opcional: Adicionar um texto de placeholder/censurado leve para dar peso à tarja
-            Text(
-                text = "Censurado",
-                color = DarkGray.copy(alpha = 0.0f), // Quase invisível, apenas para dar um tamanho base
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+        )
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun RankingScreenPreview() {
-    RankingScreen(null)
+private fun BlurredNameText(text: String, modifier: Modifier = Modifier) {
+    val baseModifier = modifier.fillMaxWidth()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        Text(
+            text = text,
+            modifier = baseModifier.blur(10.dp),
+            color = DarkGray,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    } else {
+        Text(
+            text = "••••••••••",
+            modifier = baseModifier,
+            color = DarkGray.copy(alpha = 0.6f),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
 }
