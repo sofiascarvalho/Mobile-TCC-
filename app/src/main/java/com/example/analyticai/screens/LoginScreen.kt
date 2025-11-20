@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.text.style.TextDecoration
 import com.example.analyticai.viewmodel.LoginViewModel
 import com.example.analyticai.data.SharedPreferencesManager
 
@@ -98,7 +100,7 @@ fun LoginScreen(navegacao: NavHostController?) {
                         )
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
                         value = senha,
@@ -126,22 +128,23 @@ fun LoginScreen(navegacao: NavHostController?) {
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
                             modifier = Modifier.clickable { lembrarCredenciais = !lembrarCredenciais }
                         ) {
                             Checkbox(
                                 checked = lembrarCredenciais,
                                 onCheckedChange = { lembrarCredenciais = it },
-                                colors = CheckboxDefaults.colors(checkedColor = primaryColor)
+                                colors = CheckboxDefaults.colors(checkedColor = PurplePrimary)
                             )
-                            Text("Lembrar de mim", fontSize = 14.sp, color = Color.Black) // Aumentei um pouco a fonte para melhor legibilidade
-                        }
-
-                        TextButton(onClick = { navegacao?.navigate("recPasswd") }) {
-                            Text("Esqueceu a senha?", fontSize = 14.sp, color = primaryColor) // Aumentei um pouco a fonte
+                            Text("Lembrar de mim", fontSize = 12.sp, color = Color.DarkGray) // Aumentei um pouco a fonte para melhor legibilidade
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    TextButton(onClick = { navegacao?.navigate("recovery") }) {
+                        Text("Esqueceu a senha?", fontSize = 12.sp, color = Color(0xFF673AB7), textDecoration = TextDecoration.Underline)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
                         onClick = {
@@ -201,7 +204,7 @@ fun LoginScreen(navegacao: NavHostController?) {
                             .fillMaxWidth()
                             .height(50.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor)
+                        colors = ButtonDefaults.buttonColors(containerColor = PurplePrimary)
                     ) {
                         if (isLoading) {
                             CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp)) // Mudei a cor do loading para branco para contrastar com o botão roxo

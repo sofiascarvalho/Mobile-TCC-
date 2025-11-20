@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import com.example.analyticai.data.SharedPreferencesManager
+import com.example.analyticai.data.repository.RecoveryRepository
+import com.example.analyticai.service.RecoveryService
 
 /**
  * Módulo Hilt responsável por fornecer dependências relacionadas à persistência de dados.
@@ -53,6 +55,14 @@ object DataModule {
         @ApplicationContext context: Context
     ): SharedPreferencesManager {
         return SharedPreferencesManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRecoveryRepository(
+        recoveryService: RecoveryService
+    ): RecoveryRepository {
+        return RecoveryRepository(recoveryService)
     }
 
 

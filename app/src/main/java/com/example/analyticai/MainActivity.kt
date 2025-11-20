@@ -21,6 +21,8 @@ import com.example.analyticai.screens.DashboardScreen
 import com.example.analyticai.screens.LoginScreen
 import com.example.analyticai.screens.ProfileScreen
 import com.example.analyticai.screens.RecursosScreen
+import com.example.analyticai.screens.RecoveryScreen
+import com.example.analyticai.screens.RecoveryConfirmationScreen
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -108,6 +110,14 @@ fun AppNavigationContainer() {
 
             composable("profile") {
                 ProfileScreen(navController)
+            }
+
+            composable("recovery") {
+                RecoveryScreen(navController)
+            }
+
+            composable("recovery_confirmation") {
+                RecoveryConfirmationScreen(navController)
             }
         }
     }

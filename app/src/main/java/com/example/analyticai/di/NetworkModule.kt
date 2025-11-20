@@ -14,6 +14,7 @@ import com.example.analyticai.service.LoginService
 import com.example.analyticai.service.FiltrosApi
 import com.example.analyticai.service.FiltrosApiImpl
 import com.example.analyticai.service.DesempenhoService
+import com.example.analyticai.service.RecoveryService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -91,6 +92,15 @@ object NetworkModule {
     @Singleton
     fun provideDesempenhoService(retrofit: Retrofit): DesempenhoService {
         return retrofit.create(DesempenhoService::class.java)
+    }
+
+    /**
+     * Fornece o serviço de recuperação de senha.
+     */
+    @Provides
+    @Singleton
+    fun provideRecoveryService(retrofit: Retrofit): RecoveryService {
+        return retrofit.create(RecoveryService::class.java)
     }
 
     // Você pode remover o AnalyticaiService de exemplo se ele for desnecessário.
