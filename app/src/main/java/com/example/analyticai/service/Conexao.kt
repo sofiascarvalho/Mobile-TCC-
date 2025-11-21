@@ -9,6 +9,7 @@ import com.example.analyticai.service.LoginService
 import com.example.analyticai.service.FiltrosApi
 import com.example.analyticai.service.RankingService
 import com.example.analyticai.service.AlunoService
+import com.example.analyticai.service.RecursosService
 
 // ⚠️ CORREÇÃO 1: Mudei para 'object' para acessar as propriedades estaticamente
 object Conexao {
@@ -54,5 +55,9 @@ object Conexao {
 
     val alunoService: AlunoService by lazy {
         conexao.create(AlunoService::class.java)
+    }
+
+    val recursosService: RecursosService by lazy {
+        conexao.create(RecursosService::class.java)
     }
 }

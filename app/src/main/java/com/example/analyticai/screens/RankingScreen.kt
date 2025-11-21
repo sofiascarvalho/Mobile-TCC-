@@ -94,17 +94,18 @@ fun RankingScreen(navegacao: NavHostController?) {
     ) {
         // 1. Título e Subtítulo
         Column(modifier = Modifier.fillMaxWidth()) {
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Ranking Do Aluno",
+                text = "Ranking do aluno",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
             Divider(
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 4.dp)
                     .fillMaxWidth(),
-                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.0f),
                 thickness = 1.dp
             )
             Text(
@@ -191,7 +192,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                                     ?: "Não encontramos dados para os filtros selecionados.",
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 16.sp,
                                 modifier = Modifier.padding(horizontal = 32.dp)
                             )
@@ -210,7 +211,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                         text = "Selecione uma disciplina e um período para visualizar o ranking.",
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(horizontal = 32.dp)
                     )

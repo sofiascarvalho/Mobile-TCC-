@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
@@ -90,23 +91,27 @@ fun ProfileScreen(navegacao: NavHostController?) {
             .verticalScroll(scrollState) // A rolagem agora abrange todo o conteúdo
             .padding(horizontal = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Título Principal - Configurações do Aluno
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Configurações Do Aluno",
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            color = colorScheme.onSurface
+            text = "Configurações do aluno",
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 22.sp,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth(),
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.0f),
+            thickness = 1.dp
         )
         Text(
-            text = "Gerencie suas informações e preferências do sistema",
+            text = "Gerencie suas informações e preferências do sistema.",
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
-            color = colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-
-        Spacer(modifier = Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Card principal contendo as seções E O BOTÃO SALVAR
         Card(
@@ -122,7 +127,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     "Informações do Aluno",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = colorScheme.onPrimary
+                    color = colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -234,7 +239,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     "Preferências do Aluno",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = colorScheme.onPrimary
+                    color = colorScheme.onSurface
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

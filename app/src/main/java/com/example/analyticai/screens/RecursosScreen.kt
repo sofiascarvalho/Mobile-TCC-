@@ -11,75 +11,68 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.analyticai.model.Dashboards.Materia
+import com.example.analyticai.model.Dashboards.Semestre
 import com.example.analyticai.model.Recursos.Recurso
 import com.example.analyticai.screens.components.ConfirmarDownload
+import com.example.analyticai.screens.components.FilterDropdown
 import com.example.analyticai.screens.components.RecursoCard
+import com.example.analyticai.viewmodel.FiltrosViewModel
+import com.example.analyticai.viewmodel.RecursosViewModel
+import com.example.analyticai.viewmodel.RecursosViewModelFactory
 
 @Composable
 fun RecursosScreen(navegacao: NavHostController?) {
+    val filtrosViewModel: FiltrosViewModel = hiltViewModel()
+    val context = LocalContext.current
+    val recursosViewModel: RecursosViewModel = viewModel(factory = RecursosViewModelFactory(context))
+
+    val materias by filtrosViewModel.materias.collectAsState()
+    val semestres by filtrosViewModel.semestres.collectAsState()
+    val isFiltrosLoading by filtrosViewModel.isLoading.collectAsState()
+
+    var selectedMateria by remember { mutableStateOf<Materia?>(null) }
+    var selectedSemestre by remember { mutableStateOf<Semestre?>(null) }
+
+    val recursos = recursosViewModel.recursos
+    val isLoading = recursosViewModel.isLoading
+    val errorMessage = recursosViewModel.errorMessage
+
+    val showRecursos = selectedMateria != null && selectedSemestre != null
+
     var recursoSelecionado by remember { mutableStateOf<Recurso?>(null) }
-    var abaSelecionada by remember { mutableStateOf("Mural") }
-    var disciplinaSelecionada by remember { mutableStateOf("Todas as disciplinas") }
-    var periodoSelecionado by remember { mutableStateOf("1º Semestre") }
 
-    val disciplinas = listOf("Todas as disciplinas", "Filosofia", "Matemática", "Biologia")
-    val periodos = listOf("1º Semestre", "2º Semestre")
-
-//    val recursosFiltrados = recursos.filter { recurso ->
-//        (disciplinaSelecionada == "Todas as disciplinas" || recurso.disciplina == disciplinaSelecionada) &&
-//                recurso.periodo == periodoSelecionado
-//    }
-
-    val recursos = remember {
-        listOf(
-            Recurso(
-                titulo = "Material Complementar: Filosofia",
-                descricao = "Material para estudo complementar da aula de segunda-feira",
-                disciplina = "Filosofia",
-                periodo = "1º Semestre",
-                arquivo = "material-filosofia.pdf"
-            ),
-            Recurso(
-                titulo = "Material Complementar: Matemática",
-                descricao = "Video aula no YouTube para complementar a aula de segunda-feira",
-                disciplina = "Matemática",
-                periodo = "1º Semestre",
-                arquivo = "funcao-2grau.pdf"
-            ),
-            Recurso(
-                titulo = "Material Complementar: Biologia",
-                descricao = "Material para estudo complementar da aula de segunda-feira",
-                disciplina = "Biologia",
-                periodo = "2º Semestre",
-                arquivo = "material-bio.pdf"
-            )
-        )
+    LaunchedEffect(selectedMateria?.id_materia, selectedSemestre?.id_semestre) {
+        val materiaId = selectedMateria?.id_materia
+        val semestreId = selectedSemestre?.id_semestre
+        if (materiaId != null && semestreId != null) {
+            recursosViewModel.loadRecursos(materiaId, semestreId)
+        }
     }
-
-    val recursosFiltrados = recursos.filter { recurso ->
-        (disciplinaSelecionada == "Todas as disciplinas" || recurso.disciplina == disciplinaSelecionada) &&
-                recurso.periodo == periodoSelecionado
-    }
-
 
     Column(
         modifier = Modifier
@@ -87,58 +80,131 @@ fun RecursosScreen(navegacao: NavHostController?) {
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        // Tabs (Mural / Atividades)
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Mural de recursos",
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 22.sp,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Divider(
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .fillMaxWidth(),
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.0f),
+                thickness = 1.dp
+            )
+            Text(
+                text = "Visão geral de recursos disponibilizados pelos professores.",
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+
+        // Filtros usando os mesmos componentes da Dashboard/Ranking
+        if (isFiltrosLoading) {
+            Text(
+                text = "Carregando filtros...",
+                color = MaterialTheme.colorScheme.onBackground,
+                fontSize = 14.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            AbaSelecionavel(
-                titulo = "Mural",
-                selecionado = abaSelecionada == "Mural",
-                onClick = { abaSelecionada = "Mural" }
+            val materiaLabel = selectedMateria?.materia
+                ?: if (materias.isEmpty()) "Carregando..." else "Selecione"
+
+            FilterDropdown(
+                label = "Matéria",
+                selectedValue = materiaLabel,
+                options = materias.map { it.materia },
+                onSelect = { selectedName ->
+                    selectedMateria = materias.find { it.materia == selectedName }
+                },
+                modifier = Modifier.weight(1f)
             )
-            AbaSelecionavel(
-                titulo = "Atividades",
-                selecionado = abaSelecionada == "Atividades",
-                onClick = { abaSelecionada = "Atividades" }
+
+            val semestreLabel = selectedSemestre?.semestre
+                ?: if (semestres.isEmpty()) "Carregando..." else "Selecione"
+
+            FilterDropdown(
+                label = "Semestre",
+                selectedValue = semestreLabel,
+                options = semestres.map { it.semestre },
+                onSelect = { selectedName ->
+                    selectedSemestre = semestres.find { it.semestre == selectedName }
+                },
+                modifier = Modifier.weight(1f)
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Filtros
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            DropdownFiltro(
-                label = "Disciplina:",
-                opcoes = disciplinas,
-                selecionado = disciplinaSelecionada,
-                onSelecionar = { disciplinaSelecionada = it },
-            )
-
-            DropdownFiltro(
-                label = "Período:",
-                opcoes = periodos,
-                selecionado = periodoSelecionado,
-                onSelecionar = { periodoSelecionado = it }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Lista de recursos
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(vertical = 8.dp)
-        ) {
-            items(recursosFiltrados.size) { index ->
-                RecursoCard(
-                    recurso = recursosFiltrados[index],
-                    onBaixarClick = { recursoSelecionado = it }
+        // Conteúdo condicionado à seleção dos filtros
+        if (!showRecursos) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Selecione uma matéria e um semestre para visualizar os recursos.",
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
+            }
+        } else {
+            when {
+                isLoading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                }
+
+                recursos.isNotEmpty() -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(vertical = 8.dp)
+                    ) {
+                        items(recursos) { recurso ->
+                            RecursoCard(
+                                recurso = recurso,
+                                onBaixarClick = { recursoSelecionado = it }
+                            )
+                        }
+                    }
+                }
+
+                else -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Não encontramos recursos para os filtros selecionados.",
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(horizontal = 24.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -146,7 +212,9 @@ fun RecursosScreen(navegacao: NavHostController?) {
     // Confirmação de download
     ConfirmarDownload(
         recurso = recursoSelecionado,
-        onConfirmar = { recursoSelecionado = null },
+        onConfirmar = {
+            recursoSelecionado = null
+        },
         onCancelar = { recursoSelecionado = null }
     )
 }
@@ -160,41 +228,6 @@ fun AbaSelecionavel(titulo: String, selecionado: Boolean, onClick: () -> Unit) {
             color = if (selecionado) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 16.sp
         )
-    }
-}
-
-@Composable
-fun DropdownFiltro(
-    label: String,
-    opcoes: List<String>,
-    selecionado: String,
-    onSelecionar: (String) -> Unit
-) {
-    var expandido by remember { mutableStateOf(false) }
-
-    Column {
-        Text(
-            text = label,
-            fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Box {
-            OutlinedButton(onClick = { expandido = true }) {
-                Text(selecionado)
-            }
-            DropdownMenu(expanded = expandido, onDismissRequest = { expandido = false }) {
-                opcoes.forEach { opcao ->
-                    DropdownMenuItem(
-                        text = { Text(opcao) },
-                        onClick = {
-                            onSelecionar(opcao)
-                            expandido = false
-                        }
-                    )
-                }
-            }
-        }
     }
 }
 
