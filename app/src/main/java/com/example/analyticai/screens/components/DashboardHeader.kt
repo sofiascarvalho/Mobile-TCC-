@@ -9,10 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.analyticai.screens.PurplePrimary
-import com.example.analyticai.screens.TextDark
 
 @Composable
 fun DashboardHeader(
@@ -20,6 +17,9 @@ fun DashboardHeader(
     onActionClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+    val typography = MaterialTheme.typography
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -29,23 +29,23 @@ fun DashboardHeader(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineMedium,
-            color = TextDark,
+            style = typography.headlineMedium,
+            color = colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
-        
+
         IconButton(
             onClick = onActionClick,
             modifier = Modifier
-                    .background(
-                        PurplePrimary,
-                        shape = androidx.compose.foundation.shape.CircleShape
-                    )
+                .background(
+                    colorScheme.primary,
+                    shape = androidx.compose.foundation.shape.CircleShape
+                )
         ) {
             Icon(
                 imageVector = Icons.Default.Refresh,
                 contentDescription = "Atualizar",
-                tint = Color.White
+                tint = colorScheme.onPrimary
             )
         }
     }

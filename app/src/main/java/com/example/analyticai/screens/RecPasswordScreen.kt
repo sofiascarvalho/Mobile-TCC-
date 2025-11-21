@@ -38,11 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.analyticai.ui.theme.BackgroundGeneral
-import com.example.analyticai.ui.theme.GrayBlueLight
-import com.example.analyticai.ui.theme.GrayExtraLight
-import com.example.analyticai.ui.theme.GrayPink
-import com.example.analyticai.ui.theme.PurplePrimary
 
    @Composable
    fun RecPasswd(navegacao: NavHostController?) {
@@ -51,7 +46,7 @@ import com.example.analyticai.ui.theme.PurplePrimary
        Box(
            modifier = Modifier
                .fillMaxSize()
-               .background(GrayExtraLight)
+               .background(Color.LightGray)
        ) {
            Column(
                modifier = Modifier.fillMaxSize(),
@@ -111,13 +106,13 @@ import com.example.analyticai.ui.theme.PurplePrimary
                        OutlinedTextField(
                            value = "",
                            onValueChange = {},
-                           placeholder = { Text("Sua Matrícula", color = GrayPink, fontWeight = FontWeight.ExtraLight, fontSize = 13.sp) },
+                           placeholder = { Text("Sua Matrícula", color = Color.Magenta, fontWeight = FontWeight.ExtraLight, fontSize = 13.sp) },
                            modifier = Modifier.fillMaxWidth(),
                            colors = OutlinedTextFieldDefaults.colors(
                                focusedContainerColor = colorScheme.surface,
                                unfocusedContainerColor = colorScheme.surface,
-                               focusedBorderColor = GrayBlueLight,
-                               unfocusedBorderColor = GrayBlueLight
+                               focusedBorderColor = Color.Gray,
+                               unfocusedBorderColor = Color.Gray
                            ),
                            shape = RoundedCornerShape(12.dp)
                        )
@@ -148,7 +143,7 @@ fun ConfirmEmail(navegacao: NavHostController?) {
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(GrayExtraLight),
+                .background(Color.LightGray),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -326,7 +321,7 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(GrayExtraLight),
+                .background(Color.LightGray),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){

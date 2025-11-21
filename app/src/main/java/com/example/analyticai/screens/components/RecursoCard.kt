@@ -29,8 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.analyticai.model.Recursos.Recurso
 import com.example.analyticai.screens.RecursosScreen
-import com.example.analyticai.ui.theme.BlackLight
-import com.example.analyticai.ui.theme.PurplePrimary
 import com.example.analyticai.ui.theme.getDisciplinaColor
 
 @Composable
@@ -72,13 +70,13 @@ fun RecursoCard(
                     Text(
                         text = recurso.descricao,
                         fontSize = 14.sp,
-                        color = BlackLight,
+                        color = Color.DarkGray,
                         fontWeight = FontWeight.Light
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
                         onClick = { onBaixarClick(recurso) },
-                        colors = ButtonDefaults.buttonColors(containerColor = PurplePrimary)
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta)
                     ) {
                         Text(text = "Baixar PDF")
                     }

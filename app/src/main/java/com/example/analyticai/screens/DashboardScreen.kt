@@ -1,5 +1,6 @@
 package com.example.analyticai.screens
 
+import android.R
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -221,6 +222,8 @@ fun StudentInfoCard() {
     val sharedPrefs = remember { SharedPreferencesManager(context) }
     val usuario: Usuario? = sharedPrefs.getUsuario()
 
+    val colorScheme = MaterialTheme.colorScheme
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -230,7 +233,7 @@ fun StudentInfoCard() {
                 clip = false
             ),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = colorScheme.surface
         ),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(0.dp) // usa só a shadow()
@@ -250,14 +253,14 @@ fun StudentInfoCard() {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Ícone do aluno",
-                        tint = Color.Black,
+                        tint = colorScheme.onSurface,
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
                         text = "Informações do Aluno",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = colorScheme.onSurface
                     )
                 }
             }
@@ -286,6 +289,7 @@ fun StudentInfoCard() {
 
 @Composable
 private fun InfoRow(label: String, value: String) {
+    val colorScheme = MaterialTheme.colorScheme
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -296,14 +300,16 @@ private fun InfoRow(label: String, value: String) {
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(0.3f),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = colorScheme.onSurface
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(0.7f),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = colorScheme.onBackground
         )
     }
 }

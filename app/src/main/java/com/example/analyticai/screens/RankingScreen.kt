@@ -27,8 +27,6 @@ import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
 import com.example.analyticai.model.Login.Usuario
-import com.example.analyticai.ui.theme.DarkGray
-import com.example.analyticai.ui.theme.PurplePrimary
 import com.example.analyticai.screens.components.FilterDropdown
 import com.example.analyticai.viewmodel.FiltrosViewModel
 import com.example.analyticai.viewmodel.RankingViewModel
@@ -275,7 +273,7 @@ fun HeaderCell(text: String, modifier: Modifier) {
         modifier = modifier,
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
-        color = DarkGray.copy(alpha = 0.8f),
+        color = Color.DarkGray.copy(alpha = 0.8f),
         textAlign = TextAlign.Start
     )
 }
@@ -286,7 +284,7 @@ fun RankingRow(item: RankItem) {
     val isCurrent = item.isCurrentUser
     val background = if (isCurrent) PurplePrimary else Color.Transparent
     val borderColor = if (isCurrent) PurplePrimary else Color.Transparent
-    val textColor = if (isCurrent) Color.White else DarkGray
+    val textColor = if (isCurrent) Color.White else Color.DarkGray
 
     Row(
         modifier = Modifier
@@ -355,7 +353,7 @@ private fun BlurredNameText(text: String, modifier: Modifier = Modifier) {
         Text(
             text = text,
             modifier = baseModifier.blur(10.dp),
-            color = DarkGray,
+            color = Color.DarkGray,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             maxLines = 1,
@@ -365,7 +363,7 @@ private fun BlurredNameText(text: String, modifier: Modifier = Modifier) {
         Text(
             text = "••••••••••",
             modifier = baseModifier,
-            color = DarkGray.copy(alpha = 0.6f),
+            color = Color.DarkGray.copy(alpha = 0.6f),
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )

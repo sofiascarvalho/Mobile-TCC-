@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavHostController
@@ -24,23 +26,24 @@ import com.example.analyticai.R
 
 @Composable
 fun BarraInferior(navController: NavHostController) {
-    // cor do background da barra - branco total
-    val containerColor = Color.White
+    val colorScheme = MaterialTheme.colorScheme
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
-        containerColor = containerColor,
+        containerColor = colorScheme.surface,
+        contentColor = colorScheme.onSurface,
         modifier = Modifier
             .fillMaxWidth()
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(0.dp),
                 clip = false,
-                ambientColor = Color.Black.copy(alpha = 0.15f),
-                spotColor = Color.Black.copy(alpha = 0.15f)
-            )
+                ambientColor = colorScheme.onSurface.copy(alpha = 0.08f),
+                spotColor = colorScheme.onSurface.copy(alpha = 0.08f)
+            ),
+        tonalElevation = NavigationBarDefaults.Elevation
     ) {
         NavigationItem(
             route = "dashboard",
@@ -90,11 +93,13 @@ private fun RowScope.NavigationItem(
     iconVector: ImageVector? = null,
     isVectorIcon: Boolean
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+
     val selected = currentRoute == route
-    val selectedColor = Color(0xFF7D53F3) // Roxo para item selecionado
-    val unselectedIconColor = Color(0xFF363636) // Preto para ícones não selecionados
-    val unselectedTextColor = Color(0xFF363636) // Preto para texto não selecionados
-    val iconColor = if (selected) Color.White else unselectedIconColor
+    val selectedColor = colorScheme.primary
+    val unselectedIconColor = colorScheme.onSurfaceVariant
+    val unselectedTextColor = colorScheme.onSurfaceVariant
+    val iconColor = if (selected) colorScheme.onPrimary else unselectedIconColor
 
     NavigationBarItem(
         selected = selected,
@@ -140,13 +145,13 @@ private fun RowScope.NavigationItem(
                 text = label,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = if (selected) Color.Black else unselectedTextColor
+                color = if (selected) colorScheme.onSurface else unselectedTextColor
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = Color.White, // Branco quando selecionado
-            selectedTextColor = Color.Black, // Preto quando selecionado (como você pediu)
-            indicatorColor = Color.Transparent, // Sem indicador padrão, usamos o Box
+            selectedIconColor = colorScheme.onPrimary,
+            selectedTextColor = colorScheme.onSurface,
+            indicatorColor = Color.Transparent,
             unselectedIconColor = unselectedIconColor,
             unselectedTextColor = unselectedTextColor
         )

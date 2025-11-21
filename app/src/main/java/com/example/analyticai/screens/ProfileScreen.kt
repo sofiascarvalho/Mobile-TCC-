@@ -46,10 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.analyticai.ui.theme.DarkGray
-import com.example.analyticai.ui.theme.GrayDarkMedium
-import com.example.analyticai.ui.theme.PurplePrimary
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.analyticai.data.SharedPreferencesManager
 import com.example.analyticai.viewmodel.ProfileViewModel
 import com.example.analyticai.viewmodel.ProfileViewModelFactory
 
@@ -65,6 +63,8 @@ fun ProfileScreen(navegacao: NavHostController?) {
     val errorMessage = profileViewModel.errorMessage
     val isSaving = profileViewModel.isLoading
     val hasChanges = profileViewModel.hasChanges
+
+    val sharedPrefsManager = remember { SharedPreferencesManager(context) }
 
     var isDarkMode by remember { mutableStateOf(false) }
 
@@ -284,7 +284,12 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
         // Botão "Sair da conta" (alinhado à esquerda e fora do Card)
         Button(
-            onClick = { /* Lógica de sair */ navegacao?.navigate("login") },
+            onClick = {
+                sharedPrefsManager.clearCredentials()
+                navegacao?.navigate("login") {
+                    popUpTo("dashboard") { inclusive = true }
+                }
+            },
             modifier = Modifier
                 .height(45.dp)
                 .align(Alignment.CenterHorizontally), // Alinha o botão à esquerda dentro da Column

@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -19,6 +18,7 @@ import androidx.navigation.NavHostController
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import com.example.analyticai.viewmodel.LoginViewModel
 import com.example.analyticai.data.SharedPreferencesManager
 
@@ -43,11 +43,10 @@ fun LoginScreen(navegacao: NavHostController?) {
 
     val sharedPrefsManager = remember { SharedPreferencesManager(context) }
 
-    val backgroundColor = Color(0xFFF7F7F7)
-    val cardColor = Color.White
-    val primaryColor = Color(0xFF673AB7)
+    val colorScheme = MaterialTheme.colorScheme
+    val typography = MaterialTheme.typography
 
-    Scaffold(containerColor = backgroundColor) { paddingValues ->
+    Scaffold(containerColor = colorScheme.background) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,7 +55,10 @@ fun LoginScreen(navegacao: NavHostController?) {
         ) {
             Card(
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = cardColor),
+                colors = CardDefaults.cardColors(
+                    containerColor = colorScheme.surface,
+                    contentColor = colorScheme.onSurface
+                ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
@@ -70,33 +72,44 @@ fun LoginScreen(navegacao: NavHostController?) {
 
                     Text(
                         text = "Login",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
+                        style = typography.titleLarge?.copy(fontWeight = FontWeight.Bold)
+                            ?: LocalTextStyle.current.copy(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                        color = colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
 
                     Text(
-                        text = "Acesse sua conta de aluno", // Texto ajustado para refletir a restrição
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 32.dp)
+                        text = "Acesse sua conta de aluno",
+                        style = typography.bodyMedium,
+                        color = colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 32.dp),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     OutlinedTextField(
                         value = credencial,
                         onValueChange = { credencial = it; erroCredencial = null },
-                        label = { Text("Matrícula") },
-                        placeholder = { Text("00000000") },
+                        label = { Text("Matrícula", color = colorScheme.onSurfaceVariant) },
+                        placeholder = { Text("00000000", color = colorScheme.onSurfaceVariant) },
                         isError = erroCredencial != null,
-                        supportingText = { erroCredencial?.let { Text(it) } },
+                        supportingText = {
+                            erroCredencial?.let { Text(it, color = colorScheme.error) }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = primaryColor,
-                            unfocusedBorderColor = Color.LightGray,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
+                            focusedBorderColor = colorScheme.primary,
+                            unfocusedBorderColor = colorScheme.outline,
+                            cursorColor = colorScheme.primary,
+                            focusedTextColor = colorScheme.onSurface,
+                            unfocusedTextColor = colorScheme.onSurface,
+                            focusedLabelColor = colorScheme.primary,
+                            unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                            focusedContainerColor = colorScheme.surfaceVariant,
+                            unfocusedContainerColor = colorScheme.surfaceVariant,
+                            disabledContainerColor = colorScheme.surfaceVariant,
+                            errorContainerColor = colorScheme.surfaceVariant
                         )
                     )
 
@@ -105,17 +118,26 @@ fun LoginScreen(navegacao: NavHostController?) {
                     OutlinedTextField(
                         value = senha,
                         onValueChange = { senha = it; erroSenha = null },
-                        label = { Text("Senha") },
+                        label = { Text("Senha", color = colorScheme.onSurfaceVariant) },
                         visualTransformation = PasswordVisualTransformation(),
                         isError = erroSenha != null,
-                        supportingText = { erroSenha?.let { Text(it) } },
+                        supportingText = {
+                            erroSenha?.let { Text(it, color = colorScheme.error) }
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = primaryColor,
-                            unfocusedBorderColor = Color.LightGray,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
+                            focusedBorderColor = colorScheme.primary,
+                            unfocusedBorderColor = colorScheme.outline,
+                            cursorColor = colorScheme.primary,
+                            focusedTextColor = colorScheme.onSurface,
+                            unfocusedTextColor = colorScheme.onSurface,
+                            focusedLabelColor = colorScheme.primary,
+                            unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                            focusedContainerColor = colorScheme.surfaceVariant,
+                            unfocusedContainerColor = colorScheme.surfaceVariant,
+                            disabledContainerColor = colorScheme.surfaceVariant,
+                            errorContainerColor = colorScheme.surfaceVariant
                         )
                     )
 
@@ -134,14 +156,25 @@ fun LoginScreen(navegacao: NavHostController?) {
                             Checkbox(
                                 checked = lembrarCredenciais,
                                 onCheckedChange = { lembrarCredenciais = it },
-                                colors = CheckboxDefaults.colors(checkedColor = PurplePrimary)
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = colorScheme.primary,
+                                    uncheckedColor = colorScheme.outline,
+                                    checkmarkColor = colorScheme.onPrimary
+                                )
                             )
-                            Text("Lembrar de mim", fontSize = 12.sp, color = Color.DarkGray) // Aumentei um pouco a fonte para melhor legibilidade
+                            Text(
+                                "Lembrar de mim",
+                                fontSize = 14.sp,
+                                color = colorScheme.onSurface
+                            )
                         }
                     }
 
-                    TextButton(onClick = { navegacao?.navigate("recovery") }) {
-                        Text("Esqueceu a senha?", fontSize = 12.sp, color = Color(0xFF673AB7), textDecoration = TextDecoration.Underline)
+                    TextButton(
+                        onClick = { navegacao?.navigate("recovery") },
+                        colors = ButtonDefaults.textButtonColors(contentColor = colorScheme.primary)
+                    ) {
+                        Text("Esqueceu a senha?", fontSize = 14.sp, textDecoration = TextDecoration.Underline)
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -156,22 +189,16 @@ fun LoginScreen(navegacao: NavHostController?) {
                                 loginViewModel.login(
                                     credencial = credencial,
                                     senha = senha,
-                                    // A assinatura corrigida agora recebe 'LoginResponse'
                                     onSuccess = { response ->
                                         isLoading = false
-                                        // O response.usuario agora pode ser nulo (tratado abaixo)
                                         val usuarioLogado = response.usuario
 
                                         if (usuarioLogado == null) {
-                                            // Caso o login falhe, mas o repository não lance exceção (e retorne null)
                                             Toast.makeText(context, "Credenciais inválidas ou erro no servidor.", Toast.LENGTH_LONG).show()
                                             return@login
                                         }
 
-                                        // --- INÍCIO DA VALIDAÇÃO DE NÍVEL ---
-                                        // Verifica se o nível do usuário é estritamente "aluno" (ignorando maiúsculas/minúsculas)
                                         if (usuarioLogado.nivel_usuario?.equals("aluno", ignoreCase = true) == true) {
-                                            // É aluno: prossegue com o login
                                             if (lembrarCredenciais) {
                                                 sharedPrefsManager.saveUserCredentials(
                                                     credencial,
@@ -187,10 +214,8 @@ fun LoginScreen(navegacao: NavHostController?) {
                                                 popUpTo("login") { inclusive = true }
                                             }
                                         } else {
-                                            // Não é aluno: exibe mensagem de erro e não navega
                                             Toast.makeText(context, "Acesso restrito apenas para alunos.", Toast.LENGTH_LONG).show()
                                         }
-                                        // --- FIM DA VALIDAÇÃO DE NÍVEL ---
                                     },
                                     onError = { mensagem ->
                                         isLoading = false
@@ -204,12 +229,20 @@ fun LoginScreen(navegacao: NavHostController?) {
                             .fillMaxWidth()
                             .height(50.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = PurplePrimary)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary,
+                            disabledContainerColor = colorScheme.primary.copy(alpha = 0.4f),
+                            disabledContentColor = colorScheme.onPrimary.copy(alpha = 0.6f)
+                        )
                     ) {
                         if (isLoading) {
-                            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp)) // Mudei a cor do loading para branco para contrastar com o botão roxo
+                            CircularProgressIndicator(
+                                color = colorScheme.onPrimary,
+                                modifier = Modifier.size(24.dp)
+                            )
                         } else {
-                            Text("Entrar", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                            Text("Entrar", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                         }
                     }
                 }

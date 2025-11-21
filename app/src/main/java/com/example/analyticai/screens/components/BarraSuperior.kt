@@ -17,13 +17,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.analyticai.data.SharedPreferencesManager
-import com.example.analyticai.ui.theme.DarkGray
 
 @Composable
 fun BarraSuperior(navController: NavHostController?) {
@@ -48,48 +47,67 @@ fun BarraSuperior(navController: NavHostController?) {
         onDispose { sharedPrefs.unregisterListener(listener) }
     }
 
+    val colorScheme = MaterialTheme.colorScheme
+    val typography = MaterialTheme.typography
+
     val userName = usuario?.nome ?: "Usuário"
     val userTurma = usuario?.turma?.turma ?: "Turma não informada"
 
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(start = 15.dp, end = 15.dp, top = 5.dp)
+    ) {
+        Spacer(modifier = Modifier.height(40.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
             modifier = Modifier
-                .padding(start = 15.dp, end = 15.dp, top = 5.dp)
-        ){
-            Spacer(modifier = Modifier.height(40.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(top = 10.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(colorScheme.primary)
+                    .padding(start = 10.dp, end = 10.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                        .padding(start = 10.dp, end = 10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Foto",
-                        tint = White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column {
-                    Text("$userName", fontWeight = FontWeight.Medium, fontSize = 18.sp, color = DarkGray, overflow = TextOverflow.Ellipsis, maxLines = 1)
-                    Text("$userTurma", fontSize = 14.sp, color = DarkGray, fontWeight = FontWeight.Light)
-                }
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Foto",
+                    tint = colorScheme.onPrimary,
+                    modifier = Modifier.size(24.dp)
+                )
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Divider(modifier = Modifier.height(1.dp).fillMaxWidth())
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column {
+                Text(
+                    text = userName,
+                    style = typography.titleMedium?.copy(fontWeight = FontWeight.Medium, fontSize = 18.sp)
+                        ?: MaterialTheme.typography.titleMedium,
+                    color = colorScheme.onSurface,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+                Text(
+                    text = userTurma,
+                    style = typography.bodyMedium?.copy(fontSize = 14.sp, fontWeight = FontWeight.Light)
+                        ?: MaterialTheme.typography.bodyMedium,
+                    color = colorScheme.onSurfaceVariant
+                )
+            }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxWidth(),
+            color = colorScheme.outline.copy(alpha = 0.5f)
+        )
     }
+}

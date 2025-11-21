@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,23 +31,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.analyticai.screens.PurplePrimary
-import com.example.analyticai.screens.TextDark
-import com.example.analyticai.screens.TextGray
 import com.example.analyticai.viewmodel.FiltrosViewModel
 import com.example.analyticai.model.Dashboards.Materia
 import com.example.analyticai.model.Dashboards.Semestre
 import com.example.analyticai.model.Dashboard.Insight
 import com.example.analyticai.model.Dashboard.RelatorioCardState
 import com.example.analyticai.model.Dashboard.RelatorioTipo
+import com.example.analyticai.screens.PurplePrimary
+import com.example.analyticai.screens.TextDark
+import com.example.analyticai.screens.TextGray
 import com.example.analyticai.viewmodel.InsightState
 import kotlin.math.max
 import kotlin.math.min
 
-val LightPurple = PurplePrimary.copy(alpha = 0.4f)
-val ChartBarColor = PurplePrimary
-val ChartTextGray = TextGray.copy(alpha = 0.9f)
-val TextDark = Color(0xFF3C3C3C)
 
 
 // --- Cards de KPI ---
@@ -55,9 +54,11 @@ fun PerformanceKpiCard(
     modifier: Modifier = Modifier,
     isPlaceholder: Boolean = false
 ) {
-    val titleColor = if (isPlaceholder) TextGray else TextDark
-    val accentColor = if (isPlaceholder) TextGray.copy(alpha = 0.7f) else PurplePrimary
-    val valueColor = if (isPlaceholder) TextGray else TextDark
+    val colorScheme = MaterialTheme.colorScheme
+
+    val titleColor = if (isPlaceholder) colorScheme.onBackground else colorScheme.onSurface
+    val accentColor = if (isPlaceholder) colorScheme.onSurface.copy(alpha = 0.7f) else colorScheme.onPrimary
+    val valueColor = if (isPlaceholder) colorScheme.onBackground else colorScheme.onSurface
     val displayScore = if (isPlaceholder) "--" else String.format("%.1f", score)
     val infoText = if (isPlaceholder) {
         "Selecione matéria e semestre para visualizar."
@@ -67,7 +68,7 @@ fun PerformanceKpiCard(
 
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier
     ) {
@@ -76,7 +77,7 @@ fun PerformanceKpiCard(
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Desempenho",
-                    tint = titleColor,
+                    tint = colorScheme.onSurface,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
@@ -84,7 +85,7 @@ fun PerformanceKpiCard(
                     "Desempenho na Matéria",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
-                    color = titleColor
+                    color = colorScheme.onSurface
                 )
             }
             Spacer(Modifier.height(12.dp))
@@ -114,15 +115,19 @@ fun FrequencyKpiCard(
     modifier: Modifier = Modifier,
     isPlaceholder: Boolean = false
 ) {
+
+    val colorScheme = MaterialTheme.colorScheme
+    val typography = MaterialTheme.typography
+
     val chartPercentage = if (isPlaceholder) 0f else presentPercentage.coerceIn(0f, 100f)
-    val valueColor = if (isPlaceholder) TextGray else TextDark
-    val placeholderColor = TextGray.copy(alpha = 0.4f)
-    val primaryColor = if (isPlaceholder) placeholderColor else PurplePrimary
-    val secondaryColor = if (isPlaceholder) placeholderColor.copy(alpha = 0.5f) else LightPurple
+    val valueColor = if (isPlaceholder) colorScheme.onSurfaceVariant else colorScheme.onSurface
+    val placeholderColor = colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+    val primaryColor = if (isPlaceholder) placeholderColor else colorScheme.primary
+    val secondaryColor = if (isPlaceholder) placeholderColor.copy(alpha = 0.5f) else colorScheme.primaryContainer
 
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier
     ) {
@@ -131,7 +136,7 @@ fun FrequencyKpiCard(
                 Icon(
                     imageVector = Icons.Default.Schedule,
                     contentDescription = "Frequência",
-                    tint = valueColor,
+                    tint = colorScheme.onSurface,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
@@ -139,7 +144,7 @@ fun FrequencyKpiCard(
                     "Frequência no Período",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
-                    color = valueColor
+                    color = colorScheme.onSurface
                 )
             }
             Spacer(Modifier.height(24.dp))
@@ -160,12 +165,12 @@ fun FrequencyKpiCard(
                         text = if (isPlaceholder) "--%" else "${chartPercentage.toInt()}%",
                         fontWeight = FontWeight.Bold,
                         fontSize = 42.sp,
-                        color = valueColor
+                        color = colorScheme.onSurface
                     )
                     Text(
                         text = "Frequência",
                         fontSize = 16.sp,
-                        color = if (isPlaceholder) TextGray else TextGray
+                        color = colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -190,8 +195,8 @@ fun FrequencyKpiCard(
 fun PieChart(
     percentage: Float,
     modifier: Modifier = Modifier,
-    primaryColor: Color = PurplePrimary,
-    backgroundColor: Color = LightPurple
+    primaryColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer
 ) {
     val sweepAngle = percentage * 360f / 100f
     Canvas(modifier = modifier) {
@@ -221,7 +226,7 @@ fun LegendItem(color: Color, label: String) {
                 .background(color, RoundedCornerShape(2.dp))
         )
         Spacer(Modifier.width(4.dp))
-        Text(label, fontSize = 12.sp, color = TextGray)
+        Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -235,7 +240,7 @@ fun SubjectPerformanceChartCard(
     isPlaceholder: Boolean = false
 ) {
     val hasData = data.isNotEmpty() && !isPlaceholder
-    DashboardCard(title = "Notas em \"$subject\"", icon = Icons.Outlined.BarChart) {
+    DashboardCard(title = "Notas em $subject", icon = Icons.Outlined.BarChart) {
         Spacer(Modifier.height(8.dp))
         if (hasData) {
             BarChart(
@@ -250,7 +255,7 @@ fun SubjectPerformanceChartCard(
                     .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF5F5F5)),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -259,7 +264,7 @@ fun SubjectPerformanceChartCard(
                     } else {
                         "Nenhum dado disponível para os filtros selecionados."
                     },
-                    color = TextGray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(16.dp)
                 )
@@ -272,9 +277,9 @@ fun SubjectPerformanceChartCard(
 fun BarChart(
     data: List<BarData>,
     modifier: Modifier = Modifier,
-    barColor: Color = ChartBarColor,
-    valueColor: Color = TextDark,
-    gridColor: Color = ChartTextGray.copy(alpha = 0.5f)
+    barColor: Color = MaterialTheme.colorScheme.primary,
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+    gridColor: Color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 ) {
     val scaleMaxY = 10f
     Box(modifier = modifier.clip(RoundedCornerShape(12.dp))) {
@@ -355,7 +360,7 @@ fun BarChart(
                 Text(
                     text = item.label,
                     fontSize = 12.sp,
-                    color = ChartTextGray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.weight(1f)
                 )
@@ -375,27 +380,29 @@ fun FilterDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
+    val colorScheme = MaterialTheme.colorScheme
+
     Box(modifier = modifier.wrapContentSize(Alignment.TopStart)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(Color.White)
-                .border(1.dp, TextGray.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
+                .background(colorScheme.surface)
+                .border(1.dp, colorScheme.onSurface.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
                 .clickable { expanded = true }
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "$label: ",
-                color = TextDark,
+                color = colorScheme.onSurface,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
             Spacer(Modifier.width(4.dp))
             Text(
                 text = selectedValue,
-                color = TextGray,
+                color = colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 maxLines = 1,
@@ -404,13 +411,13 @@ fun FilterDropdown(
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = "Dropdown",
-                tint = TextGray,
+                tint = colorScheme.onSurface,
                 modifier = Modifier.size(20.dp)
             )
         }
 
         DropdownMenu(
-            containerColor = Color.White,
+            containerColor = colorScheme.surface,
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier.width(IntrinsicSize.Max)
@@ -443,13 +450,13 @@ fun DownloadCardRefined(
     }
 
     val infoText = state.lastUpdate?.let { "Última atualização: $it" } ?: state.statusMessage
-    val infoColor = if (state.hasError) Color(0xFFD32F2F) else TextGray
+    val infoColor = if (state.hasError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
 
     val buttonColor = when {
-        state.isLoading -> PurplePrimary.copy(alpha = 0.4f)
-        state.isEnabled -> PurplePrimary
-        state.hasError -> Color(0xFFBDBDBD)
-        else -> TextGray.copy(alpha = 0.2f)
+        state.isLoading -> MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
+        state.isEnabled -> MaterialTheme.colorScheme.primary
+        state.hasError -> MaterialTheme.colorScheme.outline
+        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
     }
 
     val buttonModifier = Modifier
@@ -466,7 +473,7 @@ fun DownloadCardRefined(
 
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier.fillMaxWidth()
     ) {
@@ -478,7 +485,7 @@ fun DownloadCardRefined(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = TextDark)
+                Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(Modifier.height(4.dp))
                 Text(infoText, fontSize = 12.sp, color = infoColor)
             }
@@ -490,13 +497,13 @@ fun DownloadCardRefined(
                     CircularProgressIndicator(
                         modifier = Modifier.size(18.dp),
                         strokeWidth = 2.dp,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Default.Download,
                         contentDescription = "Download",
-                        tint = if (state.isEnabled) Color.White else Color.White.copy(alpha = 0.6f),
+                        tint = if (state.isEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -509,7 +516,7 @@ fun DownloadCardRefined(
 fun DashboardCard(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector? = null, content: @Composable ColumnScope.() -> Unit) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -519,12 +526,12 @@ fun DashboardCard(title: String, icon: androidx.compose.ui.graphics.vector.Image
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = TextDark,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(Modifier.width(8.dp))
                 }
-                Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = TextDark)
+                Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
             }
             Spacer(Modifier.height(12.dp))
             content()
@@ -548,7 +555,7 @@ fun InsightsSection(
             Icon(
                 imageVector = Icons.Default.AutoAwesome,
                 contentDescription = null,
-                tint = Color.Black,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(24.dp)
             )
             Spacer(Modifier.width(8.dp))
@@ -556,7 +563,7 @@ fun InsightsSection(
                 "Relatórios e Insights por Matéria",
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp,
-                color = TextDark
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -576,11 +583,11 @@ fun InsightsSection(
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(40.dp),
-                            color = PurplePrimary
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Text(
                             "Gerando insights...",
-                            color = TextGray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                     }
@@ -597,7 +604,7 @@ fun InsightsSection(
                         .fillMaxWidth()
                         .height(150.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFF5F5F5)),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -606,7 +613,7 @@ fun InsightsSection(
                         } else {
                             "Selecione os filtros para visualizar os insights."
                         },
-                        color = TextGray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(16.dp),
                         fontSize = 14.sp
@@ -624,7 +631,7 @@ fun InsightCard(
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = modifier.fillMaxWidth()
     ) {
@@ -634,7 +641,7 @@ fun InsightCard(
                 text = insight.titulo,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
-                color = TextDark
+                color = MaterialTheme.colorScheme.onSurface
             )
             
             Spacer(Modifier.height(8.dp))
@@ -643,7 +650,7 @@ fun InsightCard(
             Text(
                 text = insight.data,
                 fontSize = 12.sp,
-                color = TextGray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             
             Spacer(Modifier.height(12.dp))
@@ -652,7 +659,7 @@ fun InsightCard(
             Text(
                 text = insight.conteudo,
                 fontSize = 14.sp,
-                color = TextDark,
+                color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp
             )
         }
@@ -682,12 +689,12 @@ fun FiltrosVerticais(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Filtros fixos para Aluno
-        Text("Matéria", color = Color.Black)
+        Text("Matéria", color = MaterialTheme.colorScheme.onSurface)
         FilterDropdown(
             label = "Matéria",
             selectedValue = selectedMateria.ifEmpty { "Selecione a Matéria" },
@@ -696,7 +703,7 @@ fun FiltrosVerticais(
             onSelect = { selected: String -> selectedMateria = selected }
         )
 
-        Text("Período", color = Color.Black)
+        Text("Período", color = MaterialTheme.colorScheme.onSurface)
         FilterDropdown(
             label = "Período",
             selectedValue = selectedSemestre.ifEmpty { "Selecione o Período" },
@@ -709,10 +716,10 @@ fun FiltrosVerticais(
 
         Button(
             onClick = { /* TODO: aplicar filtros */ },
-            colors = ButtonDefaults.buttonColors(containerColor = PurplePrimary),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Aplicar", color = Color.White)
+            Text("Aplicar", color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }
