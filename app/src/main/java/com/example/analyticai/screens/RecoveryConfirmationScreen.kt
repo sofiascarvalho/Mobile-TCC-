@@ -18,6 +18,8 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecoveryConfirmationScreen(navController: NavController) {
+        val colorScheme = MaterialTheme.colorScheme
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -30,7 +32,7 @@ fun RecoveryConfirmationScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             ) {
                 Column(
@@ -41,13 +43,14 @@ fun RecoveryConfirmationScreen(navController: NavController) {
                         text = "E-mail Enviado!",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
+                        color = colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
 
                     Text(
                         text = "Um e-mail para redefinição de senha foi enviado para seu e-mail. Por favor, verifique a caixa de entrada.",
                         fontSize = 14.sp,
-                        color = Color.Gray,
+                        color = colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
@@ -58,10 +61,11 @@ fun RecoveryConfirmationScreen(navController: NavController) {
                             .fillMaxWidth()
                             .height(50.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF673AB7) // Cor roxa do seu tema
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
                         )
                     ) {
-                        Text("Voltar para o Login", color = Color.White)
+                        Text("Voltar para o Login", color = colorScheme.onPrimary)
                     }
                 }
             }

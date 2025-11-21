@@ -47,98 +47,119 @@ fun RecoveryScreen(
         }
     }
 
-        Column(
+    val colorScheme = MaterialTheme.colorScheme
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Card (
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Card (
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                .fillMaxWidth()
+                .height(400.dp)
+        ){
+            Column (
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
+                    .padding(32.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ){
-                Column (
-                    modifier = Modifier.padding(32.dp).fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
                 ){
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ){
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Voltar"
-                            )
-                        }
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = colorScheme.onSurface
+                        )
                     }
+                }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = "Recuperar Senha",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                Text(
+                    text = "Recuperar Senha",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Text(
+                    text = "Digite sua matrícula para enviarmos um e-mail de recuperação.",
+                    fontSize = 14.sp,
+                    color = colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(bottom = 32.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+
+                OutlinedTextField(
+                    value = credencial,
+                    onValueChange = { credencial = it; error = null },
+                    label = { Text("Matrícula", color = colorScheme.onSurfaceVariant) },
+                    placeholder = { Text("Sua Matrícula", color = colorScheme.onSurfaceVariant) },
+                    isError = error != null,
+                    supportingText = { error?.let { Text(it, color = colorScheme.error) } },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
+                    maxLines = 1,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = colorScheme.primary,
+                        unfocusedBorderColor = colorScheme.outline,
+                        cursorColor = colorScheme.primary,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedContainerColor = colorScheme.surfaceVariant,
+                        unfocusedContainerColor = colorScheme.surfaceVariant,
+                        disabledContainerColor = colorScheme.surfaceVariant,
+                        errorContainerColor = colorScheme.surfaceVariant
                     )
+                )
 
-                    Text(
-                        text = "Digite sua matrícula para enviarmos um e-mail de recuperação.",
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),textAlign = TextAlign.Center
-                    )
-
-                    OutlinedTextField(
-                        value = credencial,
-                        onValueChange = { credencial = it; error = null },
-                        label = { Text("Matrícula") },
-                        placeholder = { Text("Sua Matrícula") },
-                        isError = error != null,
-                        supportingText = { error?.let { Text(it) } },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = PurplePrimary,
-                            unfocusedBorderColor = Color.LightGray,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black
-                        )
-                    )
-
-                    Button(
-                        onClick = {
-                            val validationError = viewModel.validarCredencial(credencial)
-                            if (validationError == null) {
-                                viewModel.recuperarSenha(credencial)
-                            } else {
-                                error = validationError
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        enabled = recoveryState !is RecoveryState.Loading,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF673AB7) // Cor roxa do seu tema
-                        )
-                    ) {
-                        if (recoveryState is RecoveryState.Loading) {
-                            Text("Enviando...", color = Color.White)
+                Button(
+                    onClick = {
+                        val validationError = viewModel.validarCredencial(credencial)
+                        if (validationError == null) {
+                            viewModel.recuperarSenha(credencial)
                         } else {
-                            Text("Enviar", color = Color.White)
+                            error = validationError
                         }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    enabled = recoveryState !is RecoveryState.Loading,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.primary,
+                        contentColor = colorScheme.onPrimary,
+                        disabledContainerColor = colorScheme.primary.copy(alpha = 0.4f)
+                    )
+                ) {
+                    if (recoveryState is RecoveryState.Loading) {
+                        Text("Enviando...", color = colorScheme.onPrimary)
+                    } else {
+                        Text("Enviar", color = colorScheme.onPrimary)
                     }
                 }
             }
         }
     }
+}

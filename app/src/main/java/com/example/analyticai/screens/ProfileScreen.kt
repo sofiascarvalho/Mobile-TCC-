@@ -56,6 +56,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
     // Manter estados e contexto
     val context = LocalContext.current
     val profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory(context))
+
     val userName = profileViewModel.nome
     val emailUsuario = profileViewModel.email
     val telefoneUsuario = profileViewModel.telefone
@@ -66,14 +67,26 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
     val sharedPrefsManager = remember { SharedPreferencesManager(context) }
 
-    var isDarkMode by remember { mutableStateOf(false) }
+    var themeMode by remember { mutableStateOf(sharedPrefsManager.getThemeMode() ?: "system") }
+    val systemDark = androidx.compose.foundation.isSystemInDarkTheme()
+    var isDarkMode by remember {
+        mutableStateOf(
+            when (themeMode) {
+                "dark" -> true
+                "light" -> false
+                else -> systemDark
+            }
+        )
+    }
+
+    val colorScheme = androidx.compose.material3.MaterialTheme.colorScheme
 
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(colorScheme.background)
             .verticalScroll(scrollState) // A rolagem agora abrange todo o conteúdo
             .padding(horizontal = 16.dp)
     ) {
@@ -84,13 +97,13 @@ fun ProfileScreen(navegacao: NavHostController?) {
             text = "Configurações Do Aluno",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
-            color = Color.Black
+            color = colorScheme.onSurface
         )
         Text(
             text = "Gerencie suas informações e preferências do sistema",
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
-            color = Color.Gray
+            color = colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -99,7 +112,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = colorScheme.surface),
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
@@ -109,7 +122,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     "Informações do Aluno",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = PurplePrimary
+                    color = colorScheme.onPrimary
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -117,7 +130,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 successMessage?.let {
                     Text(
                         text = it,
-                        color = Color(0xFF0F9D58),
+                        color = colorScheme.onBackground,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp
                     )
@@ -127,7 +140,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 errorMessage?.let {
                     Text(
                         text = it,
-                        color = Color(0xFFD93025),
+                        color = colorScheme.error,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp
                     )
@@ -141,13 +154,20 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     label = { Text("Nome do aluno", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
+                    maxLines = 1,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = PurplePrimary,
-                        unfocusedBorderColor = Color(0xffE1E4E7),
-                        focusedLabelColor = PurplePrimary,
-                        unfocusedLabelColor = Color.Gray
+                        focusedBorderColor = colorScheme.primary,
+                        unfocusedBorderColor = colorScheme.outline,
+                        cursorColor = colorScheme.primary,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedContainerColor = colorScheme.surfaceVariant,
+                        unfocusedContainerColor = colorScheme.surfaceVariant,
+                        disabledContainerColor = colorScheme.surfaceVariant,
+                        errorContainerColor = colorScheme.surfaceVariant
                     )
                 )
 
@@ -160,13 +180,20 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     label = { Text("Email de Contato", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
+                    maxLines = 1,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = PurplePrimary,
-                        unfocusedBorderColor = Color(0xffE1E4E7),
-                        focusedLabelColor = PurplePrimary,
-                        unfocusedLabelColor = Color.Gray
+                        focusedBorderColor = colorScheme.primary,
+                        unfocusedBorderColor = colorScheme.outline,
+                        cursorColor = colorScheme.primary,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedContainerColor = colorScheme.surfaceVariant,
+                        unfocusedContainerColor = colorScheme.surfaceVariant,
+                        disabledContainerColor = colorScheme.surfaceVariant,
+                        errorContainerColor = colorScheme.surfaceVariant
                     )
                 )
 
@@ -179,13 +206,20 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     label = { Text("Telefone de Contato", fontWeight = FontWeight.Normal) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
+                    maxLines = 1,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedBorderColor = PurplePrimary,
-                        unfocusedBorderColor = Color(0xffE1E4E7),
-                        focusedLabelColor = PurplePrimary,
-                        unfocusedLabelColor = Color.Gray
+                        focusedBorderColor = colorScheme.primary,
+                        unfocusedBorderColor = colorScheme.outline,
+                        cursorColor = colorScheme.primary,
+                        focusedTextColor = colorScheme.onSurface,
+                        unfocusedTextColor = colorScheme.onSurface,
+                        focusedLabelColor = colorScheme.primary,
+                        unfocusedLabelColor = colorScheme.onSurfaceVariant,
+                        focusedContainerColor = colorScheme.surfaceVariant,
+                        unfocusedContainerColor = colorScheme.surfaceVariant,
+                        disabledContainerColor = colorScheme.surfaceVariant,
+                        errorContainerColor = colorScheme.surfaceVariant
                     )
                 )
 
@@ -200,7 +234,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                     "Preferências do Aluno",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = PurplePrimary
+                    color = colorScheme.onPrimary
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -211,7 +245,7 @@ fun ProfileScreen(navegacao: NavHostController?) {
                         "Modo Dark",
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,
-                        color = Color.Black
+                        color = colorScheme.onSurface
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -223,19 +257,23 @@ fun ProfileScreen(navegacao: NavHostController?) {
                             modifier = Modifier.weight(1f),
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
-                            color = Color.Gray
+                            color = colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Switch(
                             checked = isDarkMode,
-                            onCheckedChange = { checked: Boolean -> isDarkMode = checked },
+                            onCheckedChange = { checked: Boolean ->
+                                isDarkMode = checked
+                                val newMode = if (checked) "dark" else "light"
+                                sharedPrefsManager.setThemeMode(newMode)
+                            },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,          // Cor da bolinha ligada
-                                uncheckedThumbColor = Color.LightGray,    // Cor da bolinha desligada
-                                checkedTrackColor = PurplePrimary,        // Cor da trilha ligada
-                                uncheckedTrackColor = Color.Transparent,  // Cor da trilha desligada
-                                checkedBorderColor = PurplePrimary,
-                                uncheckedBorderColor = Color.LightGray
+                                checkedThumbColor = colorScheme.onPrimary,
+                                uncheckedThumbColor = colorScheme.outline,
+                                checkedTrackColor = colorScheme.primary,
+                                uncheckedTrackColor = colorScheme.surfaceVariant,
+                                checkedBorderColor = colorScheme.primary,
+                                uncheckedBorderColor = colorScheme.outline
                             )
                         )
                     }
@@ -261,18 +299,18 @@ fun ProfileScreen(navegacao: NavHostController?) {
                         shape = RoundedCornerShape(8.dp),
                         enabled = hasChanges && !isSaving,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = PurplePrimary,
-                            disabledContainerColor = PurplePrimary.copy(alpha = 0.5f)
+                            containerColor = colorScheme.secondary,
+                            disabledContainerColor = colorScheme.secondary.copy(alpha = 0.5f)
                         )
                     ) {
                         if (isSaving) {
                             CircularProgressIndicator(
-                                color = Color.White,
+                                color = colorScheme.onPrimary,
                                 modifier = Modifier.size(20.dp),
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Text("Salvar Alterações", color = Color.White)
+                            Text("Salvar Alterações", color = colorScheme.onPrimary)
                         }
                     }
                 }
@@ -281,6 +319,8 @@ fun ProfileScreen(navegacao: NavHostController?) {
 
         // --- BOTÃO SAIR DA CONTA (FORA DO CARD) ---
         Spacer(modifier = Modifier.height(30.dp))
+
+        val sharedPrefsManager = remember { SharedPreferencesManager(context) }
 
         // Botão "Sair da conta" (alinhado à esquerda e fora do Card)
         Button(
@@ -294,14 +334,14 @@ fun ProfileScreen(navegacao: NavHostController?) {
                 .height(45.dp)
                 .align(Alignment.CenterHorizontally), // Alinha o botão à esquerda dentro da Column
             shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(1.dp, Color.LightGray),
+            border = BorderStroke(1.dp, colorScheme.outline),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent, // Fundo transparente
-                contentColor = Color.Black
+                contentColor = colorScheme.onSurface
             ),
             elevation = ButtonDefaults.buttonElevation(0.dp) // Sem elevação
         ) {
-            Text("Sair da conta", color = Color.Gray, fontWeight = FontWeight.Medium)
+            Text("Sair da conta", color = colorScheme.onBackground, fontWeight = FontWeight.Medium)
         }
 
         // Espaçador final

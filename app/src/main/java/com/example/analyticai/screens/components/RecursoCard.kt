@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +43,7 @@ fun RecursoCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp, horizontal = 12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xfff5f5f5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -64,19 +65,23 @@ fun RecursoCard(
                     Text(
                         text = recurso.titulo,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
                         text = recurso.descricao,
                         fontSize = 14.sp,
-                        color = Color.DarkGray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Light
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Button(
                         onClick = { onBaixarClick(recurso) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
                         Text(text = "Baixar PDF")
                     }

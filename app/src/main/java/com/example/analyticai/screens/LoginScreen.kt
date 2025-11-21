@@ -98,6 +98,8 @@ fun LoginScreen(navegacao: NavHostController?) {
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
+                        singleLine = true,
+                        maxLines = 1,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = colorScheme.primary,
                             unfocusedBorderColor = colorScheme.outline,
@@ -126,6 +128,8 @@ fun LoginScreen(navegacao: NavHostController?) {
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
+                        singleLine = true,
+                        maxLines = 1,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = colorScheme.primary,
                             unfocusedBorderColor = colorScheme.outline,

@@ -15,6 +15,7 @@ class SharedPreferencesManager(context: Context) {
         private const val KEY_CREDENTIAL = "user_credential"
         private const val KEY_NIVEL = "user_nivel"
         private const val KEY_USUARIO_JSON = "user_json" // NOVO
+        private const val KEY_THEME_MODE = "theme_mode"
     }
 
     fun saveUserCredentials(credential: String, nivel: String) {
@@ -56,4 +57,12 @@ class SharedPreferencesManager(context: Context) {
     fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         prefs.unregisterOnSharedPreferenceChangeListener(listener)
     }
+
+    // --- Preferência de tema ---
+    // Valores esperados: "system" (padrão), "light", "dark"
+    fun setThemeMode(mode: String) {
+        prefs.edit().putString(KEY_THEME_MODE, mode).apply()
+    }
+
+    fun getThemeMode(): String? = prefs.getString(KEY_THEME_MODE, "system")
 }

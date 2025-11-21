@@ -57,7 +57,7 @@ fun PerformanceKpiCard(
     val colorScheme = MaterialTheme.colorScheme
 
     val titleColor = if (isPlaceholder) colorScheme.onBackground else colorScheme.onSurface
-    val accentColor = if (isPlaceholder) colorScheme.onSurface.copy(alpha = 0.7f) else colorScheme.onPrimary
+    val accentColor = if (isPlaceholder) colorScheme.onBackground.copy(alpha = 0.7f) else colorScheme.onBackground
     val valueColor = if (isPlaceholder) colorScheme.onBackground else colorScheme.onSurface
     val displayScore = if (isPlaceholder) "--" else String.format("%.1f", score)
     val infoText = if (isPlaceholder) {
@@ -179,11 +179,11 @@ fun FrequencyKpiCard(
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 LegendItem(
-                    color = secondaryColor,
+                    color = primaryColor,
                     label = "Presença (${if (isPlaceholder) "--" else chartPercentage.toInt()}%)"
                 )
                 LegendItem(
-                    color = primaryColor,
+                    color = secondaryColor,
                     label = "Faltas (${if (isPlaceholder) "--" else (100 - chartPercentage).toInt()}%)"
                 )
             }
@@ -489,6 +489,7 @@ fun DownloadCardRefined(
                 Spacer(Modifier.height(4.dp))
                 Text(infoText, fontSize = 12.sp, color = infoColor)
             }
+            Spacer(Modifier.width(8.dp))
             Box(
                 modifier = buttonModifier,
                 contentAlignment = Alignment.Center

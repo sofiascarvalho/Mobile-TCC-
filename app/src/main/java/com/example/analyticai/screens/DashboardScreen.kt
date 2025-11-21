@@ -175,7 +175,8 @@ fun DashboardScreen() {
             item {
                 Text(
                     "Relatórios de Download",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }

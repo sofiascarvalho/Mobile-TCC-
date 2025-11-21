@@ -39,101 +39,106 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
-   @Composable
-   fun RecPasswd(navegacao: NavHostController?) {
-       val colorScheme = MaterialTheme.colorScheme
+@Composable
+fun RecPasswd(navegacao: NavHostController?) {
+    val colorScheme = MaterialTheme.colorScheme
 
-       Box(
-           modifier = Modifier
-               .fillMaxSize()
-               .background(Color.LightGray)
-       ) {
-           Column(
-               modifier = Modifier.fillMaxSize(),
-               verticalArrangement = Arrangement.Center,
-               horizontalAlignment = Alignment.CenterHorizontally
-           ) {
-               Card(
-                   modifier = Modifier
-                       .width(350.dp)
-                       .height(330.dp),
-                   elevation = CardDefaults.cardElevation(2.dp),
-                   colors = CardDefaults.cardColors(
-                       containerColor = Color.White
-                   ),
-                   shape = RoundedCornerShape(16.dp)
-               ) {
-                   Column(
-                       modifier = Modifier
-                           .fillMaxSize()
-                           .padding(horizontal = 25.dp, vertical = 20.dp)
-                   ) {
-                       Row(
-                           verticalAlignment = Alignment.CenterVertically
-                       ) {
-                           Icon(
-                               imageVector = Icons.Default.ArrowBack,
-                               contentDescription = "",
-                               modifier = Modifier
-                                   .clickable { navegacao?.popBackStack() },
-                               tint = colorScheme.onSurface
-                           )
-                           Spacer(modifier = Modifier.width(56.dp))
-                           Text(
-                               text = "Recuperar Senha",
-                               fontSize = 18.sp,
-                               fontWeight = FontWeight.Bold,
-                               color = colorScheme.onSurface
-                           )
-                       }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                modifier = Modifier
+                    .width(350.dp)
+                    .height(330.dp),
+                elevation = CardDefaults.cardElevation(2.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = colorScheme.surface
+                ),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 25.dp, vertical = 20.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clickable { navegacao?.popBackStack() },
+                            tint = colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.width(56.dp))
+                        Text(
+                            text = "Recuperar Senha",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorScheme.onSurface
+                        )
+                    }
 
-                       Spacer(modifier = Modifier.height(20.dp))
-                       Text(
-                           text = "Digite sua matrícula para enviarmos \num e-mail de recuperação.",
-                           color = colorScheme.onSurface.copy(alpha = 0.9f),
-                           fontSize = 14.sp,
-                           lineHeight = 12.sp,
-                           modifier = Modifier.padding(start = 33.dp)
-                       )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = "Digite sua matrícula para enviarmos \num e-mail de recuperação.",
+                        color = colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        lineHeight = 12.sp,
+                        modifier = Modifier.padding(start = 33.dp)
+                    )
 
-                       Spacer(modifier = Modifier.height(25.dp))
-                       Text(
-                           text = "Matrícula",
-                           color = colorScheme.onSurface,
-                           fontWeight = FontWeight.Medium
-                       )
-                       Spacer(modifier = Modifier.height(8.dp))
-                       OutlinedTextField(
-                           value = "",
-                           onValueChange = {},
-                           placeholder = { Text("Sua Matrícula", color = Color.Magenta, fontWeight = FontWeight.ExtraLight, fontSize = 13.sp) },
-                           modifier = Modifier.fillMaxWidth(),
-                           colors = OutlinedTextFieldDefaults.colors(
-                               focusedContainerColor = colorScheme.surface,
-                               unfocusedContainerColor = colorScheme.surface,
-                               focusedBorderColor = Color.Gray,
-                               unfocusedBorderColor = Color.Gray
-                           ),
-                           shape = RoundedCornerShape(12.dp)
-                       )
+                    Spacer(modifier = Modifier.height(25.dp))
+                    Text(
+                        text = "Matrícula",
+                        color = colorScheme.onSurface,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {},
+                        placeholder = { Text("Sua Matrícula", color = colorScheme.onSurfaceVariant, fontWeight = FontWeight.ExtraLight, fontSize = 13.sp) },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = colorScheme.surfaceVariant,
+                            unfocusedContainerColor = colorScheme.surfaceVariant,
+                            focusedBorderColor = colorScheme.primary,
+                            unfocusedBorderColor = colorScheme.outline,
+                            cursorColor = colorScheme.primary,
+                            focusedTextColor = colorScheme.onSurface,
+                            unfocusedTextColor = colorScheme.onSurface,
+                            focusedLabelColor = colorScheme.primary,
+                            unfocusedLabelColor = colorScheme.onSurfaceVariant
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
 
-                       Spacer(modifier = Modifier.height(30.dp))
-                       Button(
-                           onClick = { navegacao?.navigate("email") },
-                           colors = ButtonDefaults.buttonColors(
-                               containerColor = colorScheme.primary
-                           ),
-                           shape = RoundedCornerShape(13.dp),
-                           modifier = Modifier.fillMaxWidth().height(50.dp)
-                       ) {
-                           Text(text = "Enviar", color = colorScheme.onPrimary)
-                       }
-                   }
-               }
-           }
-       }
-   }
-
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Button(
+                        onClick = { navegacao?.navigate("email") },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(13.dp),
+                        modifier = Modifier.fillMaxWidth().height(50.dp)
+                    ) {
+                        Text(text = "Enviar", color = colorScheme.onPrimary)
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ConfirmEmail(navegacao: NavHostController?) {
@@ -143,7 +148,7 @@ fun ConfirmEmail(navegacao: NavHostController?) {
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.LightGray),
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -153,7 +158,7 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                     .height(330.dp),
                 elevation = CardDefaults.cardElevation(2.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {
@@ -167,14 +172,15 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                         text = "E-mail Enviado!",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(30.dp))
                     Text(
                         text = "Um e-mail para redefinição de senha foi enviado para seu e-mail educacional. Por favor, verifique a caixa de entrada.",
                         modifier = Modifier.padding(horizontal = 15.dp),
                         lineHeight = 12.sp,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(30.dp))
                     Button(
@@ -182,13 +188,15 @@ fun ConfirmEmail(navegacao: NavHostController?) {
                             navegacao?.navigate("login")
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = PurplePrimary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         ),
                         modifier = Modifier.fillMaxWidth().height(50.dp),
                         shape = RoundedCornerShape(13.dp)
                     ) {
                         Text(
-                            text = "Voltar para o login"
+                            text = "Voltar para o login",
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -196,122 +204,133 @@ fun ConfirmEmail(navegacao: NavHostController?) {
         }
     }
 }
-   @Composable
-   fun RedefinirPasswd(navegacao: NavHostController?) {
-       val colorScheme = MaterialTheme.colorScheme
 
-       Box(
-           modifier = Modifier
-               .fillMaxSize()
-               .background(colorScheme.background)
-       ) {
-           Column(
-               modifier = Modifier.fillMaxSize(),
-               verticalArrangement = Arrangement.Center,
-               horizontalAlignment = Alignment.CenterHorizontally
-           ) {
-               Card(
-                   modifier = Modifier
-                       .width(350.dp)
-                       .height(360.dp),
-                   elevation = CardDefaults.cardElevation(2.dp),
-                   colors = CardDefaults.cardColors(
-                       containerColor = colorScheme.surface
-                   ),
-                   shape = RoundedCornerShape(16.dp)
-               ) {
-                   Column(
-                       modifier = Modifier
-                           .fillMaxSize()
-                           .padding(horizontal = 25.dp, vertical = 20.dp)
-                   ) {
-                       Row(
-                           verticalAlignment = Alignment.CenterVertically
-                       ) {
-                           Icon(
-                               imageVector = Icons.Default.ArrowBack,
-                               contentDescription = "",
-                               modifier = Modifier
-                                   .clickable { navegacao?.popBackStack() },
-                               tint = colorScheme.onSurface
-                           )
-                           Spacer(modifier = Modifier.width(30.dp))
-                           Text(
-                               text = "Redefinir Senha",
-                               fontSize = 18.sp,
-                               fontWeight = FontWeight.Bold,
-                               color = colorScheme.onSurface
-                           )
-                       }
+@Composable
+fun RedefinirPasswd(navegacao: NavHostController?) {
+    val colorScheme = MaterialTheme.colorScheme
 
-                       Spacer(modifier = Modifier.height(20.dp))
-                       Text(
-                           text = "Crie sua nova senha",
-                           color = colorScheme.onSurface.copy(alpha = 0.9f),
-                           fontSize = 14.sp
-                       )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                modifier = Modifier
+                    .width(350.dp)
+                    .height(360.dp),
+                elevation = CardDefaults.cardElevation(2.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = colorScheme.surface
+                ),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 25.dp, vertical = 20.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clickable { navegacao?.popBackStack() },
+                            tint = colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.width(30.dp))
+                        Text(
+                            text = "Redefinir Senha",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorScheme.onSurface
+                        )
+                    }
 
-                       Spacer(modifier = Modifier.height(25.dp))
-                       Text(
-                           text = "Nova Senha",
-                           color = colorScheme.onSurface,
-                           fontWeight = FontWeight.SemiBold
-                       )
-                       Spacer(modifier = Modifier.height(8.dp))
-                       OutlinedTextField(
-                           value = "",
-                           onValueChange = {},
-                           placeholder = { Text("********") },
-                           modifier = Modifier.fillMaxWidth(),
-                           visualTransformation = PasswordVisualTransformation(),
-                           colors = OutlinedTextFieldDefaults.colors(
-                               focusedContainerColor = colorScheme.surface,
-                               unfocusedContainerColor = colorScheme.surface,
-                               focusedBorderColor = colorScheme.primary,
-                               unfocusedBorderColor = colorScheme.secondary
-                           ),
-                           shape = RoundedCornerShape(12.dp)
-                       )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = "Crie sua nova senha",
+                        color = colorScheme.onSurface.copy(alpha = 0.9f),
+                        fontSize = 14.sp
+                    )
 
-                       Spacer(modifier = Modifier.height(16.dp))
-                       Text(
-                           text = "Confirmar Senha",
-                           color = colorScheme.onSurface,
-                           fontWeight = FontWeight.SemiBold
-                       )
-                       Spacer(modifier = Modifier.height(8.dp))
-                       OutlinedTextField(
-                           value = "",
-                           onValueChange = {},
-                           placeholder = { Text("********") },
-                           modifier = Modifier.fillMaxWidth(),
-                           visualTransformation = PasswordVisualTransformation(),
-                           colors = OutlinedTextFieldDefaults.colors(
-                               focusedContainerColor = colorScheme.surface,
-                               unfocusedContainerColor = colorScheme.surface,
-                               focusedBorderColor = colorScheme.primary,
-                               unfocusedBorderColor = colorScheme.secondary
-                           ),
-                           shape = RoundedCornerShape(12.dp)
-                       )
+                    Spacer(modifier = Modifier.height(25.dp))
+                    Text(
+                        text = "Nova Senha",
+                        color = colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {},
+                        placeholder = { Text("********") },
+                        modifier = Modifier.fillMaxWidth(),
+                        visualTransformation = PasswordVisualTransformation(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = colorScheme.surfaceVariant,
+                            unfocusedContainerColor = colorScheme.surfaceVariant,
+                            focusedBorderColor = colorScheme.primary,
+                            unfocusedBorderColor = colorScheme.outline,
+                            cursorColor = colorScheme.primary,
+                            focusedTextColor = colorScheme.onSurface,
+                            unfocusedTextColor = colorScheme.onSurface,
+                            focusedLabelColor = colorScheme.primary,
+                            unfocusedLabelColor = colorScheme.onSurfaceVariant
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
 
-                       Spacer(modifier = Modifier.height(30.dp))
-                       Button(
-                           onClick = { navegacao?.navigate("confirmRedefinicao") },
-                           colors = ButtonDefaults.buttonColors(
-                               containerColor = colorScheme.primary
-                           ),
-                           shape = RoundedCornerShape(13.dp),
-                           modifier = Modifier.fillMaxWidth()
-                       ) {
-                           Text(text = "Redefinir", color = colorScheme.onPrimary)
-                       }
-                   }
-               }
-           }
-       }
-   }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Confirmar Senha",
+                        color = colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {},
+                        placeholder = { Text("********") },
+                        modifier = Modifier.fillMaxWidth(),
+                        visualTransformation = PasswordVisualTransformation(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = colorScheme.surfaceVariant,
+                            unfocusedContainerColor = colorScheme.surfaceVariant,
+                            focusedBorderColor = colorScheme.primary,
+                            unfocusedBorderColor = colorScheme.outline,
+                            cursorColor = colorScheme.primary,
+                            focusedTextColor = colorScheme.onSurface,
+                            unfocusedTextColor = colorScheme.onSurface,
+                            focusedLabelColor = colorScheme.primary,
+                            unfocusedLabelColor = colorScheme.onSurfaceVariant
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    )
 
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Button(
+                        onClick = { navegacao?.navigate("confirmRedefinicao") },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(13.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Redefinir", color = colorScheme.onPrimary)
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ConfirmRedefinicao(navegacao: NavHostController?) {
@@ -321,14 +340,14 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
         Column (
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.LightGray),
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Card(
                 modifier = Modifier.size(350.dp, 300.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.surface
                 ),
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
@@ -341,12 +360,13 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
                         text = "Senha Redefinida!",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(45.dp))
                     Text(
                         text = "Sua senha foi redefinida com sucesso. Você já pode voltar para a tela de login.",
-                        modifier = Modifier.padding(horizontal = 50.dp)
+                        modifier = Modifier.padding(horizontal = 50.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(45.dp))
                     Button(
@@ -354,11 +374,13 @@ fun ConfirmRedefinicao(navegacao: NavHostController?) {
                             navegacao?.navigate("home")
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = PurplePrimary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
                         Text(
-                            text = "Voltar para o login"
+                            text = "Voltar para o login",
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }

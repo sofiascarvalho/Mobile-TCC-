@@ -89,7 +89,7 @@ fun RankingScreen(navegacao: NavHostController?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         // 1. Título e Subtítulo
@@ -98,20 +98,20 @@ fun RankingScreen(navegacao: NavHostController?) {
                 text = "Ranking Do Aluno",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 22.sp,
-                color = PurplePrimary
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Divider(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
-                color = Color(0xFFE0E3EB),
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
                 thickness = 1.dp
             )
             Text(
                 text = "Visão geral da sua classificação em relação aos colegas.",
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(20.dp))
         }
@@ -123,7 +123,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    color = PurplePrimary
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -159,7 +159,7 @@ fun RankingScreen(navegacao: NavHostController?) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Divider(color = Color(0xFFE1E4E7))
+        Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -170,7 +170,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                     isRankingLoading -> {
                         CircularProgressIndicator(
                             modifier = Modifier.align(Alignment.Center),
-                            color = PurplePrimary
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
 
@@ -191,7 +191,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                                     ?: "Não encontramos dados para os filtros selecionados.",
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Medium,
-                                color = Color.Gray,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 16.sp,
                                 modifier = Modifier.padding(horizontal = 32.dp)
                             )
@@ -210,7 +210,7 @@ fun RankingScreen(navegacao: NavHostController?) {
                         text = "Selecione uma disciplina e um período para visualizar o ranking.",
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(horizontal = 32.dp)
                     )
@@ -225,12 +225,12 @@ fun RankingTable(rankings: List<RankItem>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)) {
             RankingHeader()
-            Divider(color = Color(0xFFE4E6EF), thickness = 1.dp, modifier = Modifier.padding(top = 12.dp))
+            Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f), thickness = 1.dp, modifier = Modifier.padding(top = 12.dp))
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
@@ -240,7 +240,7 @@ fun RankingTable(rankings: List<RankItem>) {
                     RankingRow(item = item)
                     if (index != rankings.lastIndex) {
                         Divider(
-                            color = Color(0xFFEDEFF5),
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
                             thickness = 1.dp,
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
@@ -273,7 +273,7 @@ fun HeaderCell(text: String, modifier: Modifier) {
         modifier = modifier,
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
-        color = Color.DarkGray.copy(alpha = 0.8f),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Start
     )
 }
@@ -282,9 +282,9 @@ fun HeaderCell(text: String, modifier: Modifier) {
 fun RankingRow(item: RankItem) {
     val shape = RoundedCornerShape(32.dp)
     val isCurrent = item.isCurrentUser
-    val background = if (isCurrent) PurplePrimary else Color.Transparent
-    val borderColor = if (isCurrent) PurplePrimary else Color.Transparent
-    val textColor = if (isCurrent) Color.White else Color.DarkGray
+    val background = if (isCurrent) MaterialTheme.colorScheme.primary else Color.Transparent
+    val borderColor = if (isCurrent) MaterialTheme.colorScheme.primary else Color.Transparent
+    val textColor = if (isCurrent) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
 
     Row(
         modifier = Modifier
@@ -334,7 +334,7 @@ fun NameCell(
             modifier = paddingModifier,
             fontWeight = FontWeight.SemiBold,
             fontSize = 14.sp,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -353,7 +353,7 @@ private fun BlurredNameText(text: String, modifier: Modifier = Modifier) {
         Text(
             text = text,
             modifier = baseModifier.blur(10.dp),
-            color = Color.DarkGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             maxLines = 1,
@@ -363,7 +363,7 @@ private fun BlurredNameText(text: String, modifier: Modifier = Modifier) {
         Text(
             text = "••••••••••",
             modifier = baseModifier,
-            color = Color.DarkGray.copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )

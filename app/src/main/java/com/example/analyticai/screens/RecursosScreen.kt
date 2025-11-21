@@ -16,6 +16,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -83,7 +84,7 @@ fun RecursosScreen(navegacao: NavHostController?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFDFDFD))
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         // Tabs (Mural / Atividades)
@@ -156,7 +157,7 @@ fun AbaSelecionavel(titulo: String, selecionado: Boolean, onClick: () -> Unit) {
         Text(
             text = titulo,
             fontWeight = if (selecionado) FontWeight.Bold else FontWeight.Normal,
-            color = if (selecionado) Color(0xFF6A1B9A) else Color.Gray,
+            color = if (selecionado) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 16.sp
         )
     }
@@ -175,7 +176,8 @@ fun DropdownFiltro(
         Text(
             text = label,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurface
         )
         Box {
             OutlinedButton(onClick = { expandido = true }) {

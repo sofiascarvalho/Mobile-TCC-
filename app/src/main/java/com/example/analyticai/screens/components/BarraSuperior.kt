@@ -56,7 +56,7 @@ fun BarraSuperior(navController: NavHostController?) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(start = 15.dp, end = 15.dp, top = 5.dp)
+            .padding().background(colorScheme.surface)
     ) {
         Spacer(modifier = Modifier.height(40.dp))
         Row(
@@ -64,7 +64,7 @@ fun BarraSuperior(navController: NavHostController?) {
             horizontalArrangement = Arrangement.Start,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(start = 15.dp, end = 15.dp, top = 15.dp)
         ) {
             Box(
                 modifier = Modifier

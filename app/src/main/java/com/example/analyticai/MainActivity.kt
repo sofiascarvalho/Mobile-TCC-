@@ -5,6 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import android.content.SharedPreferences
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -36,7 +41,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AnalyticAITheme {
+            val context = LocalContext.current
+            val sharedPrefsManager = remember { SharedPreferencesManager(context) }
+            var themeMode by remember { mutableStateOf(sharedPrefsManager.getThemeMode() ?: "system") }
+
+            DisposableEffect(sharedPrefsManager) {
+                val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                    if (key == "theme_mode") {
+                        themeMode = sharedPrefsManager.getThemeMode() ?: "system"
+                    }
+                }
+                sharedPrefsManager.registerListener(listener)
+                onDispose { sharedPrefsManager.unregisterListener(listener) }
+            }
+
+            val darkTheme = when (themeMode) {
+                "dark" -> true
+                "light" -> false
+                else -> isSystemInDarkTheme()
+            }
+
+            AnalyticAITheme(darkTheme = darkTheme) {
                 AppNavigationContainer()
             }
         }
